@@ -1,8 +1,4 @@
 /** @type {import('next').NextConfig} */
-const nextConfig = {
-    output: "export",
-    assetPrefix: '/CloudSettings-API/',
-    basePath: '/CloudSettings-API/'
-}
+const nextConfig = {}
 
 module.exports = nextConfig
