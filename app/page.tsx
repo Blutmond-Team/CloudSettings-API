@@ -1,9 +1,9 @@
 import Hero2x2Grid from "@/app/Hero2x2Grid";
 import {
-    ArrowPathIcon,
     CloudArrowUpIcon,
     EyeSlashIcon,
-    LockClosedIcon, UserGroupIcon
+    LockClosedIcon,
+    UserGroupIcon
 } from "@heroicons/react/24/outline";
 
 export default function Home() {

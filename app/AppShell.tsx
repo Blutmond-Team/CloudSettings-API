@@ -28,6 +28,16 @@ const navigation: NavigationItem[] = [
         name: 'Home',
         href: '/',
         current: path => path === "" || path === "/"
+    },
+    {
+        name: 'GitHub (Mod)',
+        href: 'https://github.com/Blutmond-Team/CloudSettings-Mod',
+        current: () => false
+    },
+    {
+        name: 'GitHub (Web App)',
+        href: 'https://github.com/Blutmond-Team/CloudSettings-API',
+        current: () => false
     }
 ]
 
