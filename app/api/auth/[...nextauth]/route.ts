@@ -1,7 +1,8 @@
 import NextAuth from "next-auth";
 import AzureAD from "next-auth/providers/azure-ad";
-import {CloudSettingsSession, CloudSettingsToken} from "@/src/types/AuthTypes";
+import {CloudSettingsToken} from "@/src/types/AuthTypes";
 import {loginIntoMinecraft} from "@/src/utils/MicrosoftLoginUtils";
+import {PrismaClient} from "@prisma/client";
 
 const handler = NextAuth({
     providers: [
@@ -29,6 +30,22 @@ const handler = NextAuth({
                     t.accessTokenExpiresAt = account.expires_at! * 1000;
                     t.userId = user.id;
                     await loginIntoMinecraft(t);
+                    // Add / update user data when user is successfully logged in
+                    if (!Object.hasOwn(t, 'error')) {
+                        const prisma = new PrismaClient();
+                        await prisma.user.upsert({
+                            create: {
+                                id: t.minecraftUUID as string,
+                                name: t.minecraftUserName as string
+                            },
+                            update: {
+                                name: t.name as string
+                            },
+                            where: {
+                                id: t.minecraftUUID as string
+                            }
+                        });
+                    }
                 }
             }
             return token;
