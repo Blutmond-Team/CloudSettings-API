@@ -38,12 +38,11 @@ type UserNavigationItem = {
 }
 
 const userNavigation: UserNavigationItem[] = [
-    /*
     {
         key: "profile",
         name: 'Your Profile',
-        href: '#'
-    }*/
+        href: '/profile'
+    }
 ]
 
 export function AppShell({children}: Props) {
