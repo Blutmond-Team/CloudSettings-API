@@ -1,12 +1,16 @@
 import Hero2x2Grid from "@/app/Hero2x2Grid";
 import {
+    CircleStackIcon,
     CloudArrowUpIcon,
     EyeSlashIcon,
     LockClosedIcon,
-    UserGroupIcon
+    UserGroupIcon, UsersIcon
 } from "@heroicons/react/24/outline";
+import UsageStats from "@/app/UsageStats";
+import {PrismaClient} from "@prisma/client";
 
-export default function Home() {
+export default async function Home() {
+    const data = await getData();
     return (
         <>
             <Hero2x2Grid
@@ -36,6 +40,24 @@ export default function Home() {
                     }
                 ]}
             />
+            <div className={"px-10 pt-5 lg:px-20 xl:px-[7.5rem] 2xl:px-[12.5rem]"}>
+                <UsageStats
+                    items={[
+                        {id: 1, name: 'Registered Users', stat: `${data.userCount}`, icon: UsersIcon},
+                        {id: 2, name: 'Stored Options', stat: `${data.optionsCount}`, icon: CircleStackIcon}
+                    ]}
+                />
+            </div>
         </>
     )
+};
+
+async function getData() {
+    const prisma = new PrismaClient();
+    return {
+        userCount: await prisma.user.count(),
+        optionsCount: await prisma.option.count()
+    }
 }
+
+export const revalidate = 60;

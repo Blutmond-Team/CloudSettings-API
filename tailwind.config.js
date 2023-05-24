@@ -23,7 +23,7 @@ module.exports = {
                     950: '#000000'
                 },
             }
-        },
+        }
     },
     plugins: [],
 }
