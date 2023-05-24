@@ -3,9 +3,10 @@ import {UserProfileImg} from "@/app/UserProfileImg";
 import {Fragment} from "react";
 import {DefaultSession} from "next-auth";
 import {signOut} from "next-auth/react";
+import {CloudSettingsSession} from "@/src/types/AuthTypes";
 
 type Props = {
-    user: DefaultSession['user'],
+    session: CloudSettingsSession | null,
     navigation: { key: string, name: string | React.ReactNode, href: string }[]
 }
 
@@ -13,14 +14,14 @@ function classNames(...classes: string[]) {
     return classes.filter(Boolean).join(' ');
 }
 
-export const ProfileDropdown = ({user, navigation}: Props) => {
+export const ProfileDropdown = ({session, navigation}: Props) => {
     return (
         <Menu as="div" className="relative ml-3">
             <div>
                 <Menu.Button
                     className="flex max-w-xs items-center rounded-full bg-white text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
                     <span className="sr-only">Open user menu</span>
-                    <UserProfileImg user={user} className={"h-8 w-8 rounded-full"}/>
+                    <UserProfileImg session={session} className={"h-8 w-8 rounded-full"}/>
                 </Menu.Button>
             </div>
             <Transition

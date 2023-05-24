@@ -39,7 +39,8 @@ const handler = NextAuth({
             if (Object.hasOwn(t, 'error')) {
                 return {
                     ...session,
-                    error: t.error
+                    error: t.error,
+                    postLogin: false
                 }
             }
 
@@ -48,7 +49,8 @@ const handler = NextAuth({
                 minecraft: {
                     username: t.minecraftUserName,
                     uuid: t.minecraftUUID
-                }
+                },
+                postLogin: true
             };
         }
     }

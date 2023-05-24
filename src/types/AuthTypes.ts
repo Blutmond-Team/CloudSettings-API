@@ -31,10 +31,12 @@ export type MsStoreItem = {
 }
 
 type ErrorSession = {
+    postLogin: false
     error: string
 }
 
 type SuccessSession = {
+    postLogin: true
     minecraft: {
         username: string,
         uuid: string

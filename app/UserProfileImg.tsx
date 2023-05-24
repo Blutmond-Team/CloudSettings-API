@@ -1,21 +1,22 @@
-import {DefaultSession} from "next-auth";
 import {UserCircleIcon} from "@heroicons/react/24/outline";
+import {CloudSettingsSession} from "@/src/types/AuthTypes";
 
 type Props = {
-    user: DefaultSession['user'],
+    session: CloudSettingsSession | null,
     className?: string
 }
 
-export const UserProfileImg = ({user, className}: Props) => {
-    if (!user) {
+export const UserProfileImg = ({session, className}: Props) => {
+    if (!session) {
         return <></>;
     }
 
-    if (!user.image) {
+    if (!session.postLogin) {
         return <UserCircleIcon className={className}/>
     }
 
     return (
-        <img className="h-8 w-8 rounded-full" src={user.image} alt="" key={"profile img"}/>
+        <img className={className} src={`https://mc-heads.net/avatar/${session.minecraft.uuid}`} alt=""
+             key={"profile img"}/>
     );
 };

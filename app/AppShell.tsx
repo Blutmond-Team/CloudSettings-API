@@ -6,6 +6,7 @@ import {signIn, useSession} from "next-auth/react";
 import {UserProfileImg} from "@/app/UserProfileImg";
 import CloudSettingsLogo from '@/public/cloudsettings_logo_transparent.png';
 import {ProfileDropdown} from "@/app/ProfileDropdown";
+import {CloudSettingsSession} from "@/src/types/AuthTypes";
 
 type Props = {
     children: React.ReactNode
@@ -81,9 +82,11 @@ export function AppShell({children}: Props) {
                                 <div className="hidden sm:ml-6 sm:flex sm:items-center">
                                     {
                                         // Profile dropdown
-                                        user ? <ProfileDropdown user={user} navigation={userNavigation}/> :
+                                        user ? <ProfileDropdown session={session.data as CloudSettingsSession}
+                                                                navigation={userNavigation}/> :
                                             // Login Button
-                                            <div onClick={() => signIn('azure-ad')} className={"cursor-pointer"}>Log In</div>
+                                            <div onClick={() => signIn('azure-ad')} className={"cursor-pointer"}>Log
+                                                In</div>
                                     }
                                 </div>
                                 <div className="-mr-2 flex items-center sm:hidden">
@@ -123,7 +126,7 @@ export function AppShell({children}: Props) {
                             <div className="border-t border-gray-200 pb-3 pt-4">
                                 <div className="flex items-center px-4">
                                     <div className="flex-shrink-0">
-                                        <UserProfileImg user={user} className={"h-10 w-10 rounded-full"}/>
+                                        <UserProfileImg session={session.data as CloudSettingsSession} className={"h-10 w-10 rounded-full"}/>
                                     </div>
                                     <div className="ml-3">
                                         <div className="text-base font-medium text-gray-800">{user?.name}</div>
