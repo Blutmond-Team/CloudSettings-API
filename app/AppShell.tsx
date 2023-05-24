@@ -58,7 +58,10 @@ export function AppShell({children}: Props) {
     }, [session]);
     return (
         <div className={"min-h-full"}>
-            <Disclosure as={"nav"} className={"border-b border-gray-200 bg-white"}>
+            <Disclosure as={"nav"} className={
+                "border-b border-gray-200 bg-white " +
+                "dark:border-gray-900 dark:bg-pale-700"
+            }>
                 {({open}) => (
                     <>
                         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
@@ -83,8 +86,8 @@ export function AppShell({children}: Props) {
                                                 href={item.href}
                                                 className={classNames(
                                                     item.current(path)
-                                                        ? 'border-indigo-500 text-gray-900'
-                                                        : 'border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700',
+                                                        ? 'border-indigo-700 text-pale-900 dark:text-white'
+                                                        : 'border-transparent text-pale-500 hover:border-gray-300 hover:text-pale-800 dark:hover:text-pale-100',
                                                     'inline-flex items-center border-b-2 px-1 pt-1 text-sm font-medium'
                                                 )}
                                                 aria-current={item.current(path) ? 'page' : undefined}

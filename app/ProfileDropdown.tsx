@@ -15,11 +15,13 @@ function classNames(...classes: string[]) {
 }
 
 export const ProfileDropdown = ({session, navigation}: Props) => {
+    const userName = session?.postLogin ? session.minecraft.username : "Unknown?"
+
     return (
         <Menu as="div" className="relative ml-3">
             <div>
                 <Menu.Button
-                    className="flex max-w-xs items-center rounded-full bg-white text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
+                    className="flex max-w-xs items-center rounded-full bg-white dark:bg-transparent text-sm focus:outline-none focus:ring-2">
                     <span className="sr-only">Open user menu</span>
                     <UserProfileImg session={session} className={"h-8 w-8 rounded-full"}/>
                 </Menu.Button>
@@ -34,12 +36,16 @@ export const ProfileDropdown = ({session, navigation}: Props) => {
                 leaveTo="transform opacity-0 scale-95"
             >
                 <Menu.Items
-                    className="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+                    className="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white dark:bg-pale-800 py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none"
+                >
+                    <Menu.Item>
+                        <span className={"w-full text-center block px-4 py-2 text-pale-700 dark:text-white font-bold text-xl"}>{userName}</span>
+                    </Menu.Item>
                     {navigation.map((item) => (
                         <Menu.Item key={item.key}>
                             {({active}) => (
                                 <a href={item.href}
-                                   className={classNames(active ? 'bg-gray-100' : '', 'block px-4 py-2 text-sm text-gray-700')}
+                                   className={classNames(active ? 'bg-pale-100 dark:bg-pale-700' : '', 'block px-4 py-2 text-sm text-pale-700 dark:text-white')}
                                 >
                                     {item.name}
                                 </a>
@@ -48,8 +54,8 @@ export const ProfileDropdown = ({session, navigation}: Props) => {
                     ))}
                     <Menu.Item>
                         {({active}) => (
-                            <a onClick={()=> signOut()}
-                               className={classNames(active ? 'bg-gray-100 cursor-pointer' : '', 'block px-4 py-2 text-sm text-gray-700')}
+                            <a onClick={() => signOut()}
+                               className={classNames(active ? 'bg-pale-100 dark:bg-pale-700 cursor-pointer' : '', 'block px-4 py-2 text-sm text-pale-700 dark:text-white')}
                             >
                                 Sign Out
                             </a>
