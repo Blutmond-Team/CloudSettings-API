@@ -46,3 +46,15 @@ type SuccessSession = {
 type InternalSession = ErrorSession | SuccessSession;
 
 export type CloudSettingsSession = InternalSession & Session;
+
+export type MinecraftServicesProfile = {
+    id: string
+    name: string
+    success: true
+}
+
+export type MinecraftServicesProfileError = {
+    status: number
+    statusText: string
+    success: false
+}

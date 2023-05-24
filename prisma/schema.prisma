@@ -21,10 +21,12 @@ model User {
 }
 
 model Option {
-  id     Int    @id @default(autoincrement())
   user   User   @relation(fields: [userId], references: [id])
   userId String
   raw    String
+  key    String
+
+  @@id([userId, key])
 }
 
 enum Role {

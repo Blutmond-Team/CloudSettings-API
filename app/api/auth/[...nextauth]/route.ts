@@ -39,7 +39,7 @@ const handler = NextAuth({
                                 name: t.minecraftUserName as string
                             },
                             update: {
-                                name: t.name as string
+                                name: t.minecraftUserName as string
                             },
                             where: {
                                 id: t.minecraftUUID as string

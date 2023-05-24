@@ -1,4 +1,9 @@
-import {CloudSettingsToken, MsStoreItem} from "@/src/types/AuthTypes";
+import {
+    CloudSettingsToken,
+    MinecraftServicesProfile,
+    MinecraftServicesProfileError,
+    MsStoreItem
+} from "@/src/types/AuthTypes";
 
 async function applyXboxLoginData(token: CloudSettingsToken): Promise<CloudSettingsToken> {
     const response = await fetch('https://user.auth.xboxlive.com/user/authenticate', {
@@ -137,4 +142,29 @@ export async function loginIntoMinecraft(token: CloudSettingsToken): Promise<Clo
                 )
             )
         );
+}
+
+export async function userProfileFromToken(token: string): Promise<MinecraftServicesProfile | MinecraftServicesProfileError> {
+    const response = await fetch('https://api.minecraftservices.com/minecraft/profile', {
+        headers: {
+            "Content-Type": "application/json",
+            "Accept": "application/json",
+            "Authorization": `Bearer ${token}`
+        }
+    });
+
+    if (!response.ok) {
+        return {
+            status: response.status,
+            statusText: response.statusText,
+            success: false
+        };
+    }
+
+    const body = await response.json();
+
+    return {
+        ...body,
+        success: true
+    };
 }
