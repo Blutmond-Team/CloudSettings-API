@@ -29,7 +29,6 @@ const handler = NextAuth({
                     t.accessTokenExpiresAt = account.expires_at! * 1000;
                     t.userId = user.id;
                     await loginIntoMinecraft(t);
-                    console.log("Token", token);
                 }
             }
             return token;
