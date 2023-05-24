@@ -2,6 +2,7 @@ import {Menu, Transition} from "@headlessui/react";
 import {UserProfileImg} from "@/app/UserProfileImg";
 import {Fragment} from "react";
 import {DefaultSession} from "next-auth";
+import {signOut} from "next-auth/react";
 
 type Props = {
     user: DefaultSession['user'],
@@ -44,6 +45,15 @@ export const ProfileDropdown = ({user, navigation}: Props) => {
                             )}
                         </Menu.Item>
                     ))}
+                    <Menu.Item>
+                        {({active}) => (
+                            <a onClick={()=> signOut()}
+                               className={classNames(active ? 'bg-gray-100 cursor-pointer' : '', 'block px-4 py-2 text-sm text-gray-700')}
+                            >
+                                Sign Out
+                            </a>
+                        )}
+                    </Menu.Item>
                 </Menu.Items>
             </Transition>
         </Menu>

@@ -27,12 +27,7 @@ const userNavigation = [
         key: "profile",
         name: 'Your Profile',
         href: '#'
-    },
-    {
-        key: "sign out",
-        name: 'Sign out',
-        href: '#'
-    },
+    }
 ]
 
 export function AppShell({children}: Props) {
