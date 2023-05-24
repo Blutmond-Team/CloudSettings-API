@@ -1,7 +1,7 @@
 "use client"
 import {Disclosure} from '@headlessui/react'
 import {Bars3Icon, BellIcon, XMarkIcon} from '@heroicons/react/24/outline'
-import {useMemo} from "react";
+import {HTMLAttributeAnchorTarget, useMemo} from "react";
 import {signIn, useSession} from "next-auth/react";
 import {UserProfileImg} from "@/app/UserProfileImg";
 import CloudSettingsLogo from '@/public/cloudsettings_logo_transparent.png';
@@ -21,6 +21,7 @@ type NavigationItem = {
     name: string,
     href: string,
     current: (path: string) => boolean
+    target?: HTMLAttributeAnchorTarget
 }
 
 const navigation: NavigationItem[] = [
@@ -32,12 +33,14 @@ const navigation: NavigationItem[] = [
     {
         name: 'GitHub (Mod)',
         href: 'https://github.com/Blutmond-Team/CloudSettings-Mod',
-        current: () => false
+        current: () => false,
+        target: "_blank"
     },
     {
         name: 'GitHub (Web App)',
         href: 'https://github.com/Blutmond-Team/CloudSettings-API',
-        current: () => false
+        current: () => false,
+        target: "_blank"
     }
 ]
 
@@ -94,6 +97,7 @@ export function AppShell({children}: Props) {
                                             <a
                                                 key={item.name}
                                                 href={item.href}
+                                                target={item.target}
                                                 className={classNames(
                                                     item.current(path)
                                                         ? 'border-indigo-700 text-pale-900 dark:text-white'
