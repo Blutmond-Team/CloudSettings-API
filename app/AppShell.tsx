@@ -7,6 +7,7 @@ import {UserProfileImg} from "@/app/UserProfileImg";
 import CloudSettingsLogo from '@/public/cloudsettings_logo_transparent.png';
 import {ProfileDropdown} from "@/app/ProfileDropdown";
 import {CloudSettingsSession} from "@/src/types/AuthTypes";
+import {usePathname} from "next/navigation";
 
 type Props = {
     children: React.ReactNode
@@ -16,22 +17,37 @@ function classNames(...classes: string[]) {
     return classes.filter(Boolean).join(' ');
 }
 
-const navigation = [
-    {name: 'Dashboard', href: '#', current: true},
-    {name: 'Team', href: '#', current: false},
-    {name: 'Projects', href: '#', current: false},
-    {name: 'Calendar', href: '#', current: false},
+type NavigationItem = {
+    name: string,
+    href: string,
+    current: (path: string) => boolean
+}
+
+const navigation: NavigationItem[] = [
+    {
+        name: 'Home',
+        href: '/',
+        current: path => path === "" || path === "/"
+    }
 ]
 
-const userNavigation = [
+type UserNavigationItem = {
+    key: string,
+    name: string,
+    href: string
+}
+
+const userNavigation: UserNavigationItem[] = [
+    /*
     {
         key: "profile",
         name: 'Your Profile',
         href: '#'
-    }
+    }*/
 ]
 
 export function AppShell({children}: Props) {
+    const path = usePathname();
     const session = useSession();
     const user = useMemo(() => {
         switch (session.status) {
@@ -67,12 +83,12 @@ export function AppShell({children}: Props) {
                                                 key={item.name}
                                                 href={item.href}
                                                 className={classNames(
-                                                    item.current
+                                                    item.current(path)
                                                         ? 'border-indigo-500 text-gray-900'
                                                         : 'border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700',
                                                     'inline-flex items-center border-b-2 px-1 pt-1 text-sm font-medium'
                                                 )}
-                                                aria-current={item.current ? 'page' : undefined}
+                                                aria-current={item.current(path) ? 'page' : undefined}
                                             >
                                                 {item.name}
                                             </a>
@@ -112,12 +128,12 @@ export function AppShell({children}: Props) {
                                         as="a"
                                         href={item.href}
                                         className={classNames(
-                                            item.current
+                                            item.current(path)
                                                 ? 'border-indigo-500 bg-indigo-50 text-indigo-700'
                                                 : 'border-transparent text-gray-600 hover:border-gray-300 hover:bg-gray-50 hover:text-gray-800',
                                             'block border-l-4 py-2 pl-3 pr-4 text-base font-medium'
                                         )}
-                                        aria-current={item.current ? 'page' : undefined}
+                                        aria-current={item.current(path) ? 'page' : undefined}
                                     >
                                         {item.name}
                                     </Disclosure.Button>
@@ -126,7 +142,8 @@ export function AppShell({children}: Props) {
                             <div className="border-t border-gray-200 pb-3 pt-4">
                                 <div className="flex items-center px-4">
                                     <div className="flex-shrink-0">
-                                        <UserProfileImg session={session.data as CloudSettingsSession} className={"h-10 w-10 rounded-full"}/>
+                                        <UserProfileImg session={session.data as CloudSettingsSession}
+                                                        className={"h-10 w-10 rounded-full"}/>
                                     </div>
                                     <div className="ml-3">
                                         <div className="text-base font-medium text-gray-800">{user?.name}</div>
