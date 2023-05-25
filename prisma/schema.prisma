@@ -21,10 +21,11 @@ model User {
 }
 
 model Option {
-  user   User   @relation(fields: [userId], references: [id])
-  userId String
-  raw    String
-  key    String
+  user       User      @relation(fields: [userId], references: [id])
+  userId     String
+  raw        String
+  key        String
+  lastChange DateTime? @updatedAt
 
   @@id([userId, key])
 }
