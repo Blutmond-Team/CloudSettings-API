@@ -164,8 +164,8 @@ export function AppShell({children}: Props) {
                                                             className={"h-10 w-10"}/>
                                         </div>
                                         <div className="ml-3">
-                                            <div className="text-base font-medium text-gray-800">{user.postLogin ? user.minecraft.username : user.user?.name}</div>
-                                            <div className="text-sm font-medium text-gray-500">{user.postLogin ? user.minecraft.uuid : user.user?.email}</div>
+                                            <div className="text-base font-medium text-pale-800 dark:text-white">{user.postLogin ? user.minecraft.username : user.user?.name}</div>
+                                            <div className="text-sm font-medium text-pale-500 dark:text-pale-400">{user.postLogin ? user.minecraft.uuid : user.user?.email}</div>
                                         </div>
                                     </div>
                                     <div className="mt-3 space-y-1">
@@ -174,7 +174,7 @@ export function AppShell({children}: Props) {
                                                 key={item.name}
                                                 as="a"
                                                 href={item.href}
-                                                className="block px-4 py-2 text-base font-medium text-gray-500 hover:bg-gray-100 hover:text-gray-800"
+                                                className="block border-l-4 py-2 pl-3 pr-4 text-base font-medium border-transparent text-pale-600 dark:text-pale-400 hover:border-pale-300 hover:bg-pale-50 dark:hover:bg-pale-700 hover:text-pale-800 dark:hover:text-pale-50"
                                             >
                                                 {item.name}
                                             </Disclosure.Button>
@@ -182,7 +182,7 @@ export function AppShell({children}: Props) {
                                         <Disclosure.Button
                                             key={"sign out"}
                                             as="a"
-                                            className="block px-4 py-2 text-base font-medium text-gray-500 hover:bg-gray-100 hover:text-gray-800 cursor-pointer"
+                                            className="block border-l-4 py-2 pl-3 pr-4 text-base font-medium border-transparent text-pale-600 dark:text-pale-400 hover:border-pale-300 hover:bg-pale-50 dark:hover:bg-pale-700 hover:text-pale-800 dark:hover:text-pale-50 cursor-pointer"
                                             onClick={()=> signOut()}
                                         >
                                             Sign Out
@@ -193,7 +193,7 @@ export function AppShell({children}: Props) {
                                         <Disclosure.Button
                                             key={"sign out"}
                                             as="a"
-                                            className="block px-4 py-2 text-base font-medium text-gray-500 hover:bg-gray-100 hover:text-gray-800 cursor-pointer"
+                                            className="block border-l-4 py-2 pl-3 pr-4 text-base font-medium border-transparent text-pale-600 dark:text-pale-400 hover:border-pale-300 hover:bg-pale-50 dark:hover:bg-pale-700 hover:text-pale-800 dark:hover:text-pale-50 cursor-pointer"
                                             onClick={()=> signIn('azure-ad')}
                                         >
                                             Sign In
