@@ -1,8 +1,8 @@
 "use client"
 import {Disclosure} from '@headlessui/react'
-import {Bars3Icon, BellIcon, XMarkIcon} from '@heroicons/react/24/outline'
+import {Bars3Icon, XMarkIcon} from '@heroicons/react/24/outline'
 import {HTMLAttributeAnchorTarget, useMemo} from "react";
-import {signIn, useSession} from "next-auth/react";
+import {signIn, signOut, useSession} from "next-auth/react";
 import {UserProfileImg} from "@/app/UserProfileImg";
 import CloudSettingsLogo from '@/public/cloudsettings_logo_transparent.png';
 import {ProfileDropdown} from "@/app/ProfileDropdown";
@@ -67,7 +67,7 @@ export function AppShell({children}: Props) {
             default:
                 return undefined;
             case "authenticated":
-                return session.data.user;
+                return session.data as CloudSettingsSession;
         }
     }, [session]);
     return (
@@ -125,7 +125,7 @@ export function AppShell({children}: Props) {
                                 <div className="-mr-2 flex items-center sm:hidden">
                                     {/* Mobile menu button */}
                                     <Disclosure.Button
-                                        className="inline-flex items-center justify-center rounded-md bg-white p-2 text-gray-400 hover:bg-gray-100 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
+                                        className="inline-flex items-center justify-center rounded-md bg-white dark:bg-pale-700 p-2 text-pale-400 dark:text-white hover:bg-pale-100 dark:hover:bg-pale-600 hover:text-pale-500 dark:hover:text-white">
                                         <span className="sr-only">Open main menu</span>
                                         {open ? (
                                             <XMarkIcon className="block h-6 w-6" aria-hidden="true"/>
@@ -146,7 +146,7 @@ export function AppShell({children}: Props) {
                                         href={item.href}
                                         className={classNames(
                                             item.current(path)
-                                                ? 'border-indigo-500 bg-indigo-50 text-indigo-700'
+                                                ? 'border-indigo-500 bg-pale-100 dark:bg-pale-600 dark:text-white text-black'
                                                 : 'border-transparent text-gray-600 hover:border-gray-300 hover:bg-gray-50 hover:text-gray-800',
                                             'block border-l-4 py-2 pl-3 pr-4 text-base font-medium'
                                         )}
@@ -156,37 +156,51 @@ export function AppShell({children}: Props) {
                                     </Disclosure.Button>
                                 ))}
                             </div>
-                            <div className="border-t border-gray-200 pb-3 pt-4">
-                                <div className="flex items-center px-4">
-                                    <div className="flex-shrink-0">
-                                        <UserProfileImg session={session.data as CloudSettingsSession}
-                                                        className={"h-10 w-10 rounded-full"}/>
+                            {
+                                user ? <div className="border-t border-gray-200 pb-3 pt-4">
+                                    <div className="flex items-center px-4">
+                                        <div className="flex-shrink-0">
+                                            <UserProfileImg session={session.data as CloudSettingsSession}
+                                                            className={"h-10 w-10"}/>
+                                        </div>
+                                        <div className="ml-3">
+                                            <div className="text-base font-medium text-gray-800">{user.postLogin ? user.minecraft.username : user.user?.name}</div>
+                                            <div className="text-sm font-medium text-gray-500">{user.postLogin ? user.minecraft.uuid : user.user?.email}</div>
+                                        </div>
                                     </div>
-                                    <div className="ml-3">
-                                        <div className="text-base font-medium text-gray-800">{user?.name}</div>
-                                        <div className="text-sm font-medium text-gray-500">{user?.email}</div>
-                                    </div>
-                                    <button
-                                        type="button"
-                                        className="ml-auto flex-shrink-0 rounded-full bg-white p-1 text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-                                    >
-                                        <span className="sr-only">View notifications</span>
-                                        <BellIcon className="h-6 w-6" aria-hidden="true"/>
-                                    </button>
-                                </div>
-                                <div className="mt-3 space-y-1">
-                                    {userNavigation.map((item) => (
+                                    <div className="mt-3 space-y-1">
+                                        {userNavigation.map((item) => (
+                                            <Disclosure.Button
+                                                key={item.name}
+                                                as="a"
+                                                href={item.href}
+                                                className="block px-4 py-2 text-base font-medium text-gray-500 hover:bg-gray-100 hover:text-gray-800"
+                                            >
+                                                {item.name}
+                                            </Disclosure.Button>
+                                        ))}
                                         <Disclosure.Button
-                                            key={item.name}
+                                            key={"sign out"}
                                             as="a"
-                                            href={item.href}
-                                            className="block px-4 py-2 text-base font-medium text-gray-500 hover:bg-gray-100 hover:text-gray-800"
+                                            className="block px-4 py-2 text-base font-medium text-gray-500 hover:bg-gray-100 hover:text-gray-800 cursor-pointer"
+                                            onClick={()=> signOut()}
                                         >
-                                            {item.name}
+                                            Sign Out
                                         </Disclosure.Button>
-                                    ))}
+                                    </div>
+                                </div> : <div className="border-t border-gray-200 pb-3 pt-4">
+                                    <div className="mt-3 space-y-1">
+                                        <Disclosure.Button
+                                            key={"sign out"}
+                                            as="a"
+                                            className="block px-4 py-2 text-base font-medium text-gray-500 hover:bg-gray-100 hover:text-gray-800 cursor-pointer"
+                                            onClick={()=> signIn('azure-ad')}
+                                        >
+                                            Sign In
+                                        </Disclosure.Button>
+                                    </div>
                                 </div>
-                            </div>
+                            }
                         </Disclosure.Panel>
                     </>
                 )}
