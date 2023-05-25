@@ -19,7 +19,7 @@ function classNames(...classes: string[]) {
 
 export default function UsageStats({items, className = '', itemClassName = ''}: Props) {
     return (
-        <dl className={classNames("mt-5 grid grid-cols-1 gap-10 sm:grid-cols-2", className)}>
+        <dl className={classNames("mt-5 grid grid-cols-1 gap-10 sm:grid-cols-2 lg:grid-cols-3", className)}>
             {items.map((item) => (
                 <div
                     key={item.id}

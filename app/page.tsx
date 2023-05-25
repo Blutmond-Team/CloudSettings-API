@@ -1,5 +1,6 @@
 import Hero2x2Grid from "@/app/Hero2x2Grid";
 import {
+    ArrowDownOnSquareIcon,
     CircleStackIcon,
     CloudArrowUpIcon,
     EyeSlashIcon,
@@ -8,6 +9,8 @@ import {
 } from "@heroicons/react/24/outline";
 import UsageStats from "@/app/UsageStats";
 import {PrismaClient} from "@prisma/client";
+import * as process from "process";
+import {fetch} from "next/dist/compiled/@edge-runtime/primitives/fetch";
 
 export default async function Home() {
     const data = await getData();
@@ -44,7 +47,8 @@ export default async function Home() {
                 <UsageStats
                     items={[
                         {id: 1, name: 'Registered Users', stat: `${data.userCount}`, icon: UsersIcon},
-                        {id: 2, name: 'Stored Options', stat: `${data.optionsCount}`, icon: CircleStackIcon}
+                        {id: 2, name: 'Stored Options', stat: `${data.optionsCount}`, icon: CircleStackIcon},
+                        {id: 3, name: 'Total Downloads', stat: `${data.totalDownloads}`, icon: ArrowDownOnSquareIcon}
                     ]}
                 />
             </div>
@@ -54,9 +58,53 @@ export default async function Home() {
 
 async function getData() {
     const prisma = new PrismaClient();
+    let totalDownloads = 0;
+
+    if (process.env.CURSEFORGE_API_KEY) {
+        const response = await fetch('https://api.curseforge.com/v1/mods/622165', {
+            headers: {
+                "Accept": "application/json",
+                "x-api-key": process.env.CURSEFORGE_API_KEY
+            },
+            method: "GET"
+        });
+        if (response.ok) {
+            const body = await response.json();
+            const downloadCount = body.data.downloadCount as number;
+            totalDownloads += downloadCount;
+        } else {
+            console.error("Error on loading CurseForge Download Count", {
+                status: response.status,
+                statusText: response.statusText
+            })
+        }
+    }
+
+    if (process.env.MODRINTH_API_KEY) {
+        const response = await fetch('https://api.modrinth.com/v2/project/nnu4dJj4', {
+            headers: {
+                "Accept": "application/json",
+                "User-Agent:": "cloud settings web app (cloudsettings.blutmondgilde.de)",
+                "Authorization": process.env.MODRINTH_API_KEY
+            },
+            method: "GET"
+        });
+        if (response.ok) {
+            const body = await response.json();
+            const downloadCount = body.downloads as number;
+            totalDownloads += downloadCount;
+        } else {
+            console.error("Error on loading Modrinth Download Count", {
+                status: response.status,
+                statusText: response.statusText
+            })
+        }
+    }
+
     return {
         userCount: await prisma.user.count(),
-        optionsCount: await prisma.option.count()
+        optionsCount: await prisma.option.count(),
+        totalDownloads: totalDownloads
     }
 }
 

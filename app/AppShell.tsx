@@ -8,6 +8,7 @@ import CloudSettingsLogo from '@/public/cloudsettings_logo_transparent.png';
 import {ProfileDropdown} from "@/app/ProfileDropdown";
 import {CloudSettingsSession} from "@/src/types/AuthTypes";
 import {usePathname} from "next/navigation";
+import AppFooter from "@/app/AppFooter";
 
 type Props = {
     children: React.ReactNode
@@ -193,6 +194,7 @@ export function AppShell({children}: Props) {
             <div className="py-10">
                 {children}
             </div>
+            <AppFooter/>
         </div>
     );
 }
