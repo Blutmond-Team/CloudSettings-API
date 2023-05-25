@@ -11,9 +11,10 @@ type Props = {
     noteText: string
     title: string
     description?: string
+    bottomRow?: React.ReactNode
 }
 
-export default function Hero2x2Grid({noteText, items, title, description}: Props) {
+export default function Hero2x2Grid({noteText, items, title, description, bottomRow}: Props) {
     return (
         <div className="bg-white dark:bg-pale-800 py-24 sm:py-32">
             <div className="mx-auto max-w-7xl px-6 lg:px-8">
@@ -26,6 +27,11 @@ export default function Hero2x2Grid({noteText, items, title, description}: Props
                         {description}
                     </p>
                 </div>
+                {
+                    bottomRow && <div className="mx-auto max-w-2xl lg:max-w-4xl flex justify-center mt-7 gap-4">
+                        {bottomRow}
+                    </div>
+                }
                 <div className="mx-auto mt-16 max-w-2xl sm:mt-20 lg:mt-24 lg:max-w-4xl">
                     <dl className="grid max-w-xl grid-cols-1 gap-x-8 gap-y-10 lg:max-w-none lg:grid-cols-2 lg:gap-y-16">
                         {items.map((feature) => (
