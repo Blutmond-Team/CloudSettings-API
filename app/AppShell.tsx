@@ -157,7 +157,7 @@ export function AppShell({children}: Props) {
                                 ))}
                             </div>
                             {
-                                user ? <div className="border-t border-gray-200 pb-3 pt-4">
+                                user ? <div className="border-t border-pale-200 dark:border-pale-700 pb-3 pt-4">
                                     <div className="flex items-center px-4">
                                         <div className="flex-shrink-0">
                                             <UserProfileImg session={session.data as CloudSettingsSession}
