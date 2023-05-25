@@ -147,7 +147,7 @@ export function AppShell({children}: Props) {
                                         className={classNames(
                                             item.current(path)
                                                 ? 'border-indigo-500 bg-pale-100 dark:bg-pale-600 dark:text-white text-black'
-                                                : 'border-transparent text-gray-600 hover:border-gray-300 hover:bg-gray-50 hover:text-gray-800',
+                                                : 'border-transparent text-pale-600 dark:text-pale-400 hover:border-pale-300 hover:bg-pale-50 dark:hover:bg-pale-700 hover:text-pale-800 hover:text-pale-50',
                                             'block border-l-4 py-2 pl-3 pr-4 text-base font-medium'
                                         )}
                                         aria-current={item.current(path) ? 'page' : undefined}
