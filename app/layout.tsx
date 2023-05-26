@@ -20,6 +20,12 @@ export const metadata = {
         width: 'device-width',
         initialScale: 1,
         maximumScale: 1,
+    },
+    openGraph: {
+        title: 'CloudSettings',
+        description: 'Web App for the CloudSettings Minecraft Mod',
+        type: 'website',
+        url: 'https://cloudsettings.blutmondgilde.de/'
     }
 }
 
