@@ -39,7 +39,7 @@ export default async function Home() {
                     },
                     {
                         name: 'Privacy Respecting',
-                        description: "We're only interested in making your live easier therefor we just use your Minecraft UUID, Minecraft Name and the single line of impacted option. No more Data is stored.",
+                        description: "We're only interested in making your live easier therefore we just use your Minecraft UUID, Minecraft Name and the single line of impacted option. No more Data is stored.",
                         icon: EyeSlashIcon,
                     }
                 ]}
