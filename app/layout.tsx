@@ -2,6 +2,7 @@ import './globals.css'
 import {Inter} from 'next/font/google'
 import {AppShell} from "@/app/AppShell";
 import {AppProvider} from "@/app/AppProvider";
+import {Analytics} from "@vercel/analytics/react";
 
 const inter = Inter({subsets: ['latin']})
 
@@ -23,6 +24,7 @@ export default function RootLayout({children,}: Props) {
                 {children}
             </AppShell>
         </AppProvider>
+        <Analytics/>
         </body>
         </html>
     )
