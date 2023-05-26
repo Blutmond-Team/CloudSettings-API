@@ -8,7 +8,19 @@ const inter = Inter({subsets: ['latin']})
 
 export const metadata = {
     title: 'CloudSettings',
-    description: 'Management Interface for the CloudSettings Minecraft Mod',
+    description: 'Web App for the CloudSettings Minecraft Mod',
+    metadataBase: new URL('https://cloudsettings.blutmondgilde.de'),
+    appLinks: {
+        web: {
+            url: 'https://cloudsettings.blutmondgilde.de/',
+            should_fallback: true
+        }
+    },
+    viewport: {
+        width: 'device-width',
+        initialScale: 1,
+        maximumScale: 1,
+    }
 }
 
 type Props = {
