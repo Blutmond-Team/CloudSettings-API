@@ -67,3 +67,5 @@ async function getData(): Promise<{ users: UserData[] }> {
         }))
     }
 }
+
+export const revalidate = 500;
