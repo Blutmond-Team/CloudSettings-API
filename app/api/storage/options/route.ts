@@ -117,10 +117,12 @@ export async function POST(request: NextRequest) {
             create: {
                 userId: user.id,
                 raw: option,
-                key: id
+                key: id,
+                lastChange: new Date()
             },
             update: {
-                raw: option
+                raw: option,
+                lastChange: new Date()
             },
             where: {
                 userId_key: {

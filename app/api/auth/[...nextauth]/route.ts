@@ -1,10 +1,10 @@
-import NextAuth from "next-auth";
+import NextAuth, {NextAuthOptions} from "next-auth";
 import AzureAD from "next-auth/providers/azure-ad";
 import {CloudSettingsToken} from "@/src/types/AuthTypes";
 import {loginIntoMinecraft} from "@/src/utils/MicrosoftLoginUtils";
 import {PrismaClient} from "@prisma/client";
 
-const handler = NextAuth({
+export const authOptions: NextAuthOptions = {
     providers: [
         AzureAD({
             clientId: process.env.AZURE_AD_CLIENT_ID!,
@@ -71,7 +71,9 @@ const handler = NextAuth({
             };
         }
     }
-});
+};
+
+const handler = NextAuth(authOptions);
 
 export {handler as GET, handler as POST};
 export const dynamic = "force-dynamic";
