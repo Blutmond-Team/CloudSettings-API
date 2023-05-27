@@ -2,7 +2,6 @@ import SettingsTable from "@/app/profile/SettingsTable";
 import {PrismaClient} from "@prisma/client";
 import {getServerSession} from "next-auth";
 import {CloudSettingsSession} from "@/src/types/AuthTypes";
-import {getSession} from "next-auth/react";
 import {authOptions} from "@/app/api/auth/[...nextauth]/route";
 
 export default async function Home() {

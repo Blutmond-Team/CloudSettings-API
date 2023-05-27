@@ -1,5 +1,6 @@
 import {JWT} from "next-auth/jwt";
 import {Session} from "next-auth";
+import {Prisma} from "@prisma/client";
 
 type SuccessfulPostLogin = {
     xboxToken: string
@@ -40,7 +41,8 @@ type SuccessSession = {
     minecraft: {
         username: string,
         uuid: string
-    }
+    },
+    role: Prisma.UserGetPayload<{}>['role'];
 }
 
 type InternalSession = ErrorSession | SuccessSession;

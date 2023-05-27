@@ -1,6 +1,6 @@
 import NextAuth, {NextAuthOptions} from "next-auth";
 import AzureAD from "next-auth/providers/azure-ad";
-import {CloudSettingsToken} from "@/src/types/AuthTypes";
+import {CloudSettingsSession, CloudSettingsToken} from "@/src/types/AuthTypes";
 import {loginIntoMinecraft} from "@/src/utils/MicrosoftLoginUtils";
 import {PrismaClient} from "@prisma/client";
 
@@ -61,14 +61,22 @@ export const authOptions: NextAuthOptions = {
                 }
             }
 
+            const client = new PrismaClient();
+            const userRole = await client.user.findFirst({
+                where: {
+                    id: t.minecraftUUID!
+                }
+            });
+
             return {
                 ...session,
                 minecraft: {
                     username: t.minecraftUserName,
                     uuid: t.minecraftUUID
                 },
-                postLogin: true
-            };
+                postLogin: true,
+                role: userRole?.role ?? "USER"
+            } as CloudSettingsSession;
         }
     }
 };

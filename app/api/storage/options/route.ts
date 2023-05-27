@@ -42,7 +42,8 @@ export async function GET(request: NextRequest) {
             name: userProfile.name
         },
         update: {
-            name: userProfile.name
+            name: userProfile.name,
+            lastActivity: new Date()
         },
         where: {
             id: userProfile.id
@@ -102,7 +103,8 @@ export async function POST(request: NextRequest) {
             name: userProfile.name
         },
         update: {
-            name: userProfile.name
+            name: userProfile.name,
+            lastActivity: new Date()
         },
         where: {
             id: userProfile.id

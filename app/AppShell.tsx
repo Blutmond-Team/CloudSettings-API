@@ -43,21 +43,13 @@ const navigation: NavigationItem[] = [
         current: () => false,
         target: "_blank"
     }
-]
+];
 
 type UserNavigationItem = {
     key: string,
     name: string,
     href: string
 }
-
-const userNavigation: UserNavigationItem[] = [
-    {
-        key: "profile",
-        name: 'Your Profile',
-        href: '/profile'
-    }
-]
 
 export function AppShell({children}: Props) {
     const path = usePathname();
@@ -70,6 +62,29 @@ export function AppShell({children}: Props) {
                 return session.data as CloudSettingsSession;
         }
     }, [session]);
+
+    const userNavigation: UserNavigationItem[] = useMemo(() => {
+        const entries: UserNavigationItem[] = [
+            {
+                key: "profile",
+                name: 'Your Profile',
+                href: '/profile'
+            }
+        ];
+
+        if (user?.postLogin) {
+            if (user.role === "ADMIN") {
+                entries.push({
+                    key: "User Management",
+                    name: "User Management",
+                    href: "/admin/users"
+                })
+            }
+        }
+
+        return entries;
+    }, [user])
+
     return (
         <div className={"min-h-full"}>
             <Disclosure as={"nav"} className={
@@ -164,8 +179,10 @@ export function AppShell({children}: Props) {
                                                             className={"h-10 w-10"}/>
                                         </div>
                                         <div className="ml-3">
-                                            <div className="text-base font-medium text-pale-800 dark:text-white">{user.postLogin ? user.minecraft.username : user.user?.name}</div>
-                                            <div className="text-sm font-medium text-pale-500 dark:text-pale-400">{user.postLogin ? user.minecraft.uuid : user.user?.email}</div>
+                                            <div
+                                                className="text-base font-medium text-pale-800 dark:text-white">{user.postLogin ? user.minecraft.username : user.user?.name}</div>
+                                            <div
+                                                className="text-sm font-medium text-pale-500 dark:text-pale-400">{user.postLogin ? user.minecraft.uuid : user.user?.email}</div>
                                         </div>
                                     </div>
                                     <div className="mt-3 space-y-1">
@@ -183,7 +200,7 @@ export function AppShell({children}: Props) {
                                             key={"sign out"}
                                             as="a"
                                             className="block border-l-4 py-2 pl-3 pr-4 text-base font-medium border-transparent text-pale-600 dark:text-pale-400 hover:border-pale-300 hover:bg-pale-50 dark:hover:bg-pale-700 hover:text-pale-800 dark:hover:text-pale-50 cursor-pointer"
-                                            onClick={()=> signOut()}
+                                            onClick={() => signOut()}
                                         >
                                             Sign Out
                                         </Disclosure.Button>
@@ -194,7 +211,7 @@ export function AppShell({children}: Props) {
                                             key={"sign out"}
                                             as="a"
                                             className="block border-l-4 py-2 pl-3 pr-4 text-base font-medium border-transparent text-pale-600 dark:text-pale-400 hover:border-pale-300 hover:bg-pale-50 dark:hover:bg-pale-700 hover:text-pale-800 dark:hover:text-pale-50 cursor-pointer"
-                                            onClick={()=> signIn('azure-ad')}
+                                            onClick={() => signIn('azure-ad')}
                                         >
                                             Sign In
                                         </Disclosure.Button>
