@@ -19,6 +19,7 @@ export default async function Home() {
 }
 
 export type UserData = {
+    id: string
     name: string,
     role: Prisma.UserGetPayload<{}>['role'],
     jointAt: Date,
@@ -59,6 +60,7 @@ async function getData(): Promise<{ users: UserData[] }> {
 
     return {
         users: users.map(user => ({
+            id: user.id,
             name: user.name,
             role: user.role,
             jointAt: user.joinedAt,
