@@ -79,7 +79,7 @@ export async function POST(request: NextRequest, {params}: { params: { userId: s
     }
     console.log("Id", params.userId)
     console.log("User", user);
-    /*
+
     await prisma.user.update({
         where: {
             id: user.id
@@ -88,6 +88,6 @@ export async function POST(request: NextRequest, {params}: { params: { userId: s
             role: newRole
         }
     });
-*/
+
     return NextResponse.json({});
 };
