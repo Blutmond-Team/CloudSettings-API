@@ -51,7 +51,7 @@ export default function UserTable({title, description, items}: Props) {
                             <tbody className="divide-y divide-pale-200">
                             {items.map((item) => (
                                 <tr key={item.name}
-                                    className={"hover:bg-pale-50 transition-colors dark:hover:bg-pale-800"}>
+                                    className={"hover:bg-pale-50 transition-colors dark:hover:bg-pale-800 cursor-default select-none"}>
                                     <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-pale-900 sm:pl-0 dark:text-white">
                                         {item.name}
                                     </td>
