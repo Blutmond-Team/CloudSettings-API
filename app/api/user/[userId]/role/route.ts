@@ -5,7 +5,7 @@ import {CloudSettingsToken} from "@/src/types/AuthTypes";
 
 export const dynamic = "force-dynamic";
 
-export async function POST(request: NextRequest, params: { userId: string }) {
+export async function POST(request: NextRequest, {params}: { params: { userId: string } }) {
     const nextAuthToken = await getToken({req: request}) as CloudSettingsToken;
     if (!nextAuthToken) {
         return new Response("No valid session token found.", {
@@ -42,6 +42,13 @@ export async function POST(request: NextRequest, params: { userId: string }) {
         });
     }
 
+    if (!params.userId) {
+        return new Response("Target user not found.", {
+            status: 404,
+            statusText: "Target user not found."
+        });
+    }
+
     const user = await prisma.user.findFirst({
         where: {
             id: params.userId
@@ -70,7 +77,9 @@ export async function POST(request: NextRequest, params: { userId: string }) {
             statusText: "'role' element in payload is invalid."
         });
     }
-
+    console.log("Id", params.userId)
+    console.log("User", user);
+    /*
     await prisma.user.update({
         where: {
             id: user.id
@@ -79,6 +88,6 @@ export async function POST(request: NextRequest, params: { userId: string }) {
             role: newRole
         }
     });
-
+*/
     return NextResponse.json({});
 };

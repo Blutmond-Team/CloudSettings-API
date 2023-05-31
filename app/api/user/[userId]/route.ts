@@ -5,7 +5,7 @@ import {CloudSettingsToken} from "@/src/types/AuthTypes";
 
 export const dynamic = "force-dynamic";
 
-export async function DELETE(request: NextRequest, params: { userId: string }) {
+export async function DELETE(request: NextRequest, {params}: { params: { userId: string } }) {
     const nextAuthToken = await getToken({req: request}) as CloudSettingsToken;
     if (!nextAuthToken) {
         return new Response("No valid session token found.", {
