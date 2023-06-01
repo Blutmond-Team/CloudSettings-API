@@ -35,7 +35,7 @@ export async function DELETE(request: NextRequest, {params}: { params: { userId:
         });
     }
 
-    if (requestUser.role !== "MODERATOR" && requestUser.role !== "ADMIN") {
+    if (requestUser.role !== "MODERATOR" && requestUser.role !== "ADMIN" && requestUser.id !== params.userId) {
         return new Response("No Permission to do that.", {
             status: 401,
             statusText: "No Permission to do that."

@@ -25,7 +25,7 @@ export default function SettingsTable({title, description, items}: Props) {
         <div className="px-4 sm:px-6 lg:px-8">
             <div className="sm:flex sm:items-center">
                 <div className="sm:flex-auto">
-                    <h1 className="text-base font-semibold leading-6 text-pale-900 dark:text-white">{title}</h1>
+                    <h1 className="font-semibold leading-6 text-pale-900 dark:text-white text-2xl mb-2">{title}</h1>
                     {
                         description && <p className="mt-2 text-sm text-pale-700 dark:text-pale-200">
                             {description}

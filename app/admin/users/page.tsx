@@ -3,6 +3,7 @@ import {getServerSession} from "next-auth";
 import {CloudSettingsSession} from "@/src/types/AuthTypes";
 import {authOptions} from "@/app/api/auth/[...nextauth]/route";
 import UserTable from "@/app/admin/users/UserTable";
+import {redirect} from "next/navigation";
 
 export default async function Home() {
     const data = await getData();
@@ -30,6 +31,7 @@ export type UserData = {
 async function getData(): Promise<{ users: UserData[] }> {
     const session = await getServerSession(authOptions);
     if (!session) {
+        redirect('/');
         return {
             users: []
         }
@@ -37,12 +39,14 @@ async function getData(): Promise<{ users: UserData[] }> {
 
     const cloudSettingsSession = session as CloudSettingsSession;
     if (!cloudSettingsSession.postLogin) {
+        redirect('/');
         return {
             users: []
         }
     }
 
     if (cloudSettingsSession.role !== "ADMIN") {
+        redirect('/');
         return {
             users: []
         }
