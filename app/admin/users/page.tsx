@@ -1,10 +1,9 @@
-import {PrismaClient, Prisma} from "@prisma/client";
+import {PrismaClient, Prisma, Option} from "@prisma/client";
 import {getServerSession} from "next-auth";
 import {CloudSettingsSession} from "@/src/types/AuthTypes";
 import {authOptions} from "@/app/api/auth/[...nextauth]/route";
 import UserTable from "@/app/admin/users/UserTable";
 import {redirect} from "next/navigation";
-import {Option} from ".prisma/client";
 
 export default async function Home() {
     const data = await getData();
