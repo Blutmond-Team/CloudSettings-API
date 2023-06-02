@@ -4,6 +4,7 @@ import {CloudSettingsSession} from "@/src/types/AuthTypes";
 import {authOptions} from "@/app/api/auth/[...nextauth]/route";
 import UserTable from "@/app/admin/users/UserTable";
 import {redirect} from "next/navigation";
+import {Option} from ".prisma/client";
 
 export default async function Home() {
     const data = await getData();
@@ -25,7 +26,7 @@ export type UserData = {
     role: Prisma.UserGetPayload<{}>['role'],
     jointAt: Date,
     lastActivity: Date,
-    options: number
+    options: Option[]
 }
 
 async function getData(): Promise<{ users: UserData[] }> {
@@ -69,7 +70,7 @@ async function getData(): Promise<{ users: UserData[] }> {
             role: user.role,
             jointAt: user.joinedAt,
             lastActivity: user.lastActivity,
-            options: user.Option.length
+            options: user.Option
         }))
     }
 }

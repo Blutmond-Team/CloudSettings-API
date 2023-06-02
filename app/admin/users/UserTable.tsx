@@ -2,6 +2,8 @@
 import {UserData} from "@/app/admin/users/page";
 import {toast} from "react-toastify";
 import {Role} from "@prisma/client";
+import {useState} from "react";
+import {InspectUserModal} from "@/app/admin/users/InspectUserModal";
 
 type Props = {
     title: string
@@ -10,6 +12,8 @@ type Props = {
 }
 
 export default function UserTable({title, description, items}: Props) {
+    const [openModals, setOpenModals] = useState<Record<string, boolean>>({});
+
     return (
         <div className="px-4 sm:px-6 lg:px-8">
             <div className="sm:flex sm:items-center">
@@ -64,7 +68,7 @@ export default function UserTable({title, description, items}: Props) {
                                     <td className="whitespace-nowrap px-3 py-4 text-sm text-pale-500 dark:text-pale-200">{item.role}</td>
                                     <td className="whitespace-nowrap px-3 py-4 text-sm text-pale-500 dark:text-pale-200">{item.jointAt?.toLocaleString() ?? ""}</td>
                                     <td className="whitespace-nowrap px-3 py-4 text-sm text-pale-500 dark:text-pale-200">{item.lastActivity?.toLocaleString() ?? ""}</td>
-                                    <td className="whitespace-nowrap px-3 py-4 text-sm text-pale-500 dark:text-pale-200">{item.options}</td>
+                                    <td className="whitespace-nowrap px-3 py-4 text-sm text-pale-500 dark:text-pale-200">{item.options.length}</td>
                                     <td className="whitespace-nowrap px-3 py-4 text-sm text-pale-500 dark:text-pale-200">
                                         <span className="isolate inline-flex rounded-md shadow-sm">
                                             {
@@ -124,7 +128,6 @@ export default function UserTable({title, description, items}: Props) {
                                                                     className="relative inline-flex items-center rounded-md bg-white dark:bg-pale-800 px-3 py-2 text-sm font-semibold text-pale-900 dark:text-white ring-1 ring-inset ring-pale-300 dark:ring-pale-700 hover:bg-pale-50 dark:hover:bg-pale-700 focus:z-10 transition-colors"
                                                                     onClick={() => {
                                                                         const body: { role: Role } = {role: "BANNED"}
-
                                                                         fetch(`/api/user/${item.id}/role`, {
                                                                             method: "POST",
                                                                             headers: {
@@ -157,6 +160,34 @@ export default function UserTable({title, description, items}: Props) {
                                                 >
                                                     Ban User
                                                 </button>
+                                            }
+                                            {
+                                                item.options.length > 0 && <>
+                                                    <button
+                                                        className={"relative inline-flex items-center bg-white dark:bg-pale-800 px-3 py-2 text-sm font-semibold text-pale-900 dark:text-white ring-1 ring-inset ring-pale-300 dark:ring-pale-700 hover:bg-pale-50 dark:hover:bg-pale-700 focus:z-10 transition-colors"}
+                                                        onClick={() => {
+                                                            const copy = {
+                                                                ...openModals
+                                                            };
+                                                            copy[item.id] = true;
+                                                            setOpenModals(copy);
+                                                        }}
+                                                    >
+                                                        Inspect Options
+                                                    </button>
+                                                    <InspectUserModal
+                                                        userName={item.name}
+                                                        options={item.options}
+                                                        open={openModals[item.id] ?? false}
+                                                        setOpen={value => {
+                                                            const copy = {
+                                                                ...openModals
+                                                            };
+                                                            copy[item.id] = value;
+                                                            setOpenModals(copy);
+                                                        }}
+                                                    />
+                                                </>
                                             }
                                             <button
                                                 type="button"

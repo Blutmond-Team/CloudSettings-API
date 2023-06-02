@@ -89,5 +89,7 @@ export async function POST(request: NextRequest, {params}: { params: { userId: s
         }
     });
 
+    await prisma.$disconnect();
+
     return NextResponse.json({});
 };

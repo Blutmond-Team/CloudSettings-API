@@ -68,6 +68,8 @@ export const authOptions: NextAuthOptions = {
                 }
             });
 
+            await client.$disconnect();
+
             return {
                 ...session,
                 minecraft: {

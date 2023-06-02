@@ -56,6 +56,8 @@ export async function GET(request: NextRequest) {
         }
     });
 
+    await prisma.$disconnect();
+
     return NextResponse.json({
         options: Options.map(option => option.raw)
     });
