@@ -1,7 +1,7 @@
 import {Fragment} from 'react'
 import {Dialog, Transition} from '@headlessui/react'
-import {ExclamationTriangleIcon, XMarkIcon} from '@heroicons/react/24/outline'
-import {Option} from ".prisma/client";
+import {XMarkIcon} from '@heroicons/react/24/outline'
+import {Option} from "@prisma/client";
 import SettingsTable from "@/app/profile/SettingsTable";
 
 type Props = {
