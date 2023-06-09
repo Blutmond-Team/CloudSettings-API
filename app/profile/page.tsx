@@ -24,6 +24,7 @@ export default async function Home() {
                 <SettingsTable
                     title={"Stored Options"}
                     description={"A list of all stored options. Be careful when editing them!"}
+                    showLastEdited={false}
                     items={data.options.map(option => {
                         return {
                             key: option.key,

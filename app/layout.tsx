@@ -36,7 +36,7 @@ type Props = {
 export default function RootLayout({children,}: Props) {
     return (
         <html lang="en" className={"h-full"}>
-        <body className={`${inter.className} h-full`}>
+        <body className={`${inter.className} min-h-screen`}>
         <AppProvider>
             <AppShell>
                 {children}

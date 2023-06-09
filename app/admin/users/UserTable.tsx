@@ -58,7 +58,7 @@ export default function UserTable({title, description, items}: Props) {
                     }
                 </div>
             </div>
-            <div className="mt-8 flow-root">
+            <div className="mt-8 flow-root user-table-items overflow-y-auto overflow-x-hidden">
                 <div className="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
                     <div className="inline-block min-w-full py-2 align-middle sm:px-6 lg:px-8">
                         <table className="min-w-full divide-y divide-pale-300 dark:divide-pale-600">
@@ -85,7 +85,7 @@ export default function UserTable({title, description, items}: Props) {
                                     </div>
                                 </th>
                                 <th scope="col"
-                                    className="px-3 py-3.5 text-left text-sm font-semibold text-pale-900 dark:text-white select-none"
+                                    className="px-3 py-3.5 text-left text-sm font-semibold text-pale-900 dark:text-white select-none hidden lg:table-cell"
                                 >
                                     Role
                                 </th>
@@ -163,12 +163,12 @@ export default function UserTable({title, description, items}: Props) {
                                     <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-pale-900 sm:pl-0 dark:text-white">
                                         {item.name}
                                     </td>
-                                    <td className="whitespace-nowrap px-3 py-4 text-sm text-pale-500 dark:text-pale-200">{item.role}</td>
+                                    <td className="whitespace-nowrap px-3 py-4 text-sm text-pale-500 dark:text-pale-200 hidden lg:table-cell">{item.role}</td>
                                     <td className="whitespace-nowrap px-3 py-4 text-sm text-pale-500 dark:text-pale-200">{item.jointAt?.toLocaleString() ?? ""}</td>
                                     <td className="whitespace-nowrap px-3 py-4 text-sm text-pale-500 dark:text-pale-200">{item.lastActivity?.toLocaleString() ?? ""}</td>
                                     <td className="whitespace-nowrap px-3 py-4 text-sm text-pale-500 dark:text-pale-200">{item.options.length}</td>
                                     <td className="whitespace-nowrap px-3 py-4 text-sm text-pale-500 dark:text-pale-200">
-                                        <span className="isolate inline-flex rounded-md shadow-sm">
+                                        <span className="isolate rounded-md shadow-sm flex-col lg:columns-3 columns-1">
                                             {
                                                 item.role === "BANNED" ? <button
                                                     type="button"
