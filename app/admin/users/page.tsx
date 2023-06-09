@@ -12,6 +12,7 @@ export default async function Home() {
             <div className={"max-w-screen-xl flex-grow"}>
                 <UserTable
                     title={"User Data"}
+                    description={`${data.users.length ?? 0} Total Users`}
                     items={data.users}
                 />
             </div>

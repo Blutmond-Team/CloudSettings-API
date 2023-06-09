@@ -2,8 +2,9 @@
 import {UserData} from "@/app/admin/users/page";
 import {toast} from "react-toastify";
 import {Role} from "@prisma/client";
-import {useState} from "react";
+import {useMemo, useState} from "react";
 import {InspectUserModal} from "@/app/admin/users/InspectUserModal";
+import {ArrowDownIcon, ArrowUpIcon} from "@heroicons/react/24/outline";
 
 type Props = {
     title: string
@@ -11,8 +12,39 @@ type Props = {
     items: UserData[],
 }
 
+type SortingMethod = "Last Activity decreasing" | "Last Activity increasing" |
+    "Joined decreasing" | "Joined increasing" |
+    "Stored Option count decreasing" | "Stored Option count increasing" |
+    "Username decreasing" | "Username increasing";
+
 export default function UserTable({title, description, items}: Props) {
     const [openModals, setOpenModals] = useState<Record<string, boolean>>({});
+    const [sortingMethod, setSortingMethod] = useState<SortingMethod>("Last Activity decreasing");
+
+    const sortedItems = useMemo(() => {
+        return items.sort((a, b) => {
+            switch (sortingMethod) {
+                default:
+                    return 0;
+                case "Username decreasing":
+                    return a.name.localeCompare(b.name);
+                case "Username increasing":
+                    return b.name.localeCompare(a.name);
+                case "Joined decreasing":
+                    return b.jointAt.getTime() - a.jointAt.getTime();
+                case "Joined increasing":
+                    return a.jointAt.getTime() - b.jointAt.getTime();
+                case "Last Activity decreasing":
+                    return b.lastActivity.getTime() - a.lastActivity.getTime();
+                case "Last Activity increasing":
+                    return a.lastActivity.getTime() - b.lastActivity.getTime();
+                case "Stored Option count decreasing":
+                    return b.options.length - a.options.length;
+                case "Stored Option count increasing":
+                    return a.options.length - b.options.length;
+            }
+        });
+    }, [items, sortingMethod]);
 
     return (
         <div className="px-4 sm:px-6 lg:px-8">
@@ -33,24 +65,89 @@ export default function UserTable({title, description, items}: Props) {
                             <thead>
                             <tr>
                                 <th scope="col"
-                                    className="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-pale-900 dark:text-white sm:pl-0">
-                                    Username
+                                    className="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-pale-900 dark:text-white sm:pl-0 cursor-pointer select-none hover:bg-pale-50 transition-colors dark:hover:bg-pale-800"
+                                    onClick={() => {
+                                        if (sortingMethod === "Username decreasing") {
+                                            setSortingMethod("Username increasing");
+                                        } else {
+                                            setSortingMethod("Username decreasing");
+                                        }
+                                    }}
+                                >
+                                    <div className={"flex justify-between"}>
+                                        <span>
+                                            Username
+                                        </span>
+                                        {sortingMethod === "Username increasing" &&
+                                            <ArrowUpIcon
+                                                className={"w-4"}/>} {sortingMethod === "Username decreasing" &&
+                                        <ArrowDownIcon className={"w-4"}/>}
+                                    </div>
                                 </th>
                                 <th scope="col"
-                                    className="px-3 py-3.5 text-left text-sm font-semibold text-pale-900 dark:text-white">
+                                    className="px-3 py-3.5 text-left text-sm font-semibold text-pale-900 dark:text-white select-none"
+                                >
                                     Role
                                 </th>
                                 <th scope="col"
-                                    className="px-3 py-3.5 text-left text-sm font-semibold text-pale-900 dark:text-white">
-                                    Joined
+                                    className="px-3 py-3.5 text-left text-sm font-semibold text-pale-900 dark:text-white cursor-pointer select-none hover:bg-pale-50 transition-colors dark:hover:bg-pale-800"
+                                    onClick={() => {
+                                        if (sortingMethod === "Joined decreasing") {
+                                            setSortingMethod("Joined increasing");
+                                        } else {
+                                            setSortingMethod("Joined decreasing");
+                                        }
+                                    }}
+                                >
+                                    <div className={"flex justify-between"}>
+                                        <span>
+                                            Joined
+                                        </span>
+                                        {sortingMethod === "Joined increasing" &&
+                                            <ArrowUpIcon
+                                                className={"w-4"}/>} {sortingMethod === "Joined decreasing" &&
+                                        <ArrowDownIcon className={"w-4"}/>}
+                                    </div>
                                 </th>
                                 <th scope="col"
-                                    className="px-3 py-3.5 text-left text-sm font-semibold text-pale-900 dark:text-white">
-                                    Last activity
+                                    className="px-3 py-3.5 text-left text-sm font-semibold text-pale-900 dark:text-white cursor-pointer select-none hover:bg-pale-50 transition-colors dark:hover:bg-pale-800"
+                                    onClick={() => {
+                                        if (sortingMethod === "Last Activity decreasing") {
+                                            setSortingMethod("Last Activity increasing");
+                                        } else {
+                                            setSortingMethod("Last Activity decreasing");
+                                        }
+                                    }}
+                                >
+                                    <div className={"flex justify-between"}>
+                                        <span>
+                                            Last activity
+                                        </span>
+                                        {sortingMethod === "Last Activity increasing" &&
+                                            <ArrowUpIcon
+                                                className={"w-4"}/>} {sortingMethod === "Last Activity decreasing" &&
+                                        <ArrowDownIcon className={"w-4"}/>}
+                                    </div>
                                 </th>
                                 <th scope="col"
-                                    className="px-3 py-3.5 text-left text-sm font-semibold text-pale-900 dark:text-white">
-                                    Stored Options
+                                    className="px-3 py-3.5 text-left text-sm font-semibold text-pale-900 dark:text-white cursor-pointer select-none hover:bg-pale-50 transition-colors dark:hover:bg-pale-800"
+                                    onClick={() => {
+                                        if (sortingMethod === "Stored Option count decreasing") {
+                                            setSortingMethod("Stored Option count increasing");
+                                        } else {
+                                            setSortingMethod("Stored Option count decreasing");
+                                        }
+                                    }}
+                                >
+                                    <div className={"flex justify-between"}>
+                                        <span>
+                                            Stored Options
+                                        </span>
+                                        {sortingMethod === "Stored Option count increasing" &&
+                                            <ArrowUpIcon
+                                                className={"w-4"}/>} {sortingMethod === "Stored Option count decreasing" &&
+                                        <ArrowDownIcon className={"w-4"}/>}
+                                    </div>
                                 </th>
                                 <th scope="col"
                                     className="px-3 py-3.5 text-left text-sm font-semibold text-pale-900 dark:text-white">
@@ -59,9 +156,10 @@ export default function UserTable({title, description, items}: Props) {
                             </tr>
                             </thead>
                             <tbody className="divide-y divide-pale-200">
-                            {items.map((item) => (
+                            {sortedItems.map((item) => (
                                 <tr key={item.name}
-                                    className={"hover:bg-pale-50 transition-colors dark:hover:bg-pale-800 cursor-default select-none"}>
+                                    className={"hover:bg-pale-50 transition-colors dark:hover:bg-pale-800 cursor-default select-none"}
+                                >
                                     <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-pale-900 sm:pl-0 dark:text-white">
                                         {item.name}
                                     </td>
