@@ -1,5 +1,7 @@
 "use client"
-import {useMemo} from "react";
+import {useMemo, useTransition} from "react";
+import ButtonWithIcon from "@/app/ButtonWithIcon";
+import {ArrowPathIcon} from "@heroicons/react/24/outline";
 
 export type TableItem = {
     key: string,
@@ -12,9 +14,11 @@ type Props = {
     description?: string
     items: TableItem[],
     showLastEdited?: boolean
+    revalidateFunction: VoidFunction
 }
 
-export default function SettingsTable({title, description, items, showLastEdited = true}: Props) {
+export default function SettingsTable({title, description, items, revalidateFunction, showLastEdited = true}: Props) {
+    const [isPending, startTransition] = useTransition();
     const cachedItems: TableItem[] = useMemo(() => {
         if (items.length == 0) {
             return [
@@ -35,25 +39,38 @@ export default function SettingsTable({title, description, items, showLastEdited
 
     return (
         <div className="px-4 sm:px-6 lg:px-8">
-            {
-                (title || description) && <div className="sm:flex sm:items-center">
-                    <div className="sm:flex-auto">
-                        {
-                            title &&
-                            <h1 className="font-semibold leading-6 text-pale-900 dark:text-white text-2xl mb-2">{title}</h1>
-                        }
+            <div className={"sm:flex sm:justify-between grid-cols-1"}>
+                {
+                    (title || description) && <div className="sm:flex sm:items-center">
+                        <div className="sm:flex-auto">
+                            {
+                                title &&
+                                <h1 className="font-semibold leading-6 text-pale-900 dark:text-white text-2xl mb-2">{title}</h1>
+                            }
 
-                        {
-                            description && <p className="mt-2 text-sm text-pale-700 dark:text-pale-200">
-                                {description}
-                            </p>
-                        }
+                            {
+                                description && <p className="mt-2 text-sm text-pale-700 dark:text-pale-200">
+                                    {description}
+                                </p>
+                            }
+
+                        </div>
                     </div>
+                }
+                <div className={"mt-2 flex justify-center sm:justify-end"}>
+                    <ButtonWithIcon
+                        text={"Refresh Data"}
+                        icon={classNames => <ArrowPathIcon className={classNames}/>}
+                        onClick={() => startTransition(() => revalidateFunction())}
+                        size={"large"}
+                        className={"dark:bg-pale-700 bg-pale"}
+                    />
                 </div>
-            }
-            <div className="mt-8 flow-root">
+            </div>
+            <div className="mt-2 sm:mt-8 flow-root">
                 <div className="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
-                    <div className="inline-block min-w-full py-2 align-middle sm:px-6 lg:px-8 settings-table-items overflow-y-auto overflow-x-hidden">
+                    <div
+                        className="inline-block min-w-full py-2 align-middle sm:px-6 lg:px-8 settings-table-items overflow-y-auto overflow-x-hidden">
                         <table className="min-w-full divide-y divide-pale-300 dark:divide-pale-600">
                             <thead>
                             <tr>

@@ -54,13 +54,17 @@ export default function UserTable({title, description, items, revalidateFunction
                 <div className="sm:flex-auto">
                     <h1 className="text-base font-semibold leading-6 text-pale-900 dark:text-white">{title}</h1>
                     {
-                        description && <p className="mt-2 text-sm text-pale-700 dark:text-pale-200">
+                        description && <p
+                            className="mt-2 text-sm text-pale-700 dark:text-pale-200 cursor-pointer dark:hover:text-blue-300 transition-colors"
+                            onClick={() => startTransition(() => revalidateFunction())}
+                            title={"Click to refresh data"}
+                        >
                             {description}
                         </p>
                     }
                 </div>
             </div>
-            <div className="mt-8 flow-root user-table-items overflow-y-auto overflow-x-hidden">
+            <div className="mt-8 flow-root user-table-items overflow-y-auto overflow-x-hidden max-w-full">
                 <div className="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
                     <div className="inline-block min-w-full py-2 align-middle sm:px-6 lg:px-8">
                         <table className="min-w-full divide-y divide-pale-300 dark:divide-pale-600">
@@ -92,7 +96,7 @@ export default function UserTable({title, description, items, revalidateFunction
                                     Role
                                 </th>
                                 <th scope="col"
-                                    className="px-3 py-3.5 text-left text-sm font-semibold text-pale-900 dark:text-white cursor-pointer select-none hover:bg-pale-50 transition-colors dark:hover:bg-pale-800"
+                                    className="px-3 py-3.5 text-left text-sm font-semibold text-pale-900 dark:text-white cursor-pointer select-none hover:bg-pale-50 transition-colors dark:hover:bg-pale-800 hidden md:table-cell"
                                     onClick={() => {
                                         if (sortingMethod === "Joined decreasing") {
                                             setSortingMethod("Joined increasing");
@@ -166,7 +170,7 @@ export default function UserTable({title, description, items, revalidateFunction
                                         {item.name}
                                     </td>
                                     <td className="whitespace-nowrap px-3 py-4 text-sm text-pale-500 dark:text-pale-200 hidden lg:table-cell">{item.role}</td>
-                                    <td className="whitespace-nowrap px-3 py-4 text-sm text-pale-500 dark:text-pale-200">{item.jointAt?.toLocaleString() ?? ""}</td>
+                                    <td className="whitespace-nowrap px-3 py-4 text-sm text-pale-500 dark:text-pale-200 hidden md:table-cell">{item.jointAt?.toLocaleString() ?? ""}</td>
                                     <td className="whitespace-nowrap px-3 py-4 text-sm text-pale-500 dark:text-pale-200">{item.lastActivity?.toLocaleString() ?? ""}</td>
                                     <td className="whitespace-nowrap px-3 py-4 text-sm text-pale-500 dark:text-pale-200">{item.options.length}</td>
                                     <td className="whitespace-nowrap px-3 py-4 text-sm text-pale-500 dark:text-pale-200">

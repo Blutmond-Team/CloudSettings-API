@@ -5,8 +5,13 @@ import {CloudSettingsSession} from "@/src/types/AuthTypes";
 import {authOptions} from "@/app/api/auth/[...nextauth]/route";
 import {DeleteAccountButton} from "@/app/profile/DeleteAccountButton";
 import {redirect} from "next/navigation";
+import {revalidatePath} from "next/cache";
 
 export default async function Home() {
+    async function revalidatePage(){
+        "use server";
+        revalidatePath('/profile');
+    }
     const data = await getData();
 
     return (
@@ -32,6 +37,7 @@ export default async function Home() {
                             //lastChanged: option.lastChange
                         }
                     })}
+                    revalidateFunction={revalidatePage}
                 />
             </div>
         </div>
