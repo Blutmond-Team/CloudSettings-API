@@ -4,8 +4,13 @@ import {CloudSettingsSession} from "@/src/types/AuthTypes";
 import {authOptions} from "@/app/api/auth/[...nextauth]/route";
 import UserTable from "@/app/admin/users/UserTable";
 import {redirect} from "next/navigation";
+import {revalidatePath} from "next/cache";
 
 export default async function Home() {
+    async function revalidatePage(){
+        "use server";
+        revalidatePath('/admin/users');
+    }
     const data = await getData();
     return (
         <div className={"flex justify-center"}>
@@ -14,6 +19,7 @@ export default async function Home() {
                     title={"User Data"}
                     description={`${data.users.length ?? 0} Total Users`}
                     items={data.users}
+                    revalidateFunction={revalidatePage}
                 />
             </div>
         </div>

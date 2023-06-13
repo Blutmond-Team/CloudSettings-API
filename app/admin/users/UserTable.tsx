@@ -2,7 +2,7 @@
 import {UserData} from "@/app/admin/users/page";
 import {toast} from "react-toastify";
 import {Role} from "@prisma/client";
-import {useMemo, useState} from "react";
+import {useMemo, useState, useTransition} from "react";
 import {InspectUserModal} from "@/app/admin/users/InspectUserModal";
 import {ArrowDownIcon, ArrowUpIcon} from "@heroicons/react/24/outline";
 
@@ -10,6 +10,7 @@ type Props = {
     title: string
     description?: string
     items: UserData[],
+    revalidateFunction: VoidFunction
 }
 
 type SortingMethod = "Last Activity decreasing" | "Last Activity increasing" |
@@ -17,7 +18,8 @@ type SortingMethod = "Last Activity decreasing" | "Last Activity increasing" |
     "Stored Option count decreasing" | "Stored Option count increasing" |
     "Username decreasing" | "Username increasing";
 
-export default function UserTable({title, description, items}: Props) {
+export default function UserTable({title, description, items, revalidateFunction}: Props) {
+    const [isPending, startTransition] = useTransition();
     const [openModals, setOpenModals] = useState<Record<string, boolean>>({});
     const [sortingMethod, setSortingMethod] = useState<SortingMethod>("Last Activity decreasing");
 
@@ -199,6 +201,7 @@ export default function UserTable({title, description, items}: Props) {
                                                                                     theme: window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light',
                                                                                     type: "success"
                                                                                 })
+                                                                                startTransition(() => revalidateFunction());
                                                                             }
                                                                         })
                                                                     }}
@@ -242,6 +245,7 @@ export default function UserTable({title, description, items}: Props) {
                                                                                     theme: window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light',
                                                                                     type: "success"
                                                                                 })
+                                                                                startTransition(() => revalidateFunction());
                                                                             }
                                                                         })
                                                                     }}
@@ -313,6 +317,7 @@ export default function UserTable({title, description, items}: Props) {
                                                                                 theme: window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light',
                                                                                 type: "success"
                                                                             })
+                                                                            startTransition(() => revalidateFunction());
                                                                         }
                                                                     })
                                                                 }}
