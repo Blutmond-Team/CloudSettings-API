@@ -9,8 +9,9 @@ type Props = {
     options: Option[]
     open: boolean
     setOpen: (value: boolean) => void
+    revalidate: VoidFunction
 }
-export const InspectUserModal = ({userName, options, open, setOpen}: Props) => {
+export const InspectUserModal = ({userName, options, open, setOpen, revalidate}: Props) => {
 
     return (
         <Transition.Root show={open} as={Fragment}>
@@ -64,6 +65,7 @@ export const InspectUserModal = ({userName, options, open, setOpen}: Props) => {
                                                     value: value.raw,
                                                 }))}
                                                 showLastEdited={false}
+                                                revalidateFunction={revalidate}
                                             />
                                         </div>
                                     </div>

@@ -292,6 +292,7 @@ export default function UserTable({title, description, items, revalidateFunction
                                                             copy[item.id] = value;
                                                             setOpenModals(copy);
                                                         }}
+                                                        revalidate={revalidateFunction}
                                                     />
                                                 </>
                                             }
