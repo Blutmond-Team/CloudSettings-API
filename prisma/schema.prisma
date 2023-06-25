@@ -18,6 +18,7 @@ model User {
   joinedAt     DateTime @default(now())
   lastActivity DateTime @updatedAt
   Option       Option[]
+  Logins       Login[]
 }
 
 model Option {
@@ -28,6 +29,20 @@ model Option {
   lastChange DateTime? @updatedAt
 
   @@id([userId, key])
+}
+
+model Login {
+  id              String      @id
+  userId          String
+  user            User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  loginToken      LoginToken? @relation(fields: [loginTokenToken], references: [token], onDelete: Cascade)
+  loginTokenToken String?     @unique
+}
+
+model LoginToken {
+  token     String   @id
+  createdAt DateTime @default(now())
+  Logins    Login?
 }
 
 enum Role {

@@ -88,7 +88,7 @@ export default async function Home() {
                 }
             />
 
-            <div className={"px-10 pt-5 lg:px-20 xl:px-[7.5rem] 2xl:px-[12.5rem]"}>
+            <div className={"px-10 pt-5 lg:px-20 xl:px-[7.5rem] 2xl:px-[12.5rem] dark:bg-pale-800 bg-white"}>
                 <UsageStats
                     items={[
                         {id: 1, name: 'Registered Users', stat: `${data.userCount}`, icon: UsersIcon},
