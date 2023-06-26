@@ -5,6 +5,8 @@ import {
     MsStoreItem
 } from "@/src/types/AuthTypes";
 
+import * as crypto from "crypto";
+
 async function applyXboxLoginData(token: CloudSettingsToken): Promise<CloudSettingsToken> {
     const response = await fetch('https://user.auth.xboxlive.com/user/authenticate', {
         method: "POST",
@@ -167,4 +169,32 @@ export async function userProfileFromToken(token: string): Promise<MinecraftServ
         ...body,
         success: true
     };
+}
+
+export function mcHexDigest(str: string) {
+    const hash = new Buffer(crypto.createHash('sha1').update(str).digest('binary'));
+    // check for negative hashes
+    const negative = hash.readInt8(0) < 0;
+    if (negative) performTwosCompliment(hash);
+    let digest = hash.toString('hex');
+    // trim leading zeroes
+    digest = digest.replace(/^0+/g, '');
+    if (negative) digest = '-' + digest;
+    return digest;
+
+}
+
+function performTwosCompliment(buffer: Buffer) {
+    let carry = true;
+    let i, newByte, value;
+    for (i = buffer.length - 1; i >= 0; --i) {
+        value = buffer.readUInt8(i);
+        newByte = ~value & 0xff;
+        if (carry) {
+            carry = newByte === 0xff;
+            buffer.writeUInt8(carry ? 0 : newByte + 1, i);
+        } else {
+            buffer.writeUInt8(newByte, i);
+        }
+    }
 }

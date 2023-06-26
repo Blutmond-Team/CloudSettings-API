@@ -1,6 +1,7 @@
 import {NextRequest, NextResponse} from "next/server";
 import * as crypto from "crypto";
 import {PrismaClient} from "@prisma/client";
+import {mcHexDigest} from "@/src/utils/MicrosoftLoginUtils";
 
 export const dynamic = "force-dynamic";
 
@@ -40,13 +41,7 @@ export async function POST(request: NextRequest) {
     });
 
     // Generate Server id
-    const serverHash = crypto.createHash("sha1")
-        .update(body.username)
-        .digest();
-    const serverId = BigInt.asIntN(
-        160,
-        serverHash.reduce((a, x) => a << 8n | BigInt(x), 0n)
-    ).toString(16);
+    const serverId = mcHexDigest(body.username);
 
     if (!user) {
         await prisma.user.create({
