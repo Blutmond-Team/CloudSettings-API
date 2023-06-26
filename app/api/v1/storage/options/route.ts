@@ -25,7 +25,7 @@ export async function GET(request: NextRequest) {
             token: token
         },
         include: {
-            Logins: {
+            Login: {
                 include: {
                     user: true
                 }
@@ -33,7 +33,7 @@ export async function GET(request: NextRequest) {
         }
     });
 
-    if (!loginData || !loginData.Logins) {
+    if (!loginData || !loginData.Login) {
         return new Response('Invalid Session Token', {
             status: 401,
             statusText: 'Invalid Session Token'
@@ -49,7 +49,7 @@ export async function GET(request: NextRequest) {
 
     const Options = await prisma.option.findMany({
         where: {
-            userId: loginData.Logins.user.id
+            userId: loginData.Login.user.id
         }
     });
 
@@ -83,7 +83,7 @@ export async function POST(request: NextRequest) {
             token: token
         },
         include: {
-            Logins: {
+            Login: {
                 include: {
                     user: true
                 }
@@ -91,7 +91,7 @@ export async function POST(request: NextRequest) {
         }
     });
 
-    if (!loginData || !loginData.Logins) {
+    if (!loginData || !loginData.Login) {
         return new Response('Invalid Session Token', {
             status: 401,
             statusText: 'Invalid Session Token'
@@ -105,7 +105,7 @@ export async function POST(request: NextRequest) {
         });
     }
 
-    const userId = loginData.Logins.user.id;
+    const userId = loginData.Login.user.id;
 
     const body = await request.json();
     const promises: Promise<any>[] = [];
