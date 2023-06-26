@@ -6,6 +6,7 @@ import {
 } from "@/src/types/AuthTypes";
 
 import * as crypto from "crypto";
+import * as process from "process";
 
 async function applyXboxLoginData(token: CloudSettingsToken): Promise<CloudSettingsToken> {
     const response = await fetch('https://user.auth.xboxlive.com/user/authenticate', {
@@ -172,29 +173,37 @@ export async function userProfileFromToken(token: string): Promise<MinecraftServ
 }
 
 export function mcHexDigest(str: string) {
-    const hash = new Buffer(crypto.createHash('sha1').update(str).digest('binary'));
-    // check for negative hashes
-    const negative = hash.readInt8(0) < 0;
-    if (negative) performTwosCompliment(hash);
-    let digest = hash.toString('hex');
-    // trim leading zeroes
-    digest = digest.replace(/^0+/g, '');
-    if (negative) digest = '-' + digest;
-    return digest;
+    // The hex digest is the hash made below.
+    // However, when this hash is negative (meaning its MSB is 1, as it is in two's complement), instead of leaving it
+    // like that, we make it positive and simply put a '-' in front of it. This is a simple process: as you always do
+    // with 2's complement you simply flip all bits and add 1
 
-}
+    let hash = crypto.createHash('sha1')
+        .update('') // serverId = just an empty string
+        .update(str)
+        .digest()
 
-function performTwosCompliment(buffer: Buffer) {
-    let carry = true;
-    let i, newByte, value;
-    for (i = buffer.length - 1; i >= 0; --i) {
-        value = buffer.readUInt8(i);
-        newByte = ~value & 0xff;
-        if (carry) {
-            carry = newByte === 0xff;
-            buffer.writeUInt8(carry ? 0 : newByte + 1, i);
-        } else {
-            buffer.writeUInt8(newByte, i);
+    // Negative check: check if the most significant bit of the hash is a 1.
+    const isNegative = (hash.readUInt8(0) & (1 << 7)) !== 0 // when 0, it is positive
+
+    if (isNegative) {
+        // Flip all bits and add one. Start at the right to make sure the carry works
+        const inverted = Buffer.allocUnsafe(hash.length)
+        let carry = 0
+        for (let i = hash.length - 1; i >= 0; i--) {
+            let num = (hash.readUInt8(i) ^ 0b11111111) // a byte XOR a byte of 1's = the inverse of the byte
+            if (i === hash.length - 1) num++
+            num += carry
+            carry = Math.max(0, num - 0b11111111)
+            num = Math.min(0b11111111, num)
+            inverted.writeUInt8(num, i)
         }
+        hash = inverted
     }
+    let result = hash.toString('hex').replace(/^0+/, '')
+    // If the result was negative, add a '-' sign
+    if (isNegative) result = `-${result}`
+
+    return result
+
 }
