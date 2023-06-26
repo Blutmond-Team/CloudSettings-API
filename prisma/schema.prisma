@@ -12,13 +12,14 @@ datasource db {
 }
 
 model User {
-  id           String   @id
+  id           String       @id
   name         String
-  role         Role     @default(USER)
-  joinedAt     DateTime @default(now())
-  lastActivity DateTime @updatedAt
+  role         Role         @default(USER)
+  joinedAt     DateTime     @default(now())
+  lastActivity DateTime     @updatedAt
   Option       Option[]
   Logins       Login[]
+  LoginToken   LoginToken[]
 }
 
 model Option {
@@ -32,17 +33,21 @@ model Option {
 }
 
 model Login {
-  id              String      @id
-  userId          String
-  user            User        @relation(fields: [userId], references: [id], onDelete: Cascade)
-  loginToken      LoginToken? @relation(fields: [loginTokenToken], references: [token], onDelete: Cascade)
-  loginTokenToken String?     @unique
+  serverId   String
+  userId     String
+  user       User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  LoginToken LoginToken[]
+
+  @@id([serverId, userId])
 }
 
 model LoginToken {
   token     String   @id
   createdAt DateTime @default(now())
-  Logins    Login?
+  serverId  String
+  userId    String
+  Login     Login    @relation(fields: [serverId, userId], references: [serverId, userId])
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 enum Role {

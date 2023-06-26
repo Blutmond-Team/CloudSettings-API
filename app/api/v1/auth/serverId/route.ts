@@ -56,9 +56,23 @@ export async function POST(request: NextRequest) {
                 Logins: {
                     create: [
                         {
-                            id: serverId
+                            serverId: serverId
                         }
                     ]
+                }
+            }
+        });
+    } else {
+        await prisma.login.upsert({
+            create: {
+                serverId: serverId,
+                userId: user.id,
+            },
+            update: {},
+            where: {
+                serverId_userId: {
+                    serverId: serverId,
+                    userId: user.id
                 }
             }
         });

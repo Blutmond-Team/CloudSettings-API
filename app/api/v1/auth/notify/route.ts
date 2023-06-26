@@ -38,8 +38,10 @@ export async function POST(request: NextRequest) {
     const prisma = new PrismaClient();
     const login = await prisma.login.findFirst({
         where: {
-            id: body.serverId,
-            userId: body.uuid
+            AND: {
+                userId: body.uuid,
+                serverId: body.serverId
+            }
         },
         include: {
             user: true
@@ -53,7 +55,7 @@ export async function POST(request: NextRequest) {
         });
     }
 
-    const mojangLoginResponse = await fetch(`https://sessionserver.mojang.com/session/minecraft/hasJoined?username=${encodeURI(body.username)}&serverId=${encodeURI(login.id)}`, {
+    const mojangLoginResponse = await fetch(`https://sessionserver.mojang.com/session/minecraft/hasJoined?username=${encodeURI(body.username)}&serverId=${encodeURI(login.serverId)}`, {
         headers: {
             "Content-Type": "application/json",
             "Accept": "application/json",
@@ -62,9 +64,16 @@ export async function POST(request: NextRequest) {
     });
 
     if (!mojangLoginResponse.ok) {
-        return new Response(`Mojang declined your request`, {
+        return new Response(`Mojang declined your request. ${mojangLoginResponse.status}`, {
+            status: mojangLoginResponse.status,
+            statusText: mojangLoginResponse.statusText
+        });
+    }
+
+    if (mojangLoginResponse.status === 204) {
+        return new Response(`Missing body from mojang response`, {
             status: 401,
-            statusText: `Mojang declined your request`
+            statusText: `Missing body from mojang response`
         });
     }
 
@@ -80,6 +89,7 @@ export async function POST(request: NextRequest) {
     let userAccessToken = crypto.randomUUID();
     let uniqueCheck = await prisma.loginToken.findFirst({
         where: {
+            userId: login.userId,
             token: userAccessToken
         }
     });
@@ -95,6 +105,8 @@ export async function POST(request: NextRequest) {
 
     const loginToken = await prisma.loginToken.create({
         data: {
+            serverId: login.serverId,
+            userId: login.userId,
             token: userAccessToken
         }
     });
@@ -102,29 +114,16 @@ export async function POST(request: NextRequest) {
     await prisma.user.update({
         data: {
             name: trustedUserProfile.name,
-            lastActivity: new Date(),
-            Logins: {
-                update: {
-                    data: {
-                        loginTokenToken: loginToken.token
-                    },
-                    where: {
-                        id: login.id
-                    }
-                }
-            }
+            lastActivity: new Date()
         },
         where: {
             id: trustedUserProfile.id
-        },
-        include: {
-            Logins: true
         }
     });
 
     await prisma.$disconnect();
 
     return NextResponse.json({
-        token: userAccessToken
+        token: loginToken.token
     });
 }

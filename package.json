@@ -10,6 +10,7 @@
     "prisma:pull": "pnpm exec prisma db pull",
     "prisma:generate": "pnpm exec prisma generate",
     "prisma:migrate": "pnpm exec prisma migrate dev --name init",
+    "prisma:migrate_local": "pnpm exec prisma migrate dev --create-only",
     "vercel-build": "prisma generate && prisma migrate deploy && next build"
   },
   "dependencies": {
