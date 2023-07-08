@@ -5,22 +5,34 @@ import {authOptions} from "@/app/api/auth/[...nextauth]/route";
 import UserTable from "@/app/admin/users/UserTable";
 import {redirect} from "next/navigation";
 import {revalidatePath} from "next/cache";
+import {NewUserGraph} from "@/app/admin/users/NewUserGraph";
+import {TotalUserGraph} from "@/app/admin/users/TotalUserGraph";
 
 export default async function Home() {
-    async function revalidatePage(){
+    async function revalidatePage() {
         "use server";
         revalidatePath('/admin/users');
     }
+
     const data = await getData();
     return (
-        <div className={"flex justify-center"}>
-            <div className={"max-w-screen-xl flex-grow"}>
-                <UserTable
-                    title={"User Data"}
-                    description={`${data.users.length ?? 0} Total Users`}
-                    items={data.users}
-                    revalidateFunction={revalidatePage}
-                />
+        <div className={"justify-center grid-cols-1"}>
+            <div className={"flex justify-center"}>
+                <div className={"max-w-screen-xl flex-grow flex justify-around"}>
+                    <NewUserGraph data={data.users}/>
+                    <TotalUserGraph data={data.users}/>
+                </div>
+            </div>
+            <div className={"flex justify-center"}>
+                <div className={"max-w-screen-xl flex-grow"}>
+                    <UserTable
+                        title={"User Data"}
+                        description={`${data.users.length ?? 0} Total Users (${data.users.filter(value => value.lastActivity.setHours(0, 0, 0, 0) === new Date().setHours(0, 0, 0,
+                            0)).length} Active)`}
+                        items={data.users}
+                        revalidateFunction={revalidatePage}
+                    />
+                </div>
             </div>
         </div>
     )

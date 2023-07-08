@@ -18,7 +18,7 @@
 
 body {
     color: rgb(var(--foreground-rgb));
-    background: no-repeat linear-gradient(to bottom, rgb(var(--background-start-rgb)), rgb(var(--background-end-rgb)));
+    background: radial-gradient(rgb(var(--background-start-rgb)), rgb(var(--background-end-rgb)));
 }
 
 .user-table-items {
