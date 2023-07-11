@@ -17,7 +17,7 @@
   "dependencies": {
     "@headlessui/react": "*",
     "@heroicons/react": "*",
-    "@prisma/client": "^4.16.2",
+    "@prisma/client": "^5.0.0",
     "@types/lodash": "^4.14.195",
     "@types/node": "^20.4.1",
     "@types/react": "^18.2.14",
