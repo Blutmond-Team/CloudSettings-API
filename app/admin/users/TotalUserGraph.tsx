@@ -54,7 +54,9 @@ export const TotalUserGraph = ({data}: Props) => {
                     stroke={"#8884d8"}
                     fill={"#8884d8"}
                 />
-                <Tooltip/>
+                <Tooltip
+                    wrapperClassName={"!bg-white dark:!bg-pale-800"}
+                />
             </AreaChart>
         </div>
     )

@@ -1,6 +1,6 @@
 "use client"
 import {UserData} from "@/app/admin/users/page";
-import {Area, AreaChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxis} from "recharts";
+import {Area, AreaChart, CartesianGrid, Tooltip, XAxis, YAxis} from "recharts";
 import * as _ from "lodash"
 import {useMemo} from "react";
 
@@ -52,7 +52,9 @@ export const NewUserGraph = ({data}: Props) => {
                     stroke={"#8884d8"}
                     fill={"#8884d8"}
                 />
-                <Tooltip/>
+                <Tooltip
+                    wrapperClassName={"!bg-white dark:!bg-pale-800"}
+                />
             </AreaChart>
         </div>
     )
