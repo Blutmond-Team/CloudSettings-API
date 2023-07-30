@@ -16,7 +16,7 @@ model User {
   name         String
   role         Role         @default(USER)
   joinedAt     DateTime     @default(now())
-  lastActivity DateTime     @updatedAt
+  lastActivity DateTime     @updatedAt @default(now())
   Option       Option[]
   Logins       Login[]
   LoginToken   LoginToken[]
