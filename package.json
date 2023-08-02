@@ -30,7 +30,7 @@
     "next": "^13.4.12",
     "next-auth": "^4.22.3",
     "postcss": "^8.4.27",
-    "prisma": "^4.16.2",
+    "prisma": "^5.1.0",
     "react": "*",
     "react-dom": "*",
     "react-toastify": "*",
