@@ -6,7 +6,6 @@ import {
 } from "@/src/types/AuthTypes";
 
 import * as crypto from "crypto";
-import * as process from "process";
 
 async function applyXboxLoginData(token: CloudSettingsToken): Promise<CloudSettingsToken> {
     const response = await fetch('https://user.auth.xboxlive.com/user/authenticate', {
@@ -130,8 +129,15 @@ async function getMinecraftProfile(token: CloudSettingsToken): Promise<CloudSett
     }
 
     const responseBody = await response.json();
+
+    if ((responseBody.id as string).startsWith("000000000000")) {
+        token.error = "Invalid User UUID. Maybe Cracked? ";
+        console.error(token.error);
+        return Promise.reject(token);
+    }
+
     token.minecraftUserName = responseBody.name;
-    token.minecraftUUID = responseBody.id;
+    token.minecraftUUID = (responseBody.id as string).replaceAll('-', '');
 
     return token;
 }
@@ -145,31 +151,6 @@ export async function loginIntoMinecraft(token: CloudSettingsToken): Promise<Clo
                 )
             )
         );
-}
-
-export async function userProfileFromToken(token: string): Promise<MinecraftServicesProfile | MinecraftServicesProfileError> {
-    const response = await fetch('https://api.minecraftservices.com/minecraft/profile', {
-        headers: {
-            "Content-Type": "application/json",
-            "Accept": "application/json",
-            "Authorization": `Bearer ${token}`
-        }
-    });
-
-    if (!response.ok) {
-        return {
-            status: response.status,
-            statusText: response.statusText,
-            success: false
-        };
-    }
-
-    const body = await response.json();
-
-    return {
-        ...body,
-        success: true
-    };
 }
 
 export function mcHexDigest(str: string) {

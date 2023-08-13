@@ -46,7 +46,7 @@ export async function POST(request: NextRequest) {
     if (!user) {
         await prisma.user.create({
             data: {
-                id: body.uuid,
+                id: (body.uuid as string).replaceAll('-', ''),
                 name: body.username,
                 Logins: {
                     create: [
