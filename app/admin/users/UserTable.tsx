@@ -5,6 +5,7 @@ import {Role} from "@prisma/client";
 import {useMemo, useState, useTransition} from "react";
 import {InspectUserModal} from "@/app/admin/users/InspectUserModal";
 import {ArrowDownIcon, ArrowUpIcon} from "@heroicons/react/24/outline";
+import Image from "next/image";
 
 type Props = {
     title: string
@@ -70,6 +71,10 @@ export default function UserTable({title, description, items, revalidateFunction
                         <table className="min-w-full divide-y divide-pale-300 dark:divide-pale-600">
                             <thead>
                             <tr>
+                                <th scope="col"
+                                    className="px-3 py-3.5 text-left text-sm font-semibold text-pale-900 dark:text-white">
+                                    User Head
+                                </th>
                                 <th scope="col"
                                     className="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-pale-900 dark:text-white sm:pl-0 cursor-pointer select-none hover:bg-pale-50 transition-colors dark:hover:bg-pale-800"
                                     onClick={() => {
@@ -166,6 +171,14 @@ export default function UserTable({title, description, items, revalidateFunction
                                 <tr key={item.name}
                                     className={"hover:bg-pale-50 transition-colors dark:hover:bg-pale-800 cursor-default select-none"}
                                 >
+                                    <td className="whitespace-nowrap px-3 py-4 text-sm text-pale-500 dark:text-pale-200">
+                                        <Image
+                                            src={`https://mc-heads.net/avatar/${item.id}`}
+                                            alt={"Player Head"}
+                                            width={32}
+                                            height={32}
+                                        />
+                                    </td>
                                     <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-pale-900 sm:pl-0 dark:text-white">
                                         {item.name}
                                     </td>

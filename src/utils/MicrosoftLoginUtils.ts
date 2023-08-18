@@ -130,14 +130,25 @@ async function getMinecraftProfile(token: CloudSettingsToken): Promise<CloudSett
 
     const responseBody = await response.json();
 
-    if ((responseBody.id as string).startsWith("000000000000")) {
-        token.error = "Invalid User UUID. Maybe Cracked? ";
+    const uuid = (responseBody.id as string).replaceAll('-', '');
+    const validateUUID = await fetch('https://playerdb.co/api/player/minecraft/' + uuid);
+
+    if (!validateUUID.ok) {
+        token.error = "User UUID validation failed. Request Failed.";
+        console.error(token.error);
+        return Promise.reject(token);
+    }
+
+    const validationBody = await validateUUID.json();
+
+    if (!validationBody.success) {
+        token.error = "User UUID validation failed. Invalid User!";
         console.error(token.error);
         return Promise.reject(token);
     }
 
     token.minecraftUserName = responseBody.name;
-    token.minecraftUUID = (responseBody.id as string).replaceAll('-', '');
+    token.minecraftUUID = uuid;
 
     return token;
 }
