@@ -31,7 +31,7 @@ export default async function Home() {
                     <UserTable
                         title={"User Data"}
                         description={`${data.users.length ?? 0} Total Users (${data.users.filter(value => new Date(value.lastActivity).setHours(0, 0, 0, 0) === new Date().setHours(0, 0, 0,
-                            0)).length} Active)`}
+                            0)).length} Active, ${data.users.filter(value => !value.verified).length} Unverified)`}
                         items={data.users}
                         revalidateFunction={revalidatePage}
                     />
@@ -47,7 +47,8 @@ export type UserData = {
     role: UserGetPayload<{}>['role'],
     jointAt: Date,
     lastActivity: Date,
-    options: Option[]
+    options: Option[],
+    verified: boolean
 }
 
 async function getData(): Promise<{ users: UserData[] }> {
@@ -92,7 +93,8 @@ async function getData(): Promise<{ users: UserData[] }> {
             role: user.role,
             jointAt: user.joinedAt,
             lastActivity: user.lastActivity,
-            options: user.Option
+            options: user.Option,
+            verified: user.verified
         }))
     }
 }

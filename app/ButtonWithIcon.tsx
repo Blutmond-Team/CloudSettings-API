@@ -1,3 +1,4 @@
+import { classNames } from "@/src/utils/ClassNames";
 import {HTMLAttributeAnchorTarget, MouseEventHandler} from "react";
 
 type Props = {
@@ -10,9 +11,7 @@ type Props = {
     target?: HTMLAttributeAnchorTarget
 }
 
-function classNames(...classes: string[]) {
-    return classes.filter(Boolean).join(' ')
-}
+
 
 export default function ButtonWithIcon({size = "default", className = '', icon, text = '', onClick, href, target}: Props) {
     const commonClassNames = "inline-flex items-center rounded-md text-sm font-semibold text-white shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"

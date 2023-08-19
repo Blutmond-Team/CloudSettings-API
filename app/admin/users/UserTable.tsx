@@ -6,6 +6,8 @@ import {InspectUserModal} from "@/app/admin/users/InspectUserModal";
 import {ArrowDownIcon, ArrowUpIcon} from "@heroicons/react/24/outline";
 import Image from "next/image";
 import {Role} from ".prisma/client";
+import {Switch} from "@headlessui/react";
+import {classNames} from "@/src/utils/ClassNames";
 
 type Props = {
     title: string
@@ -23,9 +25,16 @@ export default function UserTable({title, description, items, revalidateFunction
     const [isPending, startTransition] = useTransition();
     const [openModals, setOpenModals] = useState<Record<string, boolean>>({});
     const [sortingMethod, setSortingMethod] = useState<SortingMethod>("Last Activity decreasing");
+    const [shouldHideUnverified, setHideUnverified] = useState<boolean>(true);
 
     const sortedItems = useMemo(() => {
-        return items.sort((a, b) => {
+        let userData = items;
+
+        if (shouldHideUnverified) {
+            userData = userData.filter(value => value.verified);
+        }
+
+        return userData.sort((a, b) => {
             switch (sortingMethod) {
                 default:
                     return 0;
@@ -47,7 +56,7 @@ export default function UserTable({title, description, items, revalidateFunction
                     return a.options.length - b.options.length;
             }
         });
-    }, [items, sortingMethod]);
+    }, [items, shouldHideUnverified, sortingMethod]);
 
     return (
         <div className="px-4 sm:px-6 lg:px-8">
@@ -63,6 +72,33 @@ export default function UserTable({title, description, items, revalidateFunction
                             {description}
                         </p>
                     }
+                </div>
+                <div className="sm:flex-auto">
+                    <div className={"w-fit ml-auto"}>
+                        <Switch.Group as="div" className="flex items-center justify-between">
+                          <span className="flex flex-grow flex-col">
+                            <Switch.Label as="span" className="text-sm font-medium leading-6 text-black dark:text-white mr-1" passive>
+                              Hide Unverified Users:
+                            </Switch.Label>
+                          </span>
+                            <Switch
+                                checked={shouldHideUnverified}
+                                onChange={setHideUnverified}
+                                className={classNames(
+                                    shouldHideUnverified ? 'bg-indigo-600' : 'bg-pale-200 dark:bg-pale-700',
+                                    'relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out'
+                                )}
+                            >
+                                <span
+                                    aria-hidden="true"
+                                    className={classNames(
+                                        shouldHideUnverified ? 'translate-x-5' : 'translate-x-0',
+                                        'pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out'
+                                    )}
+                                />
+                            </Switch>
+                        </Switch.Group>
+                    </div>
                 </div>
             </div>
             <div className="mt-8 flow-root user-table-items overflow-y-auto overflow-x-hidden max-w-full">
