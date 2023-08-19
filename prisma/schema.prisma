@@ -16,10 +16,11 @@ model User {
   name         String
   role         Role         @default(USER)
   joinedAt     DateTime     @default(now())
-  lastActivity DateTime     @updatedAt @default(now())
+  lastActivity DateTime     @default(now()) @updatedAt
   Option       Option[]
   Logins       Login[]
   LoginToken   LoginToken[]
+  verified     Boolean      @default(false)
 }
 
 model Option {

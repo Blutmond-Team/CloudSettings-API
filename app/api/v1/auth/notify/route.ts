@@ -114,7 +114,8 @@ export async function POST(request: NextRequest) {
     await prisma.user.update({
         data: {
             name: trustedUserProfile.name,
-            lastActivity: new Date()
+            lastActivity: new Date(),
+            verified: true
         },
         where: {
             id: trustedUserProfile.id

@@ -1,11 +1,11 @@
 "use client"
 import {UserData} from "@/app/admin/users/page";
 import {toast} from "react-toastify";
-import {Role} from "@prisma/client";
 import {useMemo, useState, useTransition} from "react";
 import {InspectUserModal} from "@/app/admin/users/InspectUserModal";
 import {ArrowDownIcon, ArrowUpIcon} from "@heroicons/react/24/outline";
 import Image from "next/image";
+import {Role} from ".prisma/client";
 
 type Props = {
     title: string

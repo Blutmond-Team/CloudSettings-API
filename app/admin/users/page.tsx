@@ -1,12 +1,15 @@
-import {PrismaClient, Prisma, Option} from "@prisma/client";
+import {PrismaClient} from "@prisma/client";
 import {getServerSession} from "next-auth";
-import {CloudSettingsSession} from "@/src/types/AuthTypes";
+import type {CloudSettingsSession} from "@/src/types/AuthTypes";
 import {authOptions} from "@/app/api/auth/[...nextauth]/route";
 import UserTable from "@/app/admin/users/UserTable";
 import {redirect} from "next/navigation";
 import {revalidatePath} from "next/cache";
 import {NewUserGraph} from "@/app/admin/users/NewUserGraph";
 import {TotalUserGraph} from "@/app/admin/users/TotalUserGraph";
+import type {Option} from ".prisma/client";
+import {Prisma} from ".prisma/client";
+import UserGetPayload = Prisma.UserGetPayload;
 
 export default async function Home() {
     async function revalidatePage() {
@@ -41,7 +44,7 @@ export default async function Home() {
 export type UserData = {
     id: string
     name: string,
-    role: Prisma.UserGetPayload<{}>['role'],
+    role: UserGetPayload<{}>['role'],
     jointAt: Date,
     lastActivity: Date,
     options: Option[]
@@ -80,6 +83,7 @@ async function getData(): Promise<{ users: UserData[] }> {
             lastActivity: 'desc'
         }
     });
+
 
     return {
         users: users.map(user => ({
