@@ -27,7 +27,7 @@ export default async function Home() {
                 <div className={"max-w-screen-xl flex-grow"}>
                     <UserTable
                         title={"User Data"}
-                        description={`${data.users.length ?? 0} Total Users (${data.users.filter(value => value.lastActivity.setHours(0, 0, 0, 0) === new Date().setHours(0, 0, 0,
+                        description={`${data.users.length ?? 0} Total Users (${data.users.filter(value => new Date(value.lastActivity).setHours(0, 0, 0, 0) === new Date().setHours(0, 0, 0,
                             0)).length} Active)`}
                         items={data.users}
                         revalidateFunction={revalidatePage}
