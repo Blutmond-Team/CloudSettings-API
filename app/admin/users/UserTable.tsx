@@ -5,7 +5,7 @@ import {useMemo, useState, useTransition} from "react";
 import {InspectUserModal} from "@/app/admin/users/InspectUserModal";
 import {ArrowDownIcon, ArrowUpIcon} from "@heroicons/react/24/outline";
 import Image from "next/image";
-import {Role} from ".prisma/client";
+import type {Role} from "@prisma/client";
 import {Switch} from "@headlessui/react";
 import {classNames} from "@/src/utils/ClassNames";
 
@@ -77,7 +77,9 @@ export default function UserTable({title, description, items, revalidateFunction
                     <div className={"w-fit ml-auto"}>
                         <Switch.Group as="div" className="flex items-center justify-between">
                           <span className="flex flex-grow flex-col">
-                            <Switch.Label as="span" className="text-sm font-medium leading-6 text-black dark:text-white mr-1" passive>
+                            <Switch.Label as="span"
+                                          className="text-sm font-medium leading-6 text-black dark:text-white mr-1"
+                                          passive>
                               Hide Unverified Users:
                             </Switch.Label>
                           </span>

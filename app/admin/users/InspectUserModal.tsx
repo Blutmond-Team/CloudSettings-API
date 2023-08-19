@@ -2,7 +2,7 @@ import {Fragment} from 'react'
 import {Dialog, Transition} from '@headlessui/react'
 import {XMarkIcon} from '@heroicons/react/24/outline'
 import SettingsTable from "@/app/profile/SettingsTable";
-import {Option} from ".prisma/client";
+import type {Option} from "@prisma/client";
 
 type Props = {
     userName: string

@@ -1,4 +1,4 @@
-import {PrismaClient} from "@prisma/client";
+import {PrismaClient, Prisma} from "@prisma/client";
 import {getServerSession} from "next-auth";
 import type {CloudSettingsSession} from "@/src/types/AuthTypes";
 import {authOptions} from "@/app/api/auth/[...nextauth]/route";
@@ -7,8 +7,7 @@ import {redirect} from "next/navigation";
 import {revalidatePath} from "next/cache";
 import {NewUserGraph} from "@/app/admin/users/NewUserGraph";
 import {TotalUserGraph} from "@/app/admin/users/TotalUserGraph";
-import type {Option} from ".prisma/client";
-import {Prisma} from ".prisma/client";
+import type {Option} from "@prisma/client";
 import UserGetPayload = Prisma.UserGetPayload;
 
 export default async function Home() {

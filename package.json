@@ -12,7 +12,8 @@
     "prisma:generate": "pnpm exec prisma generate",
     "prisma:migrate": "pnpm exec prisma migrate dev --name init",
     "prisma:migrate_zap": "pnpm exec prisma migrate dev --name init",
-    "vercel-build": "prisma generate && prisma migrate deploy && next build"
+    "vercel-build": "prisma migrate deploy && next build",
+    "postinstall": "prisma generate"
   },
   "dependencies": {
     "@headlessui/react": "^1.7.17",
