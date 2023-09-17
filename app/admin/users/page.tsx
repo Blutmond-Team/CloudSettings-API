@@ -1,13 +1,12 @@
-import {PrismaClient, Prisma} from "@prisma/client";
+import type {Option} from "@prisma/client";
+import {Prisma, PrismaClient} from "@prisma/client";
 import {getServerSession} from "next-auth";
 import type {CloudSettingsSession} from "@/src/types/AuthTypes";
 import {authOptions} from "@/app/api/auth/[...nextauth]/route";
-import UserTable from "@/app/admin/users/UserTable";
 import {redirect} from "next/navigation";
 import {revalidatePath} from "next/cache";
-import {NewUserGraph} from "@/app/admin/users/NewUserGraph";
-import {TotalUserGraph} from "@/app/admin/users/TotalUserGraph";
-import type {Option} from "@prisma/client";
+import {PredefinedSuspense} from "@/app/admin/users/PredefinedSuspense";
+import {AdminOverview} from "@/app/admin/users/AdminOverview";
 import UserGetPayload = Prisma.UserGetPayload;
 
 export default async function Home() {
@@ -16,26 +15,12 @@ export default async function Home() {
         revalidatePath('/admin/users');
     }
 
-    const data = await getData();
+    const data = getData();
     return (
         <div className={"justify-center grid-cols-1"}>
-            <div className={"flex justify-center"}>
-                <div className={"max-w-screen-xl flex-grow flex justify-around"}>
-                    <NewUserGraph data={data.users}/>
-                    <TotalUserGraph data={data.users}/>
-                </div>
-            </div>
-            <div className={"flex justify-center"}>
-                <div className={"max-w-screen-xl flex-grow"}>
-                    <UserTable
-                        title={"User Data"}
-                        description={`${data.users.length ?? 0} Total Users (${data.users.filter(value => new Date(value.lastActivity).setHours(0, 0, 0, 0) === new Date().setHours(0, 0, 0,
-                            0)).length} Active, ${data.users.filter(value => !value.verified).length} Unverified)`}
-                        items={data.users}
-                        revalidateFunction={revalidatePage}
-                    />
-                </div>
-            </div>
+            <PredefinedSuspense>
+                <AdminOverview dataPromise={data} revalidateFunction={revalidatePage}/>
+            </PredefinedSuspense>
         </div>
     )
 }
