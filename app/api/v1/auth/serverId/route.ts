@@ -44,7 +44,8 @@ export async function POST(request: NextRequest) {
     });
 
     // Generate Server id
-    const serverId = mcHexDigest(body.username);
+    const username: string = body.username;
+    const serverId = mcHexDigest(username);
 
     if (!user) {
         await prisma.user.create({

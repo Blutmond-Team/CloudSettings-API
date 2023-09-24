@@ -1,9 +1,4 @@
-import {
-    CloudSettingsToken,
-    MinecraftServicesProfile,
-    MinecraftServicesProfileError,
-    MsStoreItem
-} from "@/src/types/AuthTypes";
+import {CloudSettingsToken, MsStoreItem} from "@/src/types/AuthTypes";
 
 import * as crypto from "crypto";
 
@@ -164,7 +159,7 @@ export async function loginIntoMinecraft(token: CloudSettingsToken): Promise<Clo
         );
 }
 
-export function mcHexDigest(str: string) {
+export function mcHexDigest(playerName: string) {
     // The hex digest is the hash made below.
     // However, when this hash is negative (meaning its MSB is 1, as it is in two's complement), instead of leaving it
     // like that, we make it positive and simply put a '-' in front of it. This is a simple process: as you always do
@@ -172,7 +167,7 @@ export function mcHexDigest(str: string) {
 
     let hash = crypto.createHash('sha1')
         .update('') // serverId = just an empty string
-        .update(str)
+        .update(playerName)
         .digest()
 
     // Negative check: check if the most significant bit of the hash is a 1.
@@ -197,5 +192,4 @@ export function mcHexDigest(str: string) {
     if (isNegative) result = `-${result}`
 
     return result
-
 }

@@ -35,11 +35,16 @@ export async function POST(request: NextRequest) {
         });
     }
 
+    let uuid: string = body.uuid;
+    if (uuid.includes('-')) {
+        uuid = uuid.replaceAll('-', '');
+    }
+
     const prisma = new PrismaClient();
     const login = await prisma.login.findFirst({
         where: {
             AND: {
-                userId: body.uuid,
+                userId: uuid,
                 serverId: body.serverId
             }
         },
@@ -79,7 +84,7 @@ export async function POST(request: NextRequest) {
 
     const trustedUserProfile = await mojangLoginResponse.json();
 
-    if (trustedUserProfile.id !== body.uuid) {
+    if (trustedUserProfile.id !== uuid) {
         return new Response(`UUID mismatch`, {
             status: 401,
             statusText: `UUID mismatch`
