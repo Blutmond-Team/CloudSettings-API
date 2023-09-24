@@ -1,5 +1,4 @@
 import {NextRequest, NextResponse} from "next/server";
-import * as crypto from "crypto";
 import {PrismaClient} from "@prisma/client";
 import {mcHexDigest} from "@/src/utils/MicrosoftLoginUtils";
 
@@ -28,12 +27,16 @@ export async function POST(request: NextRequest) {
             statusText: 'Missing "username" field in Body'
         });
     }
+    let uuid: string = body.uuid;
+    if (uuid.includes('-')) {
+        uuid = uuid.replaceAll('-', '');
+    }
 
     // Store Server id in Database
     const prisma = new PrismaClient();
-    let user = await prisma.user.findFirst({
+    const user = await prisma.user.findFirst({
         where: {
-            id: body.uuid
+            id: uuid
         },
         include: {
             Logins: true
@@ -46,7 +49,7 @@ export async function POST(request: NextRequest) {
     if (!user) {
         await prisma.user.create({
             data: {
-                id: (body.uuid as string).replaceAll('-', ''),
+                id: uuid,
                 name: body.username,
                 Logins: {
                     create: [
