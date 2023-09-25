@@ -84,3 +84,4 @@ async function getData(): Promise<{ users: UserData[] }> {
 }
 
 export const revalidate = 500;
+export const dynamic = "force-dynamic";
