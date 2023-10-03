@@ -9,6 +9,13 @@ import {ProfileDropdown} from "@/app/ProfileDropdown";
 import {CloudSettingsSession} from "@/src/types/AuthTypes";
 import {usePathname} from "next/navigation";
 import AppFooter from "@/app/AppFooter";
+import {Col, Divider, Dropdown, Layout, Menu, MenuProps, Row, Space} from "antd";
+import Image from "next/image";
+import Link from "next/link";
+import {Text} from "@/components/antd/Text";
+import {ConditionalElement} from "@/components/global/ConditionalElement";
+import {UserAvatar} from "@/components/menu/UserAvatar";
+import {useTheme} from "@/hooks";
 
 type Props = {
     children: React.ReactNode
@@ -51,7 +58,11 @@ type UserNavigationItem = {
     href: string
 }
 
+const {Header, Content, Footer} = Layout;
+
+
 export function AppShell({children}: Props) {
+    const token = useTheme();
     const path = usePathname();
     const session = useSession();
     const user = useMemo(() => {
@@ -83,149 +94,298 @@ export function AppShell({children}: Props) {
         }
 
         return entries;
-    }, [user])
+    }, [user]);
+
+    const userDropdownItems: MenuProps['items'] = useMemo(() => {
+        const entries: MenuProps['items'] = [
+            {
+                key: "profile",
+                label: <Link href={"/profile"}><Text>Your Profile</Text></Link>,
+            }
+        ];
+
+        if (user?.postLogin) {
+            if (user.role === "ADMIN") {
+                entries.push(
+                    {
+                        key: "Admin Tools Divider",
+                        type: "divider"
+                    },
+                    {
+                        key: "User Management",
+                        label: <Link href={"/admin/users"}><Text>User Management</Text></Link>,
+                    }
+                )
+            }
+        }
+
+        entries.push({
+                key: "Accout Settings Divider",
+                type: "divider"
+            },
+            {
+                key: "Sign Out",
+                label: <Text>Sign Out</Text>,
+                onClick: () => signOut()
+            })
+
+
+        return entries;
+    }, [user]);
 
     return (
-        <div className={"min-h-full"}>
-            <Disclosure as={"nav"} className={
-                "border-b border-gray-200 bg-white " +
-                "dark:border-pale-700 dark:bg-pale-800"
-            }>
-                {({open}) => (
-                    <>
-                        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-                            <div className="flex h-16 justify-between">
-                                <div className="flex">
-                                    <div className="flex flex-shrink-0 items-center">
-                                        <img
-                                            className="block h-8 w-auto lg:hidden"
-                                            src={CloudSettingsLogo.src}
-                                            alt="CloudSettings"
-                                        />
-                                        <img
-                                            className="hidden h-8 w-auto lg:block"
-                                            src={CloudSettingsLogo.src}
-                                            alt="CloudSettings"
-                                        />
-                                    </div>
-                                    <div className="hidden sm:-my-px sm:ml-6 sm:flex sm:space-x-8">
-                                        {navigation.map((item) => (
-                                            <a
-                                                key={item.name}
-                                                href={item.href}
-                                                target={item.target}
-                                                className={classNames(
-                                                    item.current(path)
-                                                        ? 'border-indigo-700 text-pale-900 dark:text-white'
-                                                        : 'border-transparent text-pale-500 hover:border-gray-300 hover:text-pale-800 dark:hover:text-pale-100',
-                                                    'inline-flex items-center border-b-2 px-1 pt-1 text-sm font-medium'
-                                                )}
-                                                aria-current={item.current(path) ? 'page' : undefined}
-                                            >
-                                                {item.name}
-                                            </a>
-                                        ))}
-                                    </div>
-                                </div>
-                                <div className="hidden sm:ml-6 sm:flex sm:items-center">
+        <>
+            <Layout>
+                <Header className={"!flex !items-center !mr-3"}>
+                    <Row gutter={[16, 0]} className={"!w-full"}>
+                        <Col className={"!flex !mr-3 !items-center"}>
+                            <span>
+                                <Image
+                                    src={CloudSettingsLogo.src}
+                                    alt={"CloudSettings"}
+                                    width={42}
+                                    height={42}
+                                />
+                            </span>
+                        </Col>
+                        <Col flex={"1 0"}>
+                            <Menu
+                                selectedKeys={[]}
+                                mode={"horizontal"}
+                                items={[
                                     {
-                                        // Profile dropdown
-                                        user ? <ProfileDropdown session={session.data as CloudSettingsSession}
-                                                                navigation={userNavigation}/> :
-                                            // Login Button
-                                            <div onClick={() => signIn('azure-ad')} className={"cursor-pointer"}>Log
-                                                In</div>
-                                    }
-                                </div>
-                                <div className="-mr-2 flex items-center sm:hidden">
-                                    {/* Mobile menu button */}
-                                    <Disclosure.Button
-                                        className="inline-flex items-center justify-center rounded-md bg-white dark:bg-pale-700 p-2 text-pale-400 dark:text-white hover:bg-pale-100 dark:hover:bg-pale-600 hover:text-pale-500 dark:hover:text-white">
-                                        <span className="sr-only">Open main menu</span>
-                                        {open ? (
-                                            <XMarkIcon className="block h-6 w-6" aria-hidden="true"/>
-                                        ) : (
-                                            <Bars3Icon className="block h-6 w-6" aria-hidden="true"/>
-                                        )}
-                                    </Disclosure.Button>
-                                </div>
-                            </div>
-                        </div>
+                                        key: "home",
+                                        label: <Link href={"/"}>
+                                            <Text>Home</Text>
+                                        </Link>,
 
-                        <Disclosure.Panel className="sm:hidden">
-                            <div className="space-y-1 pb-3 pt-2">
-                                {navigation.map((item) => (
-                                    <Disclosure.Button
-                                        key={item.name}
-                                        as="a"
-                                        href={item.href}
-                                        className={classNames(
-                                            item.current(path)
-                                                ? 'border-indigo-500 bg-pale-100 dark:bg-pale-600 dark:text-white text-black'
-                                                : 'border-transparent text-pale-600 dark:text-pale-400 hover:border-pale-300 hover:bg-pale-50 dark:hover:bg-pale-700 hover:text-pale-800 dark:hover:text-pale-50',
-                                            'block border-l-4 py-2 pl-3 pr-4 text-base font-medium'
-                                        )}
-                                        aria-current={item.current(path) ? 'page' : undefined}
-                                    >
-                                        {item.name}
-                                    </Disclosure.Button>
-                                ))}
-                            </div>
-                            {
-                                user ? <div className="border-t border-pale-200 dark:border-pale-700 pb-3 pt-4">
-                                    <div className="flex items-center px-4">
-                                        <div className="flex-shrink-0">
-                                            <UserProfileImg session={session.data as CloudSettingsSession}
-                                                            className={"h-10 w-10"}/>
+                                    },
+                                    {
+                                        key: 'source_code',
+                                        label: "Source Code",
+                                        children: [
+                                            {
+                                                key: 'github_mod',
+                                                label: <Link
+                                                    href={"https://github.com/Blutmond-Team/CloudSettings-Mod"}
+                                                    target={"_blank"}
+                                                >
+                                                    <Text>Minecraft Mod</Text>
+                                                </Link>,
+                                            },
+                                            {
+                                                key: 'github_web_app',
+                                                label: <Link
+                                                    href={"https://github.com/Blutmond-Team/CloudSettings-API"}
+                                                    target={"_blank"}
+                                                >
+                                                    <Text>Web App</Text>
+                                                </Link>
+                                            },
+                                        ]
+                                    },
+                                    {
+                                        key: 'bisect',
+                                        label: <Link
+                                            href={"https://www.bisecthosting.com/bloodmoon"}
+                                            target={"_blank"}
+                                        >
+                                            <Text>BisectHosting</Text>
+                                        </Link>
+                                    },
+                                ]}
+                            />
+                        </Col>
+                        <Col>
+                            <ConditionalElement enabled={user !== undefined}>
+                                <Space direction={"vertical"}>
+                                    <Space wrap>
+                                        <Dropdown
+                                            menu={{
+                                                items: userDropdownItems
+                                            }}
+                                            dropdownRender={menu => (
+                                                <div style={{
+                                                    backgroundColor: token.colorBgElevated,
+                                                    borderRadius: token.borderRadiusLG,
+                                                    boxShadow: token.boxShadowSecondary
+                                                }}>
+                                                    <Space
+                                                        style={{padding: 8, width: "100%", justifyContent: "center"}}>
+                                                        <Text className={"!text-xl !font-bold"}>
+                                                            {user?.postLogin ? user.minecraft.username : user?.user?.name}
+                                                        </Text>
+                                                    </Space>
+                                                    <Divider style={{margin: 0}}/>
+                                                    {menu}
+                                                </div>
+                                            )}
+                                        >
+                                            <div>
+                                                <UserAvatar user={user}/>
+                                            </div>
+                                        </Dropdown>
+                                    </Space>
+                                </Space>
+                            </ConditionalElement>
+                            <ConditionalElement enabled={user === undefined}>
+                                <Menu
+                                    selectedKeys={[]}
+                                    mode={"horizontal"}
+                                    items={[
+                                        {
+                                            key: "login",
+                                            label: "Log In",
+                                            onClick: () => signIn('azure-ad')
+                                        }
+                                    ]}
+                                />
+                            </ConditionalElement>
+                        </Col>
+                    </Row>
+                </Header>
+            </Layout>
+            <div className={"min-h-full"}>
+                <Disclosure as={"nav"} className={
+                    "border-b border-gray-200 bg-white " +
+                    "dark:border-pale-700 dark:bg-pale-800"
+                }>
+                    {({open}) => (
+                        <>
+                            <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+                                <div className="flex h-16 justify-between">
+                                    <div className="flex">
+                                        <div className="flex flex-shrink-0 items-center">
+                                            <img
+                                                className="block h-8 w-auto lg:hidden"
+                                                src={CloudSettingsLogo.src}
+                                                alt="CloudSettings"
+                                            />
+                                            <img
+                                                className="hidden h-8 w-auto lg:block"
+                                                src={CloudSettingsLogo.src}
+                                                alt="CloudSettings"
+                                            />
                                         </div>
-                                        <div className="ml-3">
-                                            <div
-                                                className="text-base font-medium text-pale-800 dark:text-white">{user.postLogin ? user.minecraft.username : user.user?.name}</div>
-                                            <div
-                                                className="text-sm font-medium text-pale-500 dark:text-pale-400">{user.postLogin ? user.minecraft.uuid : user.user?.email}</div>
+                                        <div className="hidden sm:-my-px sm:ml-6 sm:flex sm:space-x-8">
+                                            {navigation.map((item) => (
+                                                <a
+                                                    key={item.name}
+                                                    href={item.href}
+                                                    target={item.target}
+                                                    className={classNames(
+                                                        item.current(path)
+                                                            ? 'border-indigo-700 text-pale-900 dark:text-white'
+                                                            : 'border-transparent text-pale-500 hover:border-gray-300 hover:text-pale-800 dark:hover:text-pale-100',
+                                                        'inline-flex items-center border-b-2 px-1 pt-1 text-sm font-medium'
+                                                    )}
+                                                    aria-current={item.current(path) ? 'page' : undefined}
+                                                >
+                                                    {item.name}
+                                                </a>
+                                            ))}
                                         </div>
                                     </div>
-                                    <div className="mt-3 space-y-1">
-                                        {userNavigation.map((item) => (
-                                            <Disclosure.Button
-                                                key={item.name}
-                                                as="a"
-                                                href={item.href}
-                                                className="block border-l-4 py-2 pl-3 pr-4 text-base font-medium border-transparent text-pale-600 dark:text-pale-400 hover:border-pale-300 hover:bg-pale-50 dark:hover:bg-pale-700 hover:text-pale-800 dark:hover:text-pale-50"
-                                            >
-                                                {item.name}
-                                            </Disclosure.Button>
-                                        ))}
-                                        <Disclosure.Button
-                                            key={"sign out"}
-                                            as="a"
-                                            className="block border-l-4 py-2 pl-3 pr-4 text-base font-medium border-transparent text-pale-600 dark:text-pale-400 hover:border-pale-300 hover:bg-pale-50 dark:hover:bg-pale-700 hover:text-pale-800 dark:hover:text-pale-50 cursor-pointer"
-                                            onClick={() => signOut()}
-                                        >
-                                            Sign Out
-                                        </Disclosure.Button>
+                                    <div className="hidden sm:ml-6 sm:flex sm:items-center">
+                                        {
+                                            // Profile dropdown
+                                            user ? <ProfileDropdown session={session.data as CloudSettingsSession}
+                                                                    navigation={userNavigation}/> :
+                                                // Login Button
+                                                <div onClick={() => signIn('azure-ad')} className={"cursor-pointer"}>Log
+                                                    In</div>
+                                        }
                                     </div>
-                                </div> : <div className="border-t border-gray-200 pb-3 pt-4">
-                                    <div className="mt-3 space-y-1">
+                                    <div className="-mr-2 flex items-center sm:hidden">
+                                        {/* Mobile menu button */}
                                         <Disclosure.Button
-                                            key={"sign out"}
-                                            as="a"
-                                            className="block border-l-4 py-2 pl-3 pr-4 text-base font-medium border-transparent text-pale-600 dark:text-pale-400 hover:border-pale-300 hover:bg-pale-50 dark:hover:bg-pale-700 hover:text-pale-800 dark:hover:text-pale-50 cursor-pointer"
-                                            onClick={() => signIn('azure-ad')}
-                                        >
-                                            Sign In
+                                            className="inline-flex items-center justify-center rounded-md bg-white dark:bg-pale-700 p-2 text-pale-400 dark:text-white hover:bg-pale-100 dark:hover:bg-pale-600 hover:text-pale-500 dark:hover:text-white">
+                                            <span className="sr-only">Open main menu</span>
+                                            {open ? (
+                                                <XMarkIcon className="block h-6 w-6" aria-hidden="true"/>
+                                            ) : (
+                                                <Bars3Icon className="block h-6 w-6" aria-hidden="true"/>
+                                            )}
                                         </Disclosure.Button>
                                     </div>
                                 </div>
-                            }
-                        </Disclosure.Panel>
-                    </>
-                )}
-            </Disclosure>
-            <div className="py-10">
-                {children}
+                            </div>
+
+                            <Disclosure.Panel className="sm:hidden">
+                                <div className="space-y-1 pb-3 pt-2">
+                                    {navigation.map((item) => (
+                                        <Disclosure.Button
+                                            key={item.name}
+                                            as="a"
+                                            href={item.href}
+                                            className={classNames(
+                                                item.current(path)
+                                                    ? 'border-indigo-500 bg-pale-100 dark:bg-pale-600 dark:text-white text-black'
+                                                    : 'border-transparent text-pale-600 dark:text-pale-400 hover:border-pale-300 hover:bg-pale-50 dark:hover:bg-pale-700 hover:text-pale-800 dark:hover:text-pale-50',
+                                                'block border-l-4 py-2 pl-3 pr-4 text-base font-medium'
+                                            )}
+                                            aria-current={item.current(path) ? 'page' : undefined}
+                                        >
+                                            {item.name}
+                                        </Disclosure.Button>
+                                    ))}
+                                </div>
+                                {
+                                    user ? <div className="border-t border-pale-200 dark:border-pale-700 pb-3 pt-4">
+                                        <div className="flex items-center px-4">
+                                            <div className="flex-shrink-0">
+                                                <UserProfileImg session={session.data as CloudSettingsSession}
+                                                                className={"h-10 w-10"}/>
+                                            </div>
+                                            <div className="ml-3">
+                                                <div
+                                                    className="text-base font-medium text-pale-800 dark:text-white">{user.postLogin ? user.minecraft.username : user.user?.name}</div>
+                                                <div
+                                                    className="text-sm font-medium text-pale-500 dark:text-pale-400">{user.postLogin ? user.minecraft.uuid : user.user?.email}</div>
+                                            </div>
+                                        </div>
+                                        <div className="mt-3 space-y-1">
+                                            {userNavigation.map((item) => (
+                                                <Disclosure.Button
+                                                    key={item.name}
+                                                    as="a"
+                                                    href={item.href}
+                                                    className="block border-l-4 py-2 pl-3 pr-4 text-base font-medium border-transparent text-pale-600 dark:text-pale-400 hover:border-pale-300 hover:bg-pale-50 dark:hover:bg-pale-700 hover:text-pale-800 dark:hover:text-pale-50"
+                                                >
+                                                    {item.name}
+                                                </Disclosure.Button>
+                                            ))}
+                                            <Disclosure.Button
+                                                key={"sign out"}
+                                                as="a"
+                                                className="block border-l-4 py-2 pl-3 pr-4 text-base font-medium border-transparent text-pale-600 dark:text-pale-400 hover:border-pale-300 hover:bg-pale-50 dark:hover:bg-pale-700 hover:text-pale-800 dark:hover:text-pale-50 cursor-pointer"
+                                                onClick={() => signOut()}
+                                            >
+                                                Sign Out
+                                            </Disclosure.Button>
+                                        </div>
+                                    </div> : <div className="border-t border-gray-200 pb-3 pt-4">
+                                        <div className="mt-3 space-y-1">
+                                            <Disclosure.Button
+                                                key={"sign out"}
+                                                as="a"
+                                                className="block border-l-4 py-2 pl-3 pr-4 text-base font-medium border-transparent text-pale-600 dark:text-pale-400 hover:border-pale-300 hover:bg-pale-50 dark:hover:bg-pale-700 hover:text-pale-800 dark:hover:text-pale-50 cursor-pointer"
+                                                onClick={() => signIn('azure-ad')}
+                                            >
+                                                Sign In
+                                            </Disclosure.Button>
+                                        </div>
+                                    </div>
+                                }
+                            </Disclosure.Panel>
+                        </>
+                    )}
+                </Disclosure>
+                <div className="py-10">
+                    {children}
+                </div>
+                <AppFooter/>
             </div>
-            <AppFooter/>
-        </div>
+        </>
     );
 }
