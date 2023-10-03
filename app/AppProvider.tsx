@@ -25,6 +25,10 @@ export const AppProvider = ({children}: Props) => {
         setDarkMode(isDarkMode);
     }, []);
 
+    useEffect(() => {
+        
+    }, []);
+
 
     return (
         <ConfigProvider theme={{...theme, algorithm: isDarkMode ? darkAlgorithm : defaultAlgorithm}}>
