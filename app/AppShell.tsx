@@ -113,9 +113,9 @@ export function AppShell({children}: Props) {
                 className={"sm:!hidden !fixed h-[100vh] !top-0 !left-0 !z-20"}
                 collapsedWidth={0}
                 breakpoint={"md"}
-                style={{backgroundColor: token.colorPrimaryActive}}
+                style={{backgroundColor: token.colorBgElevated}}
                 zeroWidthTriggerStyle={{
-                    backgroundColor: token.colorPrimaryActive
+                    backgroundColor: token.colorBgElevated
                 }}
                 defaultCollapsed={true}
             >
