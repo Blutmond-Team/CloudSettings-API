@@ -130,7 +130,7 @@ export function AppShell({children}: Props) {
 
     return (
         <Layout>
-            <Header className={"!flex !items-center"}>
+            <Header className={"!flex !items-center"} style={{backgroundColor: token.colorBgLayout}}>
                 <Row gutter={[16, 0]} className={"!w-full"}>
                     <Col className={"!flex !mr-3 !items-center"}>
                         <Image
@@ -144,6 +144,7 @@ export function AppShell({children}: Props) {
                         <Menu
                             selectedKeys={[]}
                             mode={"horizontal"}
+                            style={{backgroundColor: token.colorBgLayout, border: "0"}}
                             items={[
                                 {
                                     key: "home",
@@ -236,7 +237,7 @@ export function AppShell({children}: Props) {
                     </Col>
                 </Row>
             </Header>
-            <Content style={{padding: `0 20px`}}>
+            <Content style={{padding: "0 50"}}>
                 {children}
             </Content>
             <Footer>
@@ -271,7 +272,6 @@ export function AppShell({children}: Props) {
                                 <svg
                                     xmlns="http://www.w3.org/2000/svg" viewBox="0 0 72.54 78.82"
                                     className={"h-6 w-6"}
-                                    fill="currentColor"
                                 >
                                     <defs>
                                         <style>

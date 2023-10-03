@@ -37,7 +37,7 @@ type Props = {
 export default function RootLayout({children,}: Props) {
     return (
         <html lang="en" className={"h-full"}>
-        <body className={`${inter.className} min-h-screen`}>
+        <body className={`${inter.className} min-h-screen m-0`}>
         <AntdStyledComponentRegistry>
             <AppProvider>
                 <AppShell>
