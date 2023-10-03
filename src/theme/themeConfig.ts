@@ -16,6 +16,11 @@ export const theme: ThemeConfig = {
         "colorSuccess": "#1bd96a",
         "colorWarning": "#f16436",
         "colorError": "#dc2626"
+    },
+    components: {
+        Divider: {
+            colorSplit: "rgba(56,60,67,0.45)"
+        }
     }
 }
 

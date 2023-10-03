@@ -113,13 +113,121 @@ export function AppShell({children}: Props) {
                 className={"sm:!hidden !fixed h-[100vh] !top-0 !left-0 !z-20"}
                 collapsedWidth={0}
                 breakpoint={"md"}
-                style={{backgroundColor: token.colorBgElevated}}
+                style={{
+                    backgroundColor: token.colorBgContainer,
+                    boxShadow: token.boxShadowSecondary
+                }}
                 zeroWidthTriggerStyle={{
-                    backgroundColor: token.colorBgElevated
+                    backgroundColor: token.colorBgContainer,
+                    borderColor: token.colorPrimaryBorder,
+                    borderWidth: token.borderRadiusXS,
+                    borderStyle: "solid",
+                    borderLeftStyle: "none",
+                    zIndex: 40
                 }}
                 defaultCollapsed={true}
             >
+                <Row className={"!w-full !h-full"}>
+                    <Col span={24} className={"pt-2"}>
+                        <Row gutter={[4, 0]} className={"!w-full"} justify={"center"}>
+                            <Col>
+                                <Image
+                                    src={CloudSettingsLogo.src}
+                                    alt={"CloudSettings"}
+                                    width={32}
+                                    height={32}
+                                />
+                            </Col>
+                            <Col>
+                                <Text className={"!text-xl !font-bold"}>CloudSettings</Text>
+                            </Col>
+                            <Divider className={"!mx-0 !my-2"}/>
+                        </Row>
+                    </Col>
+                    <Col span={24} className={"!h-full"}>
+                        <Row className={"!flex !flex-col !h-full"}>
+                            <Col flex={"1 1"}>
+                                <Menu
+                                    selectedKeys={[]}
+                                    mode={"inline"}
+                                    items={[
+                                        {
+                                            key: "home",
+                                            label: <Link href={"/"}>
+                                                <Text>Home</Text>
+                                            </Link>,
 
+                                        },
+                                        {
+                                            key: 'source_code',
+                                            label: "Source Code",
+                                            children: [
+                                                {
+                                                    key: 'github_mod',
+                                                    label: <Link
+                                                        href={"https://github.com/Blutmond-Team/CloudSettings-Mod"}
+                                                        target={"_blank"}
+                                                    >
+                                                        <Text>Minecraft Mod</Text>
+                                                    </Link>,
+                                                },
+                                                {
+                                                    key: 'github_web_app',
+                                                    label: <Link
+                                                        href={"https://github.com/Blutmond-Team/CloudSettings-API"}
+                                                        target={"_blank"}
+                                                    >
+                                                        <Text>Web App</Text>
+                                                    </Link>
+                                                },
+                                            ]
+                                        },
+                                        {
+                                            key: 'bisect',
+                                            label: <Link
+                                                href={"https://www.bisecthosting.com/bloodmoon"}
+                                                target={"_blank"}
+                                            >
+                                                <Text>BisectHosting</Text>
+                                            </Link>
+                                        },
+                                    ]}
+                                />
+                            </Col>
+                            <Col flex={"1 0"}>
+                                <Divider className={"mx-0 my-2"}/>
+                                <ConditionalElement enabled={user !== undefined}>
+                                    <Row className={"!w-full"} justify={"center"} gutter={[4, 0]}>
+                                        <Col>
+                                            <UserAvatar user={user}/>
+                                        </Col>
+                                        <Col>
+                                            <Text className={"!text-xl"}>{user?.postLogin ? user.minecraft.username : user?.user?.name}</Text>
+                                        </Col>
+                                    </Row>
+                                    <Menu
+                                        selectedKeys={[]}
+                                        mode={"inline"}
+                                        items={userDropdownItems}
+                                    />
+                                </ConditionalElement>
+                                <ConditionalElement enabled={user === undefined}>
+                                    <Menu
+                                        selectedKeys={[]}
+                                        mode={"horizontal"}
+                                        items={[
+                                            {
+                                                key: "login",
+                                                label: "Log In",
+                                                onClick: () => signIn('azure-ad')
+                                            }
+                                        ]}
+                                    />
+                                </ConditionalElement>
+                            </Col>
+                        </Row>
+                    </Col>
+                </Row>
             </Sider>
             <Layout>
                 <Header className={"sm:!flex !items-center !hidden !fixed !top-0 !left-0 !right-0 !z-10"}
