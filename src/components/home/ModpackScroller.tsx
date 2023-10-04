@@ -4,8 +4,7 @@ import {Card, Col, Row} from "antd";
 import {Text} from "@/components/antd/Text";
 import {useTheme} from "@/hooks";
 import {InfiniteLooper} from "@/components/global/InfiniteLooper";
-import Image from "next/image";
-import Link from "next/link";
+import {ModpackCard} from "@/components/home/ModpackCard";
 
 export const ModpackScroller = () => {
     const theme = useTheme();
@@ -23,31 +22,12 @@ export const ModpackScroller = () => {
                 </Col>
                 <Col span={24}>
                     <InfiniteLooper>
-                        <Link href={"https://www.curseforge.com/minecraft/modpacks/blutmond"} style={{margin: `0 ${theme.marginLG}px`}} target={"_blank"}>
-                            <Card
-                                style={{width: 280, height: 210, backgroundColor: theme.colorBgBase}}
-                                cover={
-                                    <Image
-                                        src={"https://media.forgecdn.net/attachments/363/785/header.png"}
-                                        alt={"Modpack Logo"}
-                                        width={280}
-                                        height={88}
-                                    />
-                                }
-                                bodyStyle={{padding: `4px ${theme.paddingMD}px`, height: "60%"}}
-
-                            >
-                                <Row justify={"center"} className={"h-full"}>
-                                    <Col span={24} className={"!flex !justify-center"}>
-                                        <Text style={{fontSize: theme.fontSizeHeading3}}>Blutmond</Text>
-                                    </Col>
-                                    <Col span={24} style={{textAlign: "center"}}>
-                                        <Text style={{color: theme.colorTextSecondary}}>A Modpack made for the Blutmond
-                                            Community</Text>
-                                    </Col>
-                                </Row>
-                            </Card>
-                        </Link>
+                        <ModpackCard
+                            href={"https://www.curseforge.com/minecraft/modpacks/blutmond"}
+                            img={"https://media.forgecdn.net/attachments/363/785/header.png"}
+                            title={"Blutmond"}
+                            desc={"A Modpack made for the Blutmond Community"}
+                        />
                     </InfiniteLooper>
                 </Col>
             </Row>
