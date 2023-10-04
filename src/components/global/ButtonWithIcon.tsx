@@ -1,5 +1,8 @@
-import { classNames } from "@/src/utils/ClassNames";
+"use client"
+import {classNames} from "@/src/utils/ClassNames";
 import {HTMLAttributeAnchorTarget, MouseEventHandler} from "react";
+import {useTheme} from "@/hooks";
+import {Text} from "@/components/antd/Text";
 
 type Props = {
     size?: "small" | "default" | "large"
@@ -12,13 +15,21 @@ type Props = {
 }
 
 
-
-export default function ButtonWithIcon({size = "default", className = '', icon, text = '', onClick, href, target}: Props) {
+export default function ButtonWithIcon({
+                                           size = "default",
+                                           className = '',
+                                           icon,
+                                           text = '',
+                                           onClick,
+                                           href,
+                                           target
+                                       }: Props) {
     const commonClassNames = "inline-flex items-center rounded-md text-sm font-semibold text-white shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+    const token = useTheme();
 
     switch (size) {
         case "small":
-            if(href){
+            if (href) {
                 return (
                     <a
                         className={classNames(commonClassNames, "gap-x-1.5 px-2.5 py-1.5", className)}
@@ -28,7 +39,9 @@ export default function ButtonWithIcon({size = "default", className = '', icon, 
                         {
                             icon && icon("-ml-0.5 h-5 w-5")
                         }
-                        {text}
+                        <Text>
+                            {text}
+                        </Text>
                     </a>
                 );
             }
@@ -41,12 +54,14 @@ export default function ButtonWithIcon({size = "default", className = '', icon, 
                     {
                         icon && icon("-ml-0.5 h-5 w-5")
                     }
-                    {text}
+                    <Text>
+                        {text}
+                    </Text>
                 </button>
             );
 
         case "large":
-            if(href){
+            if (href) {
                 return (
                     <a
                         className={classNames(commonClassNames, "gap-x-2 px-3.5 py-2.5", className)}
@@ -56,7 +71,9 @@ export default function ButtonWithIcon({size = "default", className = '', icon, 
                         {
                             icon && icon("-ml-0.5 h-5 w-5")
                         }
-                        {text}
+                        <Text>
+                            {text}
+                        </Text>
                     </a>
                 );
             }
@@ -67,24 +84,29 @@ export default function ButtonWithIcon({size = "default", className = '', icon, 
                     className={classNames(commonClassNames, "gap-x-2 px-3.5 py-2.5", className)}
                     onClick={onClick}
                 >
-                    {
-                        icon && icon("-ml-0.5 h-5 w-5")
-                    }
-                    {text}
+                    <Text>
+                        {
+                            icon && icon("-ml-0.5 h-5 w-5")
+                        }
+                        {text}
+                    </Text>
                 </button>
             )
         default:
-            if(href){
+            if (href) {
                 return (
                     <a
                         className={classNames(commonClassNames, "gap-x-1.5 px-3 py-2", className)}
                         href={href}
                         target={target}
                     >
-                        {
-                            icon && icon("-ml-0.5 h-5 w-5")
-                        }
-                        {text}
+                        <Text>
+                            {
+                                icon && icon("-ml-0.5 h-5 w-5")
+                            }
+
+                            {text}
+                        </Text>
                     </a>
                 );
             }
@@ -95,10 +117,13 @@ export default function ButtonWithIcon({size = "default", className = '', icon, 
                     className={classNames(commonClassNames, "gap-x-1.5 px-3 py-2", className)}
                     onClick={onClick}
                 >
-                    {
-                        icon && icon("-ml-0.5 h-5 w-5")
-                    }
-                    {text}
+                    <Text>
+                        {
+                            icon && icon("-ml-0.5 h-5 w-5")
+                        }
+
+                        {text}
+                    </Text>
                 </button>
             )
     }
