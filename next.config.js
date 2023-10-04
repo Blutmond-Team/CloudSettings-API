@@ -40,6 +40,12 @@ const nextConfig = {
                 hostname: 'mc-heads.net',
                 port: '',
                 pathname: '/avatar/**'
+            },
+            {
+                protocol: 'https',
+                hostname: "media.forgecdn.net",
+                port: '',
+                pathname: '/attachments/**'
             }
         ]
     }

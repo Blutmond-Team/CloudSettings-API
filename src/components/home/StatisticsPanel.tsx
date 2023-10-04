@@ -3,7 +3,7 @@ import {Card, Col, Row} from "antd";
 import {useTheme} from "@/hooks";
 import {PageData} from "@/app/page";
 import {use} from "react";
-import {TeamOutlined} from "@ant-design/icons";
+import {ArrowDownOutlined, CloudSyncOutlined, TeamOutlined} from "@ant-design/icons";
 import {Text} from "@/components/antd/Text";
 
 const {Meta} = Card;
@@ -27,44 +27,87 @@ export const StatisticsPanel = ({dataPromise}: Props) => {
                     }}
                 >
                     <Col flex={"0 0 360px"}>
-                        <Card className={"!w-full"}>
+                        <Card className={"!w-full"} bodyStyle={{padding: `${token.paddingSM}px ${token.paddingMD}px`}}>
                             <Meta
-                                avatar={<Text style={{
-                                    fontSize: token.fontSizeHeading2 ,
-                                    color: token.colorPrimary,
-                                    alignItems: "center",
-                                    height: "100%"
-                                }}><TeamOutlined/></Text>}
-                                title={<Text style={{color: token.colorTextSecondary, fontSize: token.fontSizeSM}}>Total Users</Text>}
-                                description={<Text style={{fontSize: token.fontSizeHeading3, fontWeight: token.fontWeightStrong}}>{data.userCount}</Text>}
+                                avatar={
+                                    <Row justify={"center"} align={"middle"} className={"!h-full"}>
+                                        <Col>
+                                            <Text
+                                                style={{
+                                                    fontSize: token.fontSizeHeading2,
+                                                    color: token.colorPrimary,
+                                                    alignSelf: "center"
+                                                }}
+                                            >
+                                                <TeamOutlined/>
+                                            </Text>
+                                        </Col>
+                                    </Row>
+                                }
+                                title={<Text style={{color: token.colorTextSecondary, fontSize: token.fontSizeSM}}>Total
+                                    Users</Text>}
+                                description={<Text style={{
+                                    fontSize: token.fontSizeHeading3,
+                                    fontWeight: token.fontWeightStrong
+                                }}>{data.userCount}</Text>}
                             />
                         </Card>
                     </Col>
                     <Col flex={"0 0 360px"}>
-                        <Card className={"!w-full"}>
+                        <Card className={"!w-full"} bodyStyle={{padding: `${token.paddingSM}px ${token.paddingMD}px`}}>
                             <Meta
-                                avatar={<Text style={{
-                                    fontSize: token.fontSizeHeading2 ,
-                                    color: token.colorPrimary,
-                                    alignItems: "center",
-                                    height: "100%"
-                                }}><TeamOutlined/></Text>}
-                                title={<Text style={{color: token.colorTextSecondary, fontSize: token.fontSizeSM}}>Total Users</Text>}
-                                description={<Text style={{fontSize: token.fontSizeHeading3, fontWeight: token.fontWeightStrong}}>{data.userCount}</Text>}
+                                avatar={
+                                    <Row justify={"center"} align={"middle"} className={"!h-full"}>
+                                        <Col>
+                                            <Text
+                                                style={{
+                                                    fontSize: token.fontSizeHeading2,
+                                                    color: token.colorPrimary,
+                                                    alignSelf: "center"
+                                                }}
+                                            >
+                                                <CloudSyncOutlined/>
+                                            </Text>
+                                        </Col>
+                                    </Row>
+                                }
+                                title={<Text style={{color: token.colorTextSecondary, fontSize: token.fontSizeSM}}>Stored
+                                    Options</Text>}
+                                description={<Text style={{
+                                    fontSize: token.fontSizeHeading3,
+                                    fontWeight: token.fontWeightStrong
+                                }}>{data.optionsCount}</Text>}
                             />
                         </Card>
                     </Col>
                     <Col flex={"0 0 360px"}>
-                        <Card className={"!w-full"}>
+                        <Card className={"!w-full"} bodyStyle={{padding: `${token.paddingSM}px ${token.paddingMD}px`}}>
                             <Meta
-                                avatar={<Text style={{
-                                    fontSize: token.fontSizeHeading2 ,
-                                    color: token.colorPrimary,
-                                    alignItems: "center",
-                                    height: "100%"
-                                }}><TeamOutlined/></Text>}
-                                title={<Text style={{color: token.colorTextSecondary, fontSize: token.fontSizeSM}}>Total Users</Text>}
-                                description={<Text style={{fontSize: token.fontSizeHeading3, fontWeight: token.fontWeightStrong}}>{data.userCount}</Text>}
+                                avatar={
+                                    <Row justify={"center"} align={"middle"} className={"!h-full"}>
+                                        <Col>
+                                            <Text
+                                                style={{
+                                                    fontSize: token.fontSizeHeading2,
+                                                    color: token.colorPrimary,
+                                                    alignSelf: "center"
+                                                }}
+                                            >
+                                                <ArrowDownOutlined/>
+                                            </Text>
+                                        </Col>
+                                    </Row>
+                                }
+                                title={
+                                    <Text
+                                        style={{color: token.colorTextSecondary, fontSize: token.fontSizeSM}}>
+                                        Total Downloads
+                                    </Text>
+                                }
+                                description={<Text style={{
+                                    fontSize: token.fontSizeHeading3,
+                                    fontWeight: token.fontWeightStrong
+                                }}>{data.totalDownloads}</Text>}
                             />
                         </Card>
                     </Col>

@@ -1,6 +1,7 @@
 import {PrismaClient} from "@prisma/client";
 import {HeroCard} from "@/components/home/HeroCard";
 import {StatisticsPanel} from "@/components/home/StatisticsPanel";
+import {ModpackScroller} from "@/components/home/ModpackScroller";
 
 export type PageData = {
     userCount: number
@@ -14,6 +15,7 @@ export default async function Home() {
         <>
             <HeroCard/>
             <StatisticsPanel dataPromise={data}/>
+            <ModpackScroller/>
         </>
     )
 };
