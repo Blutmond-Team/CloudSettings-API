@@ -2,7 +2,7 @@
 import {Card, Col, Row} from "antd";
 import {Text} from "@/components/antd/Text";
 import {useTheme} from "@/hooks";
-import ButtonWithIcon from "@/app/ButtonWithIcon";
+import ButtonWithIcon from "@/components/global/ButtonWithIcon";
 import {CloudServerOutlined, EyeInvisibleOutlined, LockOutlined, TeamOutlined} from "@ant-design/icons";
 
 const {Meta} = Card;
