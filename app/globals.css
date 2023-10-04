@@ -2,29 +2,42 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {
-    --foreground-rgb: 0, 0, 0;
-    --background-start-rgb: 214, 219, 220;
-    --background-end-rgb: 255, 255, 255;
-}
-
-@media (prefers-color-scheme: dark) {
-    :root {
-        --foreground-rgb: 255, 255, 255;
-        --background-start-rgb: 20, 22, 26;
-        --background-end-rgb: 20, 22, 26;
-    }
-}
-
-body {
-    color: rgb(var(--foreground-rgb));
-    background: radial-gradient(rgb(var(--background-start-rgb)), rgb(var(--background-end-rgb)));
-}
-
 .user-table-items {
     height: calc(100vh - 757px);
 }
 
 .settings-table-items {
     height: calc(100vh - 417px);
+}
+
+*::-webkit-scrollbar,
+*::-webkit-scrollbar-thumb {
+    width: 14px;
+    border-radius: 14px;
+    background-clip: padding-box;
+    border: 8px solid transparent;
+    border-right-width: 4px;
+    border-left-width: 4px;
+}
+
+*::-webkit-scrollbar-thumb {
+    box-shadow: rgba(255, 255, 255, .125) inset 0 0 0 10px;
+}
+
+.content {
+    overflow: auto;
+    padding-bottom: 4px;
+}
+
+@media only screen and (min-width: 465px) {
+    .content {
+        height: calc(100vh - 72px) !important;
+
+    }
+}
+
+@media only screen and (max-width: 464px) {
+    .small-content {
+        height: calc(100vh - 96px) !important;
+    }
 }

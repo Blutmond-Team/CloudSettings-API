@@ -202,7 +202,8 @@ export function AppShell({children}: Props) {
                                             <UserAvatar user={user}/>
                                         </Col>
                                         <Col>
-                                            <Text className={"!text-xl"}>{user?.postLogin ? user.minecraft.username : user?.user?.name}</Text>
+                                            <Text
+                                                className={"!text-xl"}>{user?.postLogin ? user.minecraft.username : user?.user?.name}</Text>
                                         </Col>
                                     </Row>
                                     <Menu
@@ -338,10 +339,10 @@ export function AppShell({children}: Props) {
                         </Col>
                     </Row>
                 </Header>
-                <Content className={"sm:!pt-[64px] !pb-[78px]"}>
+                <Content className={"sm:!pt-[64px] content"}>
                     {children}
                 </Content>
-                <Footer className={"!fixed !bottom-0 !left-0 !right-0 !z-10"}>
+                <Footer>
                     <Row className={"w-full"} gutter={[16, 0]}>
                         <Col flex={"1 1"}>
                             <Text style={{color: token.colorTextTertiary}}>

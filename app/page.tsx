@@ -1,27 +1,24 @@
-import {ArrowDownOnSquareIcon, CircleStackIcon, UsersIcon} from "@heroicons/react/24/outline";
-import UsageStats from "@/app/UsageStats";
 import {PrismaClient} from "@prisma/client";
 import {HeroCard} from "@/components/home/HeroCard";
+import {StatisticsPanel} from "@/components/home/StatisticsPanel";
+
+export type PageData = {
+    userCount: number
+    optionsCount: number
+    totalDownloads: number
+}
 
 export default async function Home() {
-    const data = await getData();
+    const data = getData();
     return (
         <>
             <HeroCard/>
-            <div className={"px-10 pt-5 lg:px-20 xl:px-[7.5rem] 2xl:px-[12.5rem] bg-transparent"}>
-                <UsageStats
-                    items={[
-                        {id: 1, name: 'Registered Users', stat: `${data.userCount}`, icon: UsersIcon},
-                        {id: 2, name: 'Stored Options', stat: `${data.optionsCount}`, icon: CircleStackIcon},
-                        {id: 3, name: 'Total Downloads', stat: `${data.totalDownloads}`, icon: ArrowDownOnSquareIcon}
-                    ]}
-                />
-            </div>
+            <StatisticsPanel dataPromise={data}/>
         </>
     )
 };
 
-async function getData() {
+async function getData(): Promise<PageData> {
     const prisma = new PrismaClient();
     let totalDownloads = 0;
 

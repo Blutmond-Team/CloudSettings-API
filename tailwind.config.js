@@ -51,8 +51,7 @@ module.exports = {
                     950: '#280C03'
                 },
             },
-
         }
     },
-    plugins: []
+    plugins: [],
 }
