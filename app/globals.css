@@ -42,7 +42,7 @@
     }
 }
 
-@keyframes slideAnimation {
+@keyframes slideAnim {
     from {
         transform: translateX(0%);
     }
@@ -62,9 +62,13 @@
     width: fit-content;
 }
 
+.looper__innerList[data-animate="true"] .looper__listInstance {
+    animation: slideAnim linear infinite;
+}
+
 .looper__listInstance {
     display: flex;
     width: max-content;
 
-    animation: slideAnimation linear infinite;
+    animation: none;
 }

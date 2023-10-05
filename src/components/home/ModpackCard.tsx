@@ -16,7 +16,7 @@ export const ModpackCard = ({href, img, title, desc}: Props) => {
     const theme = useTheme();
 
     return (
-        <Link href={href} style={{margin: `0 ${theme.marginLG}px`}} target={"_blank"}>
+        <Link href={href} style={{margin: `0 ${theme.marginSM}px`}} target={"_blank"}>
             <Card
                 style={{width: 280, height: 210, backgroundColor: theme.colorBgBase}}
                 cover={
