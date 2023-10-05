@@ -96,12 +96,32 @@ export const AdminOverview = ({dataPromise, revalidateFunction}: Props) => {
                         },
                         {
                             title: "Username",
-                            dataIndex: 'name'
+                            dataIndex: 'name',
+                            sorter: (a, b, sortOrder) => a.name.localeCompare(b.name)
                         },
                         {
                             title: "Role",
                             dataIndex: 'role',
-                            width: 80
+                            width: 80,
+                            onFilter: (value, record) => record.role === value,
+                            filters: [
+                                {
+                                    text: "Admin",
+                                    value: Role.ADMIN
+                                },
+                                {
+                                    text: "Moderator",
+                                    value: Role.MODERATOR
+                                },
+                                {
+                                    text: "User",
+                                    value: Role.USER
+                                },
+                                {
+                                    text: "Banned",
+                                    value: Role.BANNED
+                                },
+                            ]
                         },
                         {
                             title: "Registered",
@@ -113,13 +133,16 @@ export const AdminOverview = ({dataPromise, revalidateFunction}: Props) => {
                             title: "Last Active",
                             dataIndex: 'lastActivity',
                             render: (value: Date) => value.toLocaleString(),
-                            width: 160
+                            width: 160,
+                            sorter: (a, b, sortOrder) => b.lastActivity.getTime() - a.lastActivity.getTime(),
+                            defaultSortOrder: "ascend"
                         },
                         {
                             title: "Options",
                             dataIndex: 'options',
                             render: (value: any[]) => value.length,
-                            width: 80
+                            width: 80,
+                            sorter: (a, b) => b.options.length - a.options.length
                         },
                         {
                             title: "Actions",
