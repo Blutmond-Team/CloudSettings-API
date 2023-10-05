@@ -36,27 +36,30 @@ export type UserData = {
     logins: Date[]
 }
 
-async function getData(): Promise<{ users: UserData[] }> {
+async function getData(): Promise<{ users: UserData[], date: Date }> {
     const session = await getServerSession(authOptions);
     if (!session) {
         redirect('/');
         return {
-            users: []
-        }
+            users: [],
+            date: new Date()
+        };
     }
 
     const cloudSettingsSession = session as CloudSettingsSession;
     if (!cloudSettingsSession.postLogin) {
         redirect('/');
         return {
-            users: []
+            users: [],
+            date: new Date()
         }
     }
 
     if (cloudSettingsSession.role !== "ADMIN") {
         redirect('/');
         return {
-            users: []
+            users: [],
+            date: new Date()
         }
     }
 
@@ -82,7 +85,8 @@ async function getData(): Promise<{ users: UserData[] }> {
             options: user.Option,
             verified: user.verified,
             logins: user.LoginToken.map(token => token.createdAt)
-        }))
+        })),
+        date: new Date()
     }
 }
 

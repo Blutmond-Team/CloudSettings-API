@@ -10,7 +10,7 @@ import {NewUserGraph} from "@/components/admin/NewUserGraph";
 import {TotalUserGraph} from "@/components/admin/TotalUserGraph";
 
 type Props = {
-    dataPromise: Promise<{ users: UserData[] }>
+    dataPromise: Promise<{ users: UserData[], date: Date }>
     revalidateFunction: VoidFunction
 }
 
@@ -18,7 +18,7 @@ export const AdminOverview = ({dataPromise, revalidateFunction}: Props) => {
     const token = useTheme();
     const data = use(dataPromise);
     const [isPending, startTransition] = useTransition();
-    
+
     return (
         <Row justify={"center"} gutter={[16, 8]} style={{margin: `0 ${token.margin}px`}} align={"stretch"}>
             <Col xs={24} lg={12}>
@@ -65,7 +65,7 @@ export const AdminOverview = ({dataPromise, revalidateFunction}: Props) => {
                                  className={"!cursor-pointer"}>
                                 <TitleValueCol
                                     title={"Last Update"}
-                                    value={isPending ? "Loading..." : new Date().toLocaleString()}
+                                    value={isPending ? "Loading..." : data.date.toLocaleString()}
                                 />
                             </Col>
                         </Row>
