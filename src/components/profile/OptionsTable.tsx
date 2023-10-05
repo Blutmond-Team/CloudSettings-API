@@ -8,7 +8,7 @@ import {DeleteOutlined, EditOutlined, ReloadOutlined, UnorderedListOutlined} fro
 
 type Props = {
     options: { raw: string, key: string }[]
-    revalidateFunction: VoidFunction
+    revalidateFunction?: VoidFunction
 }
 export const OptionsTable = ({options, revalidateFunction}: Props) => {
     const token = useTheme();
@@ -37,8 +37,9 @@ export const OptionsTable = ({options, revalidateFunction}: Props) => {
                 <Col>
                     <Button
                         type={"primary"}
-                        onClick={() => startTransition(revalidateFunction)}
+                        onClick={() => revalidateFunction && startTransition(revalidateFunction)}
                         icon={<ReloadOutlined spin={isPending}/>}
+                        disabled={!revalidateFunction}
                     >
                         Refresh Data
                     </Button>
@@ -54,7 +55,7 @@ export const OptionsTable = ({options, revalidateFunction}: Props) => {
                             {
                                 title: "Option Value",
                                 dataIndex: "raw",
-                                render: (value: string) => value.substring(value.indexOf(':') + 1)
+                                render: (value: string) => <Text style={{wordBreak: "break-word"}}>{value.substring(value.indexOf(':') + 1)}</Text>
                             },
                             {
                                 title: "Actions",

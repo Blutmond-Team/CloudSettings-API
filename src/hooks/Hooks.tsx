@@ -10,7 +10,7 @@ export const useTheme = () => {
 }
 
 export const useModal = (
-    {children, initialOpen = false, onOk, onCancel, footer, okText, cancelText, title, okType}: {
+    {children, initialOpen = false, onOk, onCancel, footer, okText, cancelText, title, okType, width}: {
             initialOpen?: boolean
             onOk?: VoidFunction
             okText?: React.ReactNode
@@ -19,6 +19,7 @@ export const useModal = (
             onCancel?: VoidFunction
             footer?: ModalProps["footer"]
             okType?: ModalProps["okType"]
+            width?: ModalProps["width"]
         }
         & React.PropsWithChildren
 ) => {
@@ -44,6 +45,7 @@ export const useModal = (
             footer={footer}
             okText={okText}
             cancelText={cancelText}
+            width={width}
         >
             {children}
         </Modal>

@@ -19,6 +19,7 @@
     "@ant-design/cssinjs": "^1.17.0",
     "@ant-design/icons": "^5.2.6",
     "@ant-design/pro-components": "^2.6.28",
+    "@antv/g2": "^5.1.5",
     "@headlessui/react": "^1.7.17",
     "@heroicons/react": "*",
     "@prisma/client": "^5.3.1",

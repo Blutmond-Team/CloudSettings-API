@@ -1,13 +1,17 @@
 "use client"
 import {UserData} from "@/app/admin/users/page";
-import {Area, AreaChart, CartesianGrid, Tooltip, XAxis, YAxis} from "recharts";
+import {Area, AreaChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxis} from "recharts";
 import _ from "lodash";
 import {useMemo} from "react";
+import {Card, Col, Row} from "antd";
+import {Text} from "@/components/antd/Text";
+import {useTheme} from "@/hooks";
 
 type Props = {
     data: UserData[]
 }
 export const TotalUserGraph = ({data}: Props) => {
+    const token = useTheme();
     const chartData = useMemo(() => {
         const sortedData = _.sortBy(data, value => value.jointAt.getTime());
         const seperatedData = _.groupBy(sortedData, value => value.jointAt.setHours(0, 0, 0, 0));
@@ -42,32 +46,38 @@ export const TotalUserGraph = ({data}: Props) => {
     }, [data]);
 
     return (
-        <div className={"w-fit"}>
-            <h3 className={"text-center"}>Total Users</h3>
-            <AreaChart
-                data={chartData}
-                width={512}
-                height={384}
-            >
-                <CartesianGrid strokeDasharray={"3 3"}/>
-                <YAxis/>
-                <XAxis dataKey={"key"}/>
-                <Area
-                    dataKey={"count"}
-                    type={"monotone"}
-                    stroke={"#8884d8"}
-                    fill={"#8884d8"}
-                />
-                <Area
-                    dataKey={"unverified"}
-                    type={"monotone"}
-                    stroke={"#f04eff"}
-                    fill={"#f04eff"}
-                />
-                <Tooltip
-                    wrapperClassName={"!bg-white dark:!bg-pale-800"}
-                />
-            </AreaChart>
-        </div>
+        <Row justify={"center"}>
+            <Col flex={"1"}>
+                <Card
+                    bodyStyle={{textAlign: "center", paddingLeft: 0, paddingRight: 0}}
+                >
+                    <Text style={{fontSize: token.fontSizeHeading3}}>Total Users</Text>
+                    <ResponsiveContainer width={"95%"} height={200}>
+                        <AreaChart
+                            data={chartData}
+                        >
+                            <CartesianGrid strokeDasharray={"3 3"}/>
+                            <YAxis/>
+                            <XAxis dataKey={"key"}/>
+                            <Area
+                                dataKey={"count"}
+                                type={"monotone"}
+                                stroke={"#8884d8"}
+                                fill={"#8884d8"}
+                            />
+                            <Area
+                                dataKey={"unverified"}
+                                type={"monotone"}
+                                stroke={"#f04eff"}
+                                fill={"#f04eff"}
+                            />
+                            <Tooltip
+                                wrapperClassName={"!bg-white dark:!bg-pale-800"}
+                            />
+                        </AreaChart>
+                    </ResponsiveContainer>
+                </Card>
+            </Col>
+        </Row>
     )
 };
