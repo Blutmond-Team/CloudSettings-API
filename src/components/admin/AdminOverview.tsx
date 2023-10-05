@@ -1,6 +1,4 @@
 "use client"
-import {NewUserGraph} from "@/components/admin/NewUserGraph";
-import {TotalUserGraph} from "@/components/admin/TotalUserGraph";
 import {UserData} from "@/app/admin/users/page";
 import {Card, Col, Row} from "antd";
 import {useTheme} from "@/hooks";
@@ -8,6 +6,8 @@ import {use, useTransition} from "react";
 import {TitleValueCol} from "@/components/global/TitleValueCol";
 import {ActiveUserGraph} from "@/components/admin/ActiveUserGraph";
 import {UserTable} from "@/components/admin/UserTable";
+import {NewUserGraph} from "@/components/admin/NewUserGraph";
+import {TotalUserGraph} from "@/components/admin/TotalUserGraph";
 
 type Props = {
     dataPromise: Promise<{ users: UserData[] }>
@@ -18,7 +18,7 @@ export const AdminOverview = ({dataPromise, revalidateFunction}: Props) => {
     const token = useTheme();
     const data = use(dataPromise);
     const [isPending, startTransition] = useTransition();
-
+    
     return (
         <Row justify={"center"} gutter={[16, 8]} style={{margin: `0 ${token.margin}px`}} align={"stretch"}>
             <Col xs={24} lg={12}>
