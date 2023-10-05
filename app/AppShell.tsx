@@ -1,9 +1,9 @@
 "use client"
-import {HTMLAttributeAnchorTarget, useMemo, useRef} from "react";
+import {useMemo} from "react";
 import {signIn, signOut, useSession} from "next-auth/react";
 import CloudSettingsLogo from '@/public/cloudsettings_logo_transparent.png';
 import {CloudSettingsSession} from "@/src/types/AuthTypes";
-import {Col, Divider, Dropdown, Layout, Menu, MenuProps, Row, Space} from "antd";
+import {Button, Col, Divider, Dropdown, Layout, Menu, MenuProps, Row, Space} from "antd";
 import Image from "next/image";
 import Link from "next/link";
 import {Text} from "@/components/antd/Text";
@@ -13,43 +13,6 @@ import {useTheme} from "@/hooks";
 
 type Props = {
     children: React.ReactNode
-}
-
-function classNames(...classes: string[]) {
-    return classes.filter(Boolean).join(' ');
-}
-
-type NavigationItem = {
-    name: string,
-    href: string,
-    current: (path: string) => boolean
-    target?: HTMLAttributeAnchorTarget
-}
-
-const navigation: NavigationItem[] = [
-    {
-        name: 'Home',
-        href: '/',
-        current: path => path === "" || path === "/"
-    },
-    {
-        name: 'GitHub (Mod)',
-        href: 'https://github.com/Blutmond-Team/CloudSettings-Mod',
-        current: () => false,
-        target: "_blank"
-    },
-    {
-        name: 'GitHub (Web App)',
-        href: 'https://github.com/Blutmond-Team/CloudSettings-API',
-        current: () => false,
-        target: "_blank"
-    }
-];
-
-type UserNavigationItem = {
-    key: string,
-    name: string,
-    href: string
 }
 
 const {Header, Content, Footer, Sider} = Layout;
@@ -103,9 +66,6 @@ export function AppShell({children}: Props) {
 
         return entries;
     }, [user]);
-
-    const headerRef = useRef<HTMLElement>(null);
-    const footerRef = useRef<HTMLElement>(null);
 
     return (
         <Layout>
@@ -324,17 +284,9 @@ export function AppShell({children}: Props) {
                                 </Space>
                             </ConditionalElement>
                             <ConditionalElement enabled={user === undefined}>
-                                <Menu
-                                    selectedKeys={[]}
-                                    mode={"horizontal"}
-                                    items={[
-                                        {
-                                            key: "login",
-                                            label: "Log In",
-                                            onClick: () => signIn('azure-ad')
-                                        }
-                                    ]}
-                                />
+                                <Button type={"text"} onClick={() => signIn('azure-ad')}>
+                                    Log In
+                                </Button>
                             </ConditionalElement>
                         </Col>
                     </Row>
