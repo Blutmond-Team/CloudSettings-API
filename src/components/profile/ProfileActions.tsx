@@ -5,13 +5,11 @@ import {Text} from "@/components/antd/Text";
 import {useModal, useTheme} from "@/hooks";
 import {signOut} from "next-auth/react";
 import {toast} from "react-toastify";
-import type {Option, User} from ".prisma/client";
+import type {Option, User} from "@prisma/client";
 import {TitleValueCol} from "@/components/global/TitleValueCol";
 import Image from "next/image";
 import {ColProps} from "antd/es/grid/col";
 import {WarningOutlined} from "@ant-design/icons";
-
-const {Meta} = Card;
 
 type Props = {
     user: User | null | undefined

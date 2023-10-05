@@ -1,5 +1,5 @@
 import {NextRequest, NextResponse} from "next/server";
-import {PrismaClient, Role} from "@prisma/client";
+import {PrismaClient} from "@prisma/client";
 import {getToken} from "next-auth/jwt";
 import {CloudSettingsToken} from "@/src/types/AuthTypes";
 
