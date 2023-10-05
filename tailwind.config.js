@@ -4,6 +4,7 @@ module.exports = {
         './pages/**/*.{js,ts,jsx,tsx,mdx}',
         './components/**/*.{js,ts,jsx,tsx,mdx}',
         './app/**/*.{js,ts,jsx,tsx,mdx}',
+        './src/**/*.{js,ts,jsx,tsx,mdx}'
     ],
     theme: {
         extend: {
@@ -19,7 +20,7 @@ module.exports = {
                     600: '#515761',
                     700: '#383C43',
                     800: '#1E2024',
-                    900: '#050506',
+                    900: '#0A0A0A',
                     950: '#000000'
                 },
                 'malachite': {
@@ -51,8 +52,7 @@ module.exports = {
                     950: '#280C03'
                 },
             },
-
         }
     },
-    plugins: [],
+    plugins: []
 }

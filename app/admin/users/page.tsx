@@ -5,8 +5,8 @@ import type {CloudSettingsSession} from "@/src/types/AuthTypes";
 import {authOptions} from "@/app/api/auth/[...nextauth]/route";
 import {redirect} from "next/navigation";
 import {revalidatePath} from "next/cache";
-import {PredefinedSuspense} from "@/app/admin/users/PredefinedSuspense";
-import {AdminOverview} from "@/app/admin/users/AdminOverview";
+import {PredefinedSuspense} from "@/components/global/PredefinedSuspense";
+import {AdminOverview} from "@/components/admin/AdminOverview";
 import UserGetPayload = Prisma.UserGetPayload;
 
 export default async function Home() {
@@ -33,36 +33,41 @@ export type UserData = {
     lastActivity: Date,
     options: Option[],
     verified: boolean
+    logins: Date[]
 }
 
-async function getData(): Promise<{ users: UserData[] }> {
+async function getData(): Promise<{ users: UserData[], date: Date }> {
     const session = await getServerSession(authOptions);
     if (!session) {
         redirect('/');
         return {
-            users: []
-        }
+            users: [],
+            date: new Date()
+        };
     }
 
     const cloudSettingsSession = session as CloudSettingsSession;
     if (!cloudSettingsSession.postLogin) {
         redirect('/');
         return {
-            users: []
+            users: [],
+            date: new Date()
         }
     }
 
     if (cloudSettingsSession.role !== "ADMIN") {
         redirect('/');
         return {
-            users: []
+            users: [],
+            date: new Date()
         }
     }
 
     const prisma = new PrismaClient();
     const users = await prisma.user.findMany({
         include: {
-            Option: true
+            Option: true,
+            LoginToken: true
         },
         orderBy: {
             lastActivity: 'desc'
@@ -78,8 +83,10 @@ async function getData(): Promise<{ users: UserData[] }> {
             jointAt: user.joinedAt,
             lastActivity: user.lastActivity,
             options: user.Option,
-            verified: user.verified
-        }))
+            verified: user.verified,
+            logins: user.LoginToken.map(token => token.createdAt)
+        })),
+        date: new Date()
     }
 }
 

@@ -3,6 +3,7 @@ import {Inter} from 'next/font/google'
 import {AppShell} from "@/app/AppShell";
 import {AppProvider} from "@/app/AppProvider";
 import {Analytics} from "@vercel/analytics/react";
+import {AntdStyledComponentRegistry} from "@/components/antd/AntdStyledComponentRegistry";
 
 const inter = Inter({subsets: ['latin']});
 
@@ -36,12 +37,14 @@ type Props = {
 export default function RootLayout({children,}: Props) {
     return (
         <html lang="en" className={"h-full"}>
-        <body className={`${inter.className} min-h-screen`}>
-        <AppProvider>
-            <AppShell>
-                {children}
-            </AppShell>
-        </AppProvider>
+        <body className={`${inter.className} min-h-screen m-0`}>
+        <AntdStyledComponentRegistry>
+            <AppProvider>
+                <AppShell>
+                    {children}
+                </AppShell>
+            </AppProvider>
+        </AntdStyledComponentRegistry>
         <Analytics/>
         </body>
         </html>

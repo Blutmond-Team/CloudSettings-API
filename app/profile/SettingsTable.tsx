@@ -1,6 +1,6 @@
 "use client"
 import {useMemo, useTransition} from "react";
-import ButtonWithIcon from "@/app/ButtonWithIcon";
+import ButtonWithIcon from "@/components/global/ButtonWithIcon";
 import {ArrowPathIcon} from "@heroicons/react/24/outline";
 
 export type TableItem = {
