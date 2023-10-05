@@ -20,7 +20,7 @@ export const theme: ThemeConfig = {
     components: {
         Divider: {
             colorSplit: "rgba(56,60,67,0.45)"
-        }
+        },
     }
 }
 
