@@ -21,7 +21,10 @@ export default async function Home() {
             <Col style={{width: "100%", maxWidth: 1280, padding: "4px 8px"}}>
                 <Row gutter={[16, 8]}>
                     <Col span={24}>
-                        <ProfileActions user={data.user}/>
+                        <ProfileActions
+                            user={data.user}
+                            options={data.options}
+                        />
                     </Col>
                     <Col span={24}>
                         <OptionsTable

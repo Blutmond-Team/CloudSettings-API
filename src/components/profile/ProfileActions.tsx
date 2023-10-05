@@ -5,13 +5,20 @@ import {Text} from "@/components/antd/Text";
 import {useModal, useTheme} from "@/hooks";
 import {signOut} from "next-auth/react";
 import {toast} from "react-toastify";
-import type {User} from ".prisma/client";
+import type {Option, User} from ".prisma/client";
+import {TitleValueCol} from "@/components/global/TitleValueCol";
+import Image from "next/image";
+import {ColProps} from "antd/es/grid/col";
+import {WarningOutlined} from "@ant-design/icons";
+
+const {Meta} = Card;
 
 type Props = {
     user: User | null | undefined
+    options: Option[]
 }
 
-export const ProfileActions = ({user}: Props) => {
+export const ProfileActions = ({user, options}: Props) => {
     const token = useTheme();
     const deleteAccountModal = useModal({
         title: "Are you sure you want to delete your Account?",
@@ -46,6 +53,20 @@ export const ProfileActions = ({user}: Props) => {
         cancelText: "No",
     });
 
+    const infoColSettings: {
+        xs?: ColProps['xs']
+        sm?: ColProps['sm']
+        md?: ColProps['md']
+        lg?: ColProps['lg']
+        xl?: ColProps['xl']
+        xxl?: ColProps['xxl']
+    } = {
+        xs: 24,
+        sm: 24,
+        md: 12,
+        lg: 8
+    }
+
     return (
         <Card
             title={<Text style={{fontSize: token.fontSizeHeading2}}>Account</Text>}
@@ -53,13 +74,56 @@ export const ProfileActions = ({user}: Props) => {
         >
             <Row gutter={[16, 8]}>
                 <Col span={24}>
-
-                </Col>
-                <Col>
-                    <Button danger type={"primary"} onClick={deleteAccountModal.open}>
-                        Delete Account
-                    </Button>
-                    {deleteAccountModal.modal}
+                    <Row gutter={[32, 16]}>
+                        <Col xs={8} sm={6} md={4} xl={3}>
+                            <Image
+                                src={`https://mc-heads.net/body/${user?.id}/100`}
+                                alt={"User Skin"}
+                                width={100}
+                                height={240}
+                            />
+                        </Col>
+                        <Col xs={16} sm={18} md={20} xl={21}>
+                            <Row gutter={[16,8]}>
+                                <TitleValueCol
+                                    title={"UUID"}
+                                    value={user?.id}
+                                    {...infoColSettings}
+                                />
+                                <TitleValueCol
+                                    title={"Name"}
+                                    value={user?.name}
+                                    {...infoColSettings}
+                                />
+                                <TitleValueCol
+                                    title={"Registered Since"}
+                                    value={user?.joinedAt.toLocaleDateString()}
+                                    {...infoColSettings}
+                                />
+                                <TitleValueCol
+                                    title={"Role"}
+                                    value={user?.role}
+                                    {...infoColSettings}
+                                />
+                                <TitleValueCol
+                                    title={"Stored Options"}
+                                    value={options.length}
+                                    {...infoColSettings}
+                                />
+                            </Row>
+                        </Col>
+                        <Col span={24} style={{textAlign: "right"}}>
+                            <Button
+                                danger
+                                type={"primary"}
+                                onClick={deleteAccountModal.open}
+                                icon={<WarningOutlined />}
+                            >
+                                Delete Account
+                            </Button>
+                            {deleteAccountModal.modal}
+                        </Col>
+                    </Row>
                 </Col>
             </Row>
         </Card>
