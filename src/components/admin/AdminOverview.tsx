@@ -19,6 +19,19 @@ export const AdminOverview = ({dataPromise, revalidateFunction}: Props) => {
     const data = use(dataPromise);
     const [isPending, startTransition] = useTransition();
 
+    function toPercent(value: number) {
+        return (100 / data.users.length * value).toFixed(0);
+    }
+
+
+    const unverified = data.users.filter(value => !value.verified).length;
+    const verified = data.users.length - unverified;
+    const activeToday = data.users.filter(value => {
+        const startToday = new Date().setHours(0, 0, 0, 0);
+        return value.lastActivity.getTime() >= startToday;
+    }).length;
+
+
     return (
         <Row justify={"center"} gutter={[16, 8]} style={{margin: `0 ${token.margin}px`}} align={"stretch"}>
             <Col xs={24} lg={12}>
@@ -43,22 +56,19 @@ export const AdminOverview = ({dataPromise, revalidateFunction}: Props) => {
                             <Col flex={"0 0 200px"}>
                                 <TitleValueCol
                                     title={"Verified Users"}
-                                    value={data.users.filter(value => value.verified).length}
+                                    value={`${verified} | ${toPercent(verified)}%`}
                                 />
                             </Col>
                             <Col flex={"0 0 200px"}>
                                 <TitleValueCol
                                     title={"Unverified Users"}
-                                    value={data.users.filter(value => !value.verified).length}
+                                    value={`${unverified} | ${toPercent(unverified)}%`}
                                 />
                             </Col>
                             <Col flex={"0 0 200px"}>
                                 <TitleValueCol
                                     title={"Active Today"}
-                                    value={data.users.filter(value => {
-                                        const startToday = new Date().setHours(0, 0, 0, 0);
-                                        return value.lastActivity.getTime() >= startToday;
-                                    }).length}
+                                    value={`${activeToday} | ${toPercent(activeToday)}%`}
                                 />
                             </Col>
                             <Col flex={"0 0 200px"} onClick={() => startTransition(revalidateFunction)}
