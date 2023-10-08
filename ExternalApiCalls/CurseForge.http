@@ -1,0 +1,13 @@
+###
+# @name Figure out Author Id
+GET https://api.curseforge.com/v1/mods/622165
+Accept: application/json
+x-api-key: {{curseForgeAPIKey}}
+
+
+
+###
+# @name Get All Mods
+GET https://api.curseforge.com/v1/mods/search?gameId=432&authorId=16481697
+Accept: application/json
+x-api-key: {{curseForgeAPIKey}}

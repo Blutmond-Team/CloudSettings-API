@@ -36,3 +36,5 @@ next-env.d.ts
 
 *.iml
 .idea
+
+*.private.env.json
