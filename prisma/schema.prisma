@@ -24,11 +24,12 @@ model User {
 }
 
 model Option {
-  user       User      @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId     String
-  raw        String
-  key        String
-  lastChange DateTime? @updatedAt
+  user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId      String
+  raw         String
+  key         String
+  lastChange  DateTime? @updatedAt
+  blacklisted Boolean   @default(false)
 
   @@id([userId, key])
 }

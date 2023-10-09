@@ -5,9 +5,10 @@ import {useTheme} from "@/hooks";
 import {Text} from "@/components/antd/Text";
 import {useTransition} from "react";
 import {DeleteOutlined, EditOutlined, ReloadOutlined, UnorderedListOutlined} from "@ant-design/icons";
+import {blacklistUserOption, whitelistUserOption} from "@/app/actions";
 
 type Props = {
-    options: { raw: string, key: string }[]
+    options: { raw: string, key: string, blacklisted: boolean }[]
     revalidateFunction?: VoidFunction
 }
 export const OptionsTable = ({options, revalidateFunction}: Props) => {
@@ -55,12 +56,14 @@ export const OptionsTable = ({options, revalidateFunction}: Props) => {
                             {
                                 title: "Option Value",
                                 dataIndex: "raw",
-                                render: (value: string) => <Text style={{wordBreak: "break-word"}}>{value.substring(value.indexOf(':') + 1)}</Text>
+                                render: (value: string) => <Text
+                                    style={{wordBreak: "break-word"}}>{value.substring(value.indexOf(':') + 1)}</Text>
                             },
                             {
                                 title: "Actions",
+                                dataIndex: 'key',
                                 width: 48 * 3,
-                                render: value => (
+                                render: (value, record) => (
                                     <Row justify={"center"} gutter={[8, 4]}>
                                         <Col>
                                             <Tooltip title={"Edit"}>
@@ -72,12 +75,23 @@ export const OptionsTable = ({options, revalidateFunction}: Props) => {
                                             </Tooltip>
                                         </Col>
                                         <Col>
-                                            <Tooltip title={"Blacklist"}>
-                                                <Button
-                                                    icon={<UnorderedListOutlined/>}
-                                                    disabled
-                                                />
-                                            </Tooltip>
+                                            {
+                                                record.blacklisted
+                                                    ? <Tooltip title={"Remove from Blacklist"}>
+                                                        <Button
+                                                            icon={<UnorderedListOutlined/>}
+                                                            onClick={() => startTransition(() => whitelistUserOption(value).then(revalidateFunction))}
+                                                        />
+                                                    </Tooltip>
+                                                    : <Tooltip title={"Add to Blacklist"}>
+                                                        <Button
+                                                            icon={<UnorderedListOutlined/>}
+                                                            onClick={() => startTransition(() => blacklistUserOption(value).then(revalidateFunction))}
+                                                            danger
+                                                            type={"primary"}
+                                                        />
+                                                    </Tooltip>
+                                            }
                                         </Col>
                                         <Col>
                                             <Tooltip title={"Delete"}>
@@ -85,6 +99,7 @@ export const OptionsTable = ({options, revalidateFunction}: Props) => {
                                                     icon={<DeleteOutlined/>}
                                                     disabled
                                                     danger
+                                                    type={"primary"}
                                                 />
                                             </Tooltip>
                                         </Col>

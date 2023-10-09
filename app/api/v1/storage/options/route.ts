@@ -49,7 +49,8 @@ export async function GET(request: NextRequest) {
 
     const Options = await prisma.option.findMany({
         where: {
-            userId: loginData.Login.user.id
+            userId: loginData.Login.user.id,
+            blacklisted: false
         }
     });
 
