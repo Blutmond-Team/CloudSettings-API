@@ -1,18 +1,25 @@
 "use client"
-import {Modal, theme} from "antd";
+import {Form, Modal, theme} from "antd";
 import {useState} from "react";
 import {ModalProps} from "antd/es/modal/interface";
 
+/**
+ * Easier to use AntD Token Hook
+ */
 export const useTheme = () => {
     const {token} = theme.useToken();
 
     return token;
 }
 
+/**
+ * Easy to use Modal Hook.
+ * Can only provide static modals.
+ */
 export const useModal = (
     {children, initialOpen = false, onOk, onCancel, footer, okText, cancelText, title, okType, width}: {
             initialOpen?: boolean
-            onOk?: VoidFunction
+            onOk?: () => Promise<boolean> | boolean | void
             okText?: React.ReactNode
             cancelText?: React.ReactNode
             title?: React.ReactNode
@@ -34,8 +41,15 @@ export const useModal = (
             okType={okType}
             title={title}
             open={isOpen}
-            onOk={() => {
-                if (onOk) onOk();
+            onOk={async () => {
+                if (onOk) {
+                    const exit = onOk();
+                    if (typeof exit === "boolean" && !exit) return;
+                    if (exit) {
+                        const close = await exit;
+                        if (!close) return;
+                    }
+                }
                 close();
             }}
             onCancel={() => {
@@ -52,4 +66,12 @@ export const useModal = (
     );
 
     return {modal, toggle, close, open}
+}
+
+/**
+ * Easier to use AntD Form Hook
+ */
+export const useForm = <T, >() => {
+    const [form] = Form.useForm<T>();
+    return form;
 }

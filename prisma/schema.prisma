@@ -21,8 +21,6 @@ model User {
   Logins       Login[]
   LoginToken   LoginToken[]
   verified     Boolean      @default(false)
-  ModStat      ModStat[]
-  ModClaim     ModClaim[]
 }
 
 model Option {
@@ -58,47 +56,4 @@ enum Role {
   USER
   MODERATOR
   ADMIN
-}
-
-model Mod {
-  id       String     @id
-  name     String
-  ModStat  ModStat[]
-  ModClaim ModClaim[]
-}
-
-model ModStat {
-  id        Int       @id @default(autoincrement())
-  modId     String
-  mod       Mod       @relation(fields: [modId], references: [id], onDelete: Cascade)
-  version   String
-  userId    String
-  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
-  createdAt DateTime  @default(now())
-  modLoader ModLoader
-}
-
-model ModClaim {
-  id        String
-  modId     String
-  mod       Mod       @relation(fields: [modId], references: [id], onDelete: Cascade)
-  userId    String
-  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
-  apiKey    String
-  plattform Plattform
-
-  @@id([id, plattform])
-}
-
-enum ModLoader {
-  FORGE
-  NEO
-  FABRIC
-  QUILT
-  UNKNOWN
-}
-
-enum Plattform {
-  CURSEFORGE
-  MODRINTH
 }
