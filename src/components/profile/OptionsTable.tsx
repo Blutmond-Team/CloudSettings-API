@@ -1,11 +1,11 @@
 "use client"
 
-import {Button, Card, Col, Row, Table, Tooltip} from "antd";
+import {Button, Card, Col, Popconfirm, Row, Table, Tooltip} from "antd";
 import {useTheme} from "@/hooks";
 import {Text} from "@/components/antd/Text";
 import {useTransition} from "react";
 import {DeleteOutlined, EditOutlined, ReloadOutlined, UnorderedListOutlined} from "@ant-design/icons";
-import {blacklistUserOption, whitelistUserOption} from "@/app/actions";
+import {blacklistUserOption, deleteUserOption, whitelistUserOption} from "@/app/actions";
 
 type Props = {
     options: { raw: string, key: string, blacklisted: boolean }[]
@@ -81,6 +81,7 @@ export const OptionsTable = ({options, revalidateFunction}: Props) => {
                                                         <Button
                                                             icon={<UnorderedListOutlined/>}
                                                             onClick={() => startTransition(() => whitelistUserOption(value).then(revalidateFunction))}
+                                                            type={"dashed"}
                                                         />
                                                     </Tooltip>
                                                     : <Tooltip title={"Add to Blacklist"}>
@@ -88,19 +89,26 @@ export const OptionsTable = ({options, revalidateFunction}: Props) => {
                                                             icon={<UnorderedListOutlined/>}
                                                             onClick={() => startTransition(() => blacklistUserOption(value).then(revalidateFunction))}
                                                             danger
-                                                            type={"primary"}
+                                                            type={"dashed"}
                                                         />
                                                     </Tooltip>
                                             }
                                         </Col>
                                         <Col>
                                             <Tooltip title={"Delete"}>
-                                                <Button
-                                                    icon={<DeleteOutlined/>}
-                                                    disabled
-                                                    danger
-                                                    type={"primary"}
-                                                />
+                                                <Popconfirm
+                                                    title={"Delete this Option"}
+                                                    description={"Are you sure to delete this option?"}
+                                                    onConfirm={() => startTransition(() => deleteUserOption(value).then(revalidateFunction))}
+                                                    okText={"Yes"}
+                                                    cancelText={"No"}
+                                                >
+                                                    <Button
+                                                        icon={<DeleteOutlined/>}
+                                                        danger
+                                                        type={"primary"}
+                                                    />
+                                                </Popconfirm>
                                             </Tooltip>
                                         </Col>
                                     </Row>

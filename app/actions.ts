@@ -47,3 +47,23 @@ export async function whitelistUserOption(optionKey: string) {
     })
     await prisma.$disconnect();
 }
+
+export async function deleteUserOption(optionKey: string) {
+    const session = await getServerSession(authOptions);
+    if (!session) return;
+
+    const cloudSettingsSession = session as CloudSettingsSession;
+    if (!cloudSettingsSession.postLogin) return;
+
+    const prisma = new PrismaClient();
+    await prisma.option.delete({
+        where: {
+            userId_key: {
+                userId: cloudSettingsSession.minecraft.uuid,
+                key: optionKey
+            }
+        }
+    });
+
+    await prisma.$disconnect();
+}
