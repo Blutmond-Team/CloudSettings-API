@@ -4,12 +4,20 @@ import Image from "next/image";
 import {Role} from "@prisma/client";
 import {Button, Col, Input, InputRef, Row, Space, Table, Tooltip} from "antd";
 import {InspectUserButton} from "@/components/admin/InspectUserButton";
-import {DeleteOutlined, SearchOutlined, UserAddOutlined, UserDeleteOutlined} from "@ant-design/icons";
+import {
+    CheckCircleOutlined,
+    CloseCircleOutlined,
+    DeleteOutlined,
+    SearchOutlined,
+    UserAddOutlined,
+    UserDeleteOutlined
+} from "@ant-design/icons";
 import {toast} from "react-toastify";
 import type {UserData} from "@/app/admin/users/page";
 import {useRef, useTransition} from "react";
 import type {FilterConfirmProps} from "antd/es/table/interface";
 import {useTheme} from "@/hooks";
+import {Text} from "@/components/antd/Text";
 
 type Props = {
     users: UserData[]
@@ -19,12 +27,6 @@ export const UserTable = ({users, revalidateFunction}: Props) => {
     const [isPending, startTransition] = useTransition();
     const searchInput = useRef<InputRef>(null);
     const token = useTheme();
-
-    const handleSearch = (
-        confirm: (param?: FilterConfirmProps) => void,
-    ) => {
-        confirm();
-    };
 
     const handleReset = (clearFilters: () => void, confirm: (param?: FilterConfirmProps) => void) => {
         clearFilters();
@@ -49,6 +51,28 @@ export const UserTable = ({users, revalidateFunction}: Props) => {
                         />
                     ),
                     width: 40
+                },
+                {
+                    title: "Verified",
+                    dataIndex: 'verified',
+                    render: (value: boolean) => <div className={"w-full text-center"}>
+                        <Text
+                            style={{color: value ? token.colorSuccess : token.colorError}}>
+                            {value ? <CheckCircleOutlined/> : <CloseCircleOutlined/>}
+                        </Text>
+                    </div>,
+                    width: 40,
+                    filters: [
+                        {
+                            text: "Verified",
+                            value: true
+                        },
+                        {
+                            text: "Unverified",
+                            value: false
+                        }
+                    ],
+                    onFilter: (value, record) => record.verified === value
                 },
                 {
                     title: "Username",
@@ -132,7 +156,8 @@ export const UserTable = ({users, revalidateFunction}: Props) => {
                     title: "Registered",
                     dataIndex: 'jointAt',
                     render: (value: Date) => value.toLocaleString(),
-                    width: 160
+                    width: 160,
+                    sorter: (a, b, sortOrder) => b.lastActivity.getTime() - a.lastActivity.getTime(),
                 },
                 {
                     title: "Last Active",
