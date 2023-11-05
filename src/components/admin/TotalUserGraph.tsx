@@ -14,16 +14,21 @@ export const TotalUserGraph = ({data}: Props) => {
     const token = useTheme();
     const chartData = useMemo(() => {
         const sortedData = _.sortBy(data, value => value.jointAt.getTime());
-        const seperatedData = _.groupBy(sortedData, value => new Date(value.jointAt).setHours(0, 0, 0, 0));
+        const seperatedData = _.groupBy(sortedData, value => Date.UTC(value.jointAt.getUTCFullYear(), value.jointAt.getUTCMonth(), value.jointAt.getUTCDate()));
         const seperatedArray = _.values(seperatedData);
         const firstEntry = seperatedArray[0];
-        const lastEntry = seperatedArray[seperatedArray.length - 1];
 
         const resultData: { key: string, count: number, unverified: number }[] = [];
+
+        const firstJointAt = firstEntry[0].jointAt
+        const today = new Date();
+
+        const startDate = Date.UTC(firstJointAt.getUTCFullYear(), firstJointAt.getUTCMonth(), firstJointAt.getUTCDate());
+        const endDate = Date.UTC(today.getUTCFullYear(), today.getUTCMonth(), today.getUTCDate());
+
         let currentUserCount = 0;
         let unverifiedUserCount = 0;
-        const startDate = new Date(firstEntry[0].jointAt).setHours(0, 0, 0, 0);
-        const endDate = new Date(lastEntry[0].jointAt).setHours(0, 0, 0, 0);
+
         for (let date = startDate; date < endDate; date += 24 * 60 * 60 * 1000) {
             const seperatedDataEntry = seperatedData[date];
             const key = new Date(date).toLocaleDateString();
