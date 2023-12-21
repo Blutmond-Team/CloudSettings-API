@@ -1,12 +1,12 @@
 import {PrismaClient} from "@prisma/client";
 import {getServerSession} from "next-auth";
 import {CloudSettingsSession} from "@/src/types/AuthTypes";
-import {authOptions} from "@/app/api/auth/[...nextauth]/route";
 import {redirect} from "next/navigation";
 import {revalidatePath} from "next/cache";
 import {OptionsTable} from "@/components/profile/OptionsTable";
 import {Col, Row} from "antd";
 import {ProfileActions} from "@/components/profile/ProfileActions";
+import {authOptions} from "@/src/utils/AuthOptions";
 
 export default async function Home() {
     async function revalidatePage() {

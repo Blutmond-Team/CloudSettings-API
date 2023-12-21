@@ -1,8 +1,8 @@
 "use server"
 import {getServerSession} from "next-auth";
 import type {CloudSettingsSession} from "@/src/types/AuthTypes";
-import {authOptions} from "@/app/api/auth/[...nextauth]/route";
 import {PrismaClient} from "@prisma/client";
+import {authOptions} from "@/src/utils/AuthOptions";
 
 export async function blacklistUserOption(optionKey: string) {
     const session = await getServerSession(authOptions);

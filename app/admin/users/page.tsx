@@ -2,11 +2,11 @@ import type {Option} from "@prisma/client";
 import {Prisma, PrismaClient} from "@prisma/client";
 import {getServerSession} from "next-auth";
 import type {CloudSettingsSession} from "@/src/types/AuthTypes";
-import {authOptions} from "@/app/api/auth/[...nextauth]/route";
 import {redirect} from "next/navigation";
 import {revalidatePath} from "next/cache";
 import {PredefinedSuspense} from "@/components/global/PredefinedSuspense";
 import {AdminOverview} from "@/components/admin/AdminOverview";
+import {authOptions} from "@/src/utils/AuthOptions";
 import UserGetPayload = Prisma.UserGetPayload;
 
 export default async function Home() {
