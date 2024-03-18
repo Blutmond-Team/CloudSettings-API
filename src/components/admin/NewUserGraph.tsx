@@ -59,7 +59,15 @@ export const NewUserGraph = ({data}: Props) => {
     return (
         <Row justify={"center"}>
             <Col flex={"1"}>
-                <Card bodyStyle={{textAlign: "center", paddingLeft: 0, paddingRight: 0}}>
+                <Card
+                    styles={{
+                        body: {
+                            textAlign: "center",
+                            paddingLeft: 0,
+                            paddingRight: 0
+                        }
+                    }}
+                >
                     <Text style={{fontSize: token.fontSizeHeading3}}>New Users</Text>
                     <ResponsiveContainer width={"95%"} height={200}>
                         <AreaChart

@@ -18,7 +18,12 @@ export const OptionsTable = ({options, revalidateFunction}: Props) => {
     return (
         <Card
             title={<Text style={{fontSize: token.fontSizeHeading2}}>Stored Options</Text>}
-            bodyStyle={{padding: `0 ${token.paddingLG}px`, paddingBottom: token.paddingXXS}}
+            styles={{
+                body: {
+                    padding:  `0 ${token.paddingLG}px`,
+                    paddingBottom: token.paddingXXS
+                }
+            }}
         >
             <Row>
                 <Col flex={"1 1"}>

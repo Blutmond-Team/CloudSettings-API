@@ -68,7 +68,11 @@ export const ProfileActions = ({user, options}: Props) => {
     return (
         <Card
             title={<Text style={{fontSize: token.fontSizeHeading2}}>Account</Text>}
-            bodyStyle={{paddingTop: 0}}
+            styles={{
+                body: {
+                    paddingTop: 0
+                }
+            }}
         >
             <Row gutter={[16, 8]}>
                 <Col span={24}>
@@ -82,7 +86,7 @@ export const ProfileActions = ({user, options}: Props) => {
                             />
                         </Col>
                         <Col xs={16} sm={18} md={20} xl={21}>
-                            <Row gutter={[16,8]}>
+                            <Row gutter={[16, 8]}>
                                 <TitleValueCol
                                     title={"UUID"}
                                     value={user?.id}

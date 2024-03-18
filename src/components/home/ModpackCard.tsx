@@ -27,7 +27,12 @@ export const ModpackCard = ({href, img, title, desc}: Props) => {
                         height={88}
                     />
                 }
-                bodyStyle={{padding: `4px ${theme.paddingMD}px`, height: "60%"}}
+                styles={{
+                    body: {
+                        padding: `4px ${theme.paddingMD}px`,
+                        height: "60%"
+                    }
+                }}
             >
                 <Row justify={"center"} className={"h-full"}>
                     <Col span={24} className={"!flex !justify-center"}>

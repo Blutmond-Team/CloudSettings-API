@@ -4,6 +4,7 @@ import {AppShell} from "@/app/AppShell";
 import {AppProvider} from "@/app/AppProvider";
 import {Analytics} from "@vercel/analytics/react";
 import {AntdStyledComponentRegistry} from "@/components/antd/AntdStyledComponentRegistry";
+import {Viewport} from "next";
 
 const inter = Inter({subsets: ['latin']});
 
@@ -17,17 +18,18 @@ export const metadata = {
             should_fallback: true
         }
     },
-    viewport: {
-        width: 'device-width',
-        initialScale: 1,
-        maximumScale: 1,
-    },
     openGraph: {
         title: 'CloudSettings',
         description: 'Web App for the CloudSettings Minecraft Mod',
         type: 'website',
         url: 'https://cloudsettings.blutmondgilde.de/'
     }
+}
+
+export const viewport: Viewport = {
+    width: 'device-width',
+    initialScale: 1,
+    maximumScale: 1,
 }
 
 type Props = {

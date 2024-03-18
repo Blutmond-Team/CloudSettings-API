@@ -56,7 +56,13 @@ export const TotalUserGraph = ({data}: Props) => {
         <Row justify={"center"}>
             <Col flex={"1"}>
                 <Card
-                    bodyStyle={{textAlign: "center", paddingLeft: 0, paddingRight: 0}}
+                    styles={{
+                        body: {
+                            textAlign: "center",
+                            paddingLeft: 0,
+                            paddingRight: 0
+                        }
+                    }}
                 >
                     <Text style={{fontSize: token.fontSizeHeading3}}>Total Users</Text>
                     <ResponsiveContainer width={"95%"} height={200}>

@@ -27,7 +27,14 @@ export const StatisticsPanel = ({dataPromise}: Props) => {
                     }}
                 >
                     <Col flex={"0 0 360px"}>
-                        <Card className={"!w-full"} bodyStyle={{padding: `${token.paddingSM}px ${token.paddingMD}px`}}>
+                        <Card
+                            className={"!w-full"}
+                            styles={{
+                                body: {
+                                    padding: `${token.paddingSM}px ${token.paddingMD}px`
+                                }
+                            }}
+                        >
                             <Meta
                                 avatar={
                                     <Row justify={"center"} align={"middle"} className={"!h-full"}>
@@ -54,7 +61,14 @@ export const StatisticsPanel = ({dataPromise}: Props) => {
                         </Card>
                     </Col>
                     <Col flex={"0 0 360px"}>
-                        <Card className={"!w-full"} bodyStyle={{padding: `${token.paddingSM}px ${token.paddingMD}px`}}>
+                        <Card
+                            className={"!w-full"}
+                            styles={{
+                                body: {
+                                    padding: `${token.paddingSM}px ${token.paddingMD}px`
+                                }
+                            }}
+                        >
                             <Meta
                                 avatar={
                                     <Row justify={"center"} align={"middle"} className={"!h-full"}>
@@ -81,7 +95,14 @@ export const StatisticsPanel = ({dataPromise}: Props) => {
                         </Card>
                     </Col>
                     <Col flex={"0 0 360px"}>
-                        <Card className={"!w-full"} bodyStyle={{padding: `${token.paddingSM}px ${token.paddingMD}px`}}>
+                        <Card
+                            className={"!w-full"}
+                            styles={{
+                                body: {
+                                    padding: `${token.paddingSM}px ${token.paddingMD}px`
+                                }
+                            }}
+                        >
                             <Meta
                                 avatar={
                                     <Row justify={"center"} align={"middle"} className={"!h-full"}>

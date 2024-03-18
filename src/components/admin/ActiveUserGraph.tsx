@@ -38,7 +38,7 @@ export const ActiveUserGraph = ({data}: Props) => {
 
         const distinctData: ChartItem[] = [];
 
-        for (let timeStamp = 1687557600000; timeStamp < Date.now()-86400000; timeStamp += 86400000) {
+        for (let timeStamp = 1687557600000; timeStamp < Date.now() - 86400000; timeStamp += 86400000) {
             const key = new Date(timeStamp).toLocaleDateString();
             distinctData.push({
                 key: key,
@@ -53,7 +53,13 @@ export const ActiveUserGraph = ({data}: Props) => {
         <Row justify={"center"}>
             <Col flex={"1"}>
                 <Card
-                    bodyStyle={{textAlign: "center", paddingLeft: 0, paddingRight: 0}}
+                    styles={{
+                        body: {
+                            textAlign: "center",
+                            paddingLeft: 0,
+                            paddingRight: 0
+                        }
+                    }}
                 >
                     <Text style={{fontSize: token.fontSizeHeading3}}>Active Users</Text>
                     <ResponsiveContainer width={"95%"} height={200}>

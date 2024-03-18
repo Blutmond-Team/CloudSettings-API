@@ -24,7 +24,14 @@ export const ModpackScroller = () => {
     const theme = useTheme();
 
     return (
-        <Card style={{borderRadius: 0}} bodyStyle={{padding: `${theme.paddingLG}px 0`}}>
+        <Card
+            style={{borderRadius: 0}}
+            styles={{
+                body: {
+                    padding: `${theme.paddingLG}px 0`
+                }
+            }}
+        >
             <Row gutter={[0, 16]}>
                 <Col span={24}>
                     <Row justify={"center"}>
