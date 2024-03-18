@@ -9,8 +9,10 @@ import {useTheme} from "@/hooks";
 
 type Props = {
     data: UserData[]
+    selectedStartDate?: Date
+    selecredEndDate?: Date
 }
-export const TotalUserGraph = ({data}: Props) => {
+export const TotalUserGraph = ({data, selectedStartDate, selecredEndDate}: Props) => {
     const token = useTheme();
     const chartData = useMemo(() => {
         const sortedData = _.sortBy(data, value => value.jointAt.getTime());
@@ -18,7 +20,7 @@ export const TotalUserGraph = ({data}: Props) => {
         const seperatedArray = _.values(seperatedData);
         const firstEntry = seperatedArray[0];
 
-        const resultData: { key: string, count: number, unverified: number }[] = [];
+        const resultData: { key: string, date: number, count: number, unverified: number }[] = [];
 
         const firstJointAt = firstEntry[0].jointAt
         const today = new Date();
@@ -35,6 +37,7 @@ export const TotalUserGraph = ({data}: Props) => {
             if (!seperatedDataEntry || seperatedDataEntry.length === 0) {
                 resultData.push({
                     key: key,
+                    date: date,
                     count: currentUserCount,
                     unverified: unverifiedUserCount
                 });
@@ -43,14 +46,26 @@ export const TotalUserGraph = ({data}: Props) => {
                 unverifiedUserCount += seperatedDataEntry.filter(value => !value.verified).length;
                 resultData.push({
                     key: key,
+                    date: date,
                     count: currentUserCount,
                     unverified: unverifiedUserCount
                 });
             }
         }
 
-        return resultData;
-    }, [data]);
+        return resultData.filter(({date}) => {
+            let passed = true;
+            if (selectedStartDate) {
+                passed = date >= selectedStartDate.getTime();
+            }
+
+            if (passed && selecredEndDate) {
+                passed = date <= selecredEndDate.getTime();
+            }
+
+            return passed;
+        });
+    }, [data, selectedStartDate]);
 
     return (
         <Row justify={"center"}>

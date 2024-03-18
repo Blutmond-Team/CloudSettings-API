@@ -92,7 +92,11 @@ export const AdminOverview = ({dataPromise, revalidateFunction}: Props) => {
                 <NewUserGraph data={newUsers}/>
             </Col>
             <Col xs={24} lg={12}>
-                <TotalUserGraph data={data.users}/>
+                <TotalUserGraph
+                    data={data.users}
+                    selectedStartDate={startDate?.toDate()}
+                    selecredEndDate={endDate?.toDate()}
+                />
             </Col>
             <Col xs={24} lg={12}>
                 <ActiveUserGraph data={activeUsers} startDate={startDate?.toDate() || new Date(1687557600000)}/>
