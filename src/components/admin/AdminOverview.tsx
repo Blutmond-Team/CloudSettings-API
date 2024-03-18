@@ -9,6 +9,7 @@ import {UserTable} from "@/components/admin/UserTable";
 import {NewUserGraph} from "@/components/admin/NewUserGraph";
 import {TotalUserGraph} from "@/components/admin/TotalUserGraph";
 import dayjs, {Dayjs} from "dayjs";
+import _ from "lodash";
 
 const {RangePicker} = DatePicker;
 
@@ -21,7 +22,7 @@ export const AdminOverview = ({dataPromise, revalidateFunction}: Props) => {
     const token = useTheme();
     const data = use(dataPromise);
     const [isPending, startTransition] = useTransition();
-    const [selectedRange, selectRange] = useState<[Dayjs | null, Dayjs | null] | null>(null);
+    const [selectedRange, selectRange] = useState<[Dayjs | null, Dayjs | null] | null>([dayjs().startOf('month'), dayjs()]);
     const [startDate, endDate] = selectedRange || [null, null];
 
     const toPercent = useCallback((value: number) => {
@@ -39,20 +40,29 @@ export const AdminOverview = ({dataPromise, revalidateFunction}: Props) => {
         return [unverified, verified, activeToday];
     }, [data.users]);
 
-    const [newUsers] = useMemo(() => {
+    const [newUsers, activeUsers] = useMemo(() => {
         const start = startDate?.toDate();
         const end = endDate?.toDate();
-        let newUsers = data.users;
+        let newUsers = _.cloneDeep(data.users);
+        let activeUsers = _.cloneDeep(data.users);
 
         if (start) {
             newUsers = newUsers.filter(value => value.jointAt.getTime() >= start.getTime());
+            activeUsers = activeUsers.map(user => {
+                user.logins = user.logins.filter(loginDate => loginDate.getTime() >= start.getTime())
+                return user;
+            }).filter(value => value.logins.length > 0);
         }
 
         if (end) {
             newUsers = newUsers.filter(value => value.jointAt.getTime() <= end.getTime());
+            activeUsers = activeUsers.map(user => {
+                user.logins = user.logins.filter(loginDate => loginDate.getTime() <= end.getTime())
+                return user;
+            }).filter(value => value.logins.length > 0);
         }
 
-        return [newUsers];
+        return [newUsers, activeUsers];
     }, [data.users, endDate, startDate])
 
     return (
@@ -85,7 +95,7 @@ export const AdminOverview = ({dataPromise, revalidateFunction}: Props) => {
                 <TotalUserGraph data={data.users}/>
             </Col>
             <Col xs={24} lg={12}>
-                <ActiveUserGraph data={data.users}/>
+                <ActiveUserGraph data={activeUsers} startDate={startDate?.toDate() || new Date(1687557600000)}/>
             </Col>
             <Col xs={24} lg={12}>
                 <Card>

@@ -13,8 +13,9 @@ type ChartItem = {
 
 type Props = {
     data: UserData[]
+    startDate: Date
 }
-export const ActiveUserGraph = ({data}: Props) => {
+export const ActiveUserGraph = ({data, startDate}: Props) => {
     const token = useTheme();
     const chartData = useMemo(() => {
         const mapped = data.flatMap(value => {
@@ -38,7 +39,7 @@ export const ActiveUserGraph = ({data}: Props) => {
 
         const distinctData: ChartItem[] = [];
 
-        for (let timeStamp = 1687557600000; timeStamp < Date.now() - 86400000; timeStamp += 86400000) {
+        for (let timeStamp = startDate.getTime(); timeStamp < Date.now() - 86400000; timeStamp += 86400000) {
             const key = new Date(timeStamp).toLocaleDateString();
             distinctData.push({
                 key: key,
