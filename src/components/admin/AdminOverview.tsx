@@ -1,13 +1,16 @@
 "use client"
 import {UserData} from "@/app/admin/users/page";
-import {Card, Col, Row} from "antd";
+import {Card, Col, DatePicker, Row, Typography} from "antd";
 import {useTheme} from "@/hooks";
-import {use, useTransition} from "react";
+import {use, useCallback, useMemo, useState, useTransition} from "react";
 import {TitleValueCol} from "@/components/global/TitleValueCol";
 import {ActiveUserGraph} from "@/components/admin/ActiveUserGraph";
 import {UserTable} from "@/components/admin/UserTable";
 import {NewUserGraph} from "@/components/admin/NewUserGraph";
 import {TotalUserGraph} from "@/components/admin/TotalUserGraph";
+import dayjs, {Dayjs} from "dayjs";
+
+const {RangePicker} = DatePicker;
 
 type Props = {
     dataPromise: Promise<{ users: UserData[], date: Date }>
@@ -18,24 +21,65 @@ export const AdminOverview = ({dataPromise, revalidateFunction}: Props) => {
     const token = useTheme();
     const data = use(dataPromise);
     const [isPending, startTransition] = useTransition();
+    const [selectedRange, selectRange] = useState<[Dayjs | null, Dayjs | null] | null>(null);
+    const [startDate, endDate] = selectedRange || [null, null];
 
-    function toPercent(value: number) {
+    const toPercent = useCallback((value: number) => {
         return (100 / data.users.length * value).toFixed(0);
-    }
+    }, [data.users.length])
 
+    const [unverified, verified, activeToday] = useMemo(() => {
+        const unverified = data.users.filter(value => !value.verified).length;
+        const verified = data.users.length - unverified;
+        const activeToday = data.users.filter(value => {
+            const startToday = new Date().setHours(0, 0, 0, 0);
+            return value.lastActivity.getTime() >= startToday;
+        }).length;
 
-    const unverified = data.users.filter(value => !value.verified).length;
-    const verified = data.users.length - unverified;
-    const activeToday = data.users.filter(value => {
-        const startToday = new Date().setHours(0, 0, 0, 0);
-        return value.lastActivity.getTime() >= startToday;
-    }).length;
+        return [unverified, verified, activeToday];
+    }, [data.users]);
 
+    const [newUsers] = useMemo(() => {
+        const start = startDate?.toDate();
+        const end = endDate?.toDate();
+        let newUsers = data.users;
+
+        if (start) {
+            newUsers = newUsers.filter(value => value.jointAt.getTime() >= start.getTime());
+        }
+
+        if (end) {
+            newUsers = newUsers.filter(value => value.jointAt.getTime() <= end.getTime());
+        }
+
+        return [newUsers];
+    }, [data.users, endDate, startDate])
 
     return (
         <Row justify={"center"} gutter={[16, 8]} style={{margin: `0 ${token.margin}px`}} align={"stretch"}>
+            <Col xs={24}>
+                <Card>
+                    <Row justify={"center"}>
+                        <Col xs={24} className={"text-center"}>
+                            <Typography.Title>Admin Overview</Typography.Title>
+                            <Typography.Text>
+                                Select a date range for the graphs:
+                            </Typography.Text>
+                        </Col>
+                        <Col>
+                            <RangePicker
+                                value={selectedRange}
+                                onChange={(value) => selectRange(value)}
+                                minDate={dayjs(data.users[data.users.length - 1].jointAt)}
+                                maxDate={dayjs()}
+                                format={"DD.MM.YYYY"}
+                            />
+                        </Col>
+                    </Row>
+                </Card>
+            </Col>
             <Col xs={24} lg={12}>
-                <NewUserGraph data={data.users}/>
+                <NewUserGraph data={newUsers}/>
             </Col>
             <Col xs={24} lg={12}>
                 <TotalUserGraph data={data.users}/>
