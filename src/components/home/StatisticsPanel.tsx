@@ -3,7 +3,9 @@ import {Card, Col, Row} from "antd";
 import {useTheme} from "@/hooks";
 import {PageData} from "@/app/page";
 import {use} from "react";
-import {ArrowDownOutlined, CloudSyncOutlined, TeamOutlined} from "@ant-design/icons";
+import ArrowDownOutlined from "@ant-design/icons/ArrowDownOutlined";
+import CloudSyncOutlined from "@ant-design/icons/CloudSyncOutlined";
+import TeamOutlined from "@ant-design/icons/TeamOutlined";
 import {Text} from "@/components/antd/Text";
 
 const {Meta} = Card;

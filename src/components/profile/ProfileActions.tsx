@@ -9,7 +9,7 @@ import type {Option, User} from "@prisma/client";
 import {TitleValueCol} from "@/components/global/TitleValueCol";
 import Image from "next/image";
 import {ColProps} from "antd/es/grid/col";
-import {WarningOutlined} from "@ant-design/icons";
+import WarningOutlined from "@ant-design/icons/WarningOutlined";
 
 type Props = {
     user: User | null | undefined
@@ -119,7 +119,7 @@ export const ProfileActions = ({user, options}: Props) => {
                                 danger
                                 type={"primary"}
                                 onClick={deleteAccountModal.open}
-                                icon={<WarningOutlined />}
+                                icon={<WarningOutlined/>}
                             >
                                 Delete Account
                             </Button>

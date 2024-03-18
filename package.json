@@ -17,7 +17,7 @@
   },
   "dependencies": {
     "@ant-design/cssinjs": "^1.18.4",
-    "@ant-design/icons": "^5.2.6",
+    "@ant-design/icons": "4.8.2",
     "@ant-design/pro-components": "^2.6.50",
     "@antv/g2": "^5.1.16",
     "@headlessui/react": "^1.7.18",

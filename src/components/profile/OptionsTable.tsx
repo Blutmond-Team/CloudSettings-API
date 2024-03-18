@@ -4,7 +4,10 @@ import {Button, Card, Col, Popconfirm, Row, Table, Tooltip} from "antd";
 import {useTheme} from "@/hooks";
 import {Text} from "@/components/antd/Text";
 import {useTransition} from "react";
-import {DeleteOutlined, EditOutlined, ReloadOutlined, UnorderedListOutlined} from "@ant-design/icons";
+import DeleteOutlined from "@ant-design/icons/DeleteOutlined";
+import EditOutlined from "@ant-design/icons/EditOutlined";
+import ReloadOutlined from "@ant-design/icons/ReloadOutlined";
+import UnorderedListOutlined from "@ant-design/icons/UnorderedListOutlined";
 import {blacklistUserOption, deleteUserOption, whitelistUserOption} from "@/app/actions";
 
 type Props = {
@@ -20,7 +23,7 @@ export const OptionsTable = ({options, revalidateFunction}: Props) => {
             title={<Text style={{fontSize: token.fontSizeHeading2}}>Stored Options</Text>}
             styles={{
                 body: {
-                    padding:  `0 ${token.paddingLG}px`,
+                    padding: `0 ${token.paddingLG}px`,
                     paddingBottom: token.paddingXXS
                 }
             }}
