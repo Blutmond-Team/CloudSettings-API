@@ -151,6 +151,15 @@ export function AppShell({children}: Props) {
                                                 <Text>BisectHosting</Text>
                                             </Link>
                                         },
+                                        {
+                                            key: 'vercel',
+                                            label: <Link
+                                                href={"https://vercel.com/"}
+                                                target={"_blank"}
+                                            >
+                                                <Text>Vercel</Text>
+                                            </Link>
+                                        }
                                     ]}
                                 />
                             </Col>
@@ -248,6 +257,15 @@ export function AppShell({children}: Props) {
                                             <Text>BisectHosting</Text>
                                         </Link>
                                     },
+                                    {
+                                        key: 'vercel',
+                                        label: <Link
+                                            href={"https://vercel.com/"}
+                                            target={"_blank"}
+                                        >
+                                            <Text>Vercel</Text>
+                                        </Link>
+                                    }
                                 ]}
                             />
                         </Col>
