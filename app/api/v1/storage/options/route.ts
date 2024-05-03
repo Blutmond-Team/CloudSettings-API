@@ -129,6 +129,8 @@ export async function POST(request: NextRequest) {
                     key: id
                 }
             }
+        }).catch(reason => {
+            console.error("Failed to save option", option, "for user", userId, "\nReason:\n", reason);
         }));
     });
 
