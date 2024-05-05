@@ -1,6 +1,6 @@
 "use client"
 import {UserData} from "@/app/admin/users/page";
-import {Card, Col, DatePicker, Row, Typography} from "antd";
+import {Button, Card, Col, DatePicker, Row, Typography} from "antd";
 import {useTheme} from "@/hooks";
 import {use, useCallback, useMemo, useState, useTransition} from "react";
 import {TitleValueCol} from "@/components/global/TitleValueCol";
@@ -10,15 +10,17 @@ import {NewUserGraph} from "@/components/admin/NewUserGraph";
 import {TotalUserGraph} from "@/components/admin/TotalUserGraph";
 import dayjs, {Dayjs} from "dayjs";
 import _ from "lodash";
+import {toast} from "react-toastify";
 
 const {RangePicker} = DatePicker;
 
 type Props = {
     dataPromise: Promise<{ users: UserData[], date: Date }>
     revalidateFunction: VoidFunction
+    deleteUnverifiedFunction: VoidFunction
 }
 
-export const AdminOverview = ({dataPromise, revalidateFunction}: Props) => {
+export const AdminOverview = ({dataPromise, revalidateFunction, deleteUnverifiedFunction}: Props) => {
     const token = useTheme();
     const data = use(dataPromise);
     const [isPending, startTransition] = useTransition();
@@ -28,7 +30,6 @@ export const AdminOverview = ({dataPromise, revalidateFunction}: Props) => {
     const toPercent = useCallback((value: number) => {
         return (100 / data.users.length * value).toFixed(0);
     }, [data.users.length])
-
     const [unverified, verified, activeToday] = useMemo(() => {
         const unverified = data.users.filter(value => !value.verified).length;
         const verified = data.users.length - unverified;
@@ -39,7 +40,6 @@ export const AdminOverview = ({dataPromise, revalidateFunction}: Props) => {
 
         return [unverified, verified, activeToday];
     }, [data.users]);
-
     const [newUsers, activeUsers] = useMemo(() => {
         const start = startDate?.toDate();
         const end = endDate?.toDate();
@@ -135,6 +135,29 @@ export const AdminOverview = ({dataPromise, revalidateFunction}: Props) => {
                                     title={"Last Update"}
                                     value={isPending ? "Loading..." : data.date.toLocaleString()}
                                 />
+                            </Col>
+                            <Col flex={"0 0 200px"}>
+                                <Button onClick={() => {
+                                    toast(<div>
+                                            <p>Are you sure you want to delete {unverified} unverified Users?</p>
+                                            <div className={"w-full flex justify-end"}>
+                                                <button
+                                                    type="button"
+                                                    className="relative inline-flex items-center rounded-md bg-white dark:bg-pale-800 px-3 py-2 text-sm font-semibold text-pale-900 dark:text-white ring-1 ring-inset ring-pale-300 dark:ring-pale-700 hover:bg-pale-50 dark:hover:bg-pale-700 focus:z-10 transition-colors"
+                                                    onClick={() => {
+                                                        startTransition(() => {
+                                                            deleteUnverifiedFunction();
+                                                            toast("Deleted all unverified users");
+                                                            revalidateFunction();
+                                                        })
+                                                    }}
+                                                >
+                                                    Yes
+                                                </button>
+                                            </div>
+                                        </div>
+                                    )
+                                }}>Delete all unverified</Button>
                             </Col>
                         </Row>
                     </div>

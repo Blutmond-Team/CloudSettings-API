@@ -1,4 +1,4 @@
-import type {Option} from "@prisma/client";
+import {Option, Role} from "@prisma/client";
 import {Prisma, PrismaClient} from "@prisma/client";
 import {getServerSession} from "next-auth";
 import type {CloudSettingsSession} from "@/src/types/AuthTypes";
@@ -15,11 +15,36 @@ export default async function Home() {
         revalidatePath('/admin/users');
     }
 
+    async function deleteUnverified() {
+        "use server"
+        const session = await getServerSession(authOptions) as CloudSettingsSession | null;
+        // User has to be logged in
+        if (!session) return;
+        // Post login has to be successful
+        if (!session.postLogin) return;
+        // User has to be a moderator or admin
+        if (!(session.role === Role.MODERATOR || session.role === Role.ADMIN)) return;
+
+        const prisma = new PrismaClient();
+        const result = await prisma.user.deleteMany({
+            where: {
+                verified: false
+            }
+        });
+
+        console.log("Deleted " + result.count + " unverified users.");
+        prisma.$disconnect();
+    }
+
     const data = getData();
     return (
         <div className={"justify-center grid-cols-1"}>
             <PredefinedSuspense>
-                <AdminOverview dataPromise={data} revalidateFunction={revalidatePage}/>
+                <AdminOverview
+                    dataPromise={data}
+                    revalidateFunction={revalidatePage}
+                    deleteUnverifiedFunction={deleteUnverified}
+                />
             </PredefinedSuspense>
         </div>
     )
