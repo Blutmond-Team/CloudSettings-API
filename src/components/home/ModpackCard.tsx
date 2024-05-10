@@ -20,12 +20,14 @@ export const ModpackCard = ({href, img, title, desc}: Props) => {
             <Card
                 style={{width: 280, height: 210, backgroundColor: theme.colorBgBase}}
                 cover={
-                    <Image
-                        src={img}
-                        alt={"Modpack Logo"}
-                        width={280}
-                        height={88}
-                    />
+                    <div className={"overflow-hidden w-[280px] h-[80px]"}>
+                        <Image
+                            src={img}
+                            alt={"Modpack Logo"}
+                            width={280}
+                            height={80}
+                        />
+                    </div>
                 }
                 styles={{
                     body: {

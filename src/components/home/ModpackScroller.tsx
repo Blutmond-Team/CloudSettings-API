@@ -36,7 +36,11 @@ export const ModpackScroller = () => {
                 <Col span={24}>
                     <Row justify={"center"}>
                         <Col className={"!text-center"}>
-                            <Text style={{fontSize: theme.fontSizeHeading3, fontWeight: theme.fontWeightStrong, display: "inline-block"}}>
+                            <Text style={{
+                                fontSize: theme.fontSizeHeading3,
+                                fontWeight: theme.fontWeightStrong,
+                                display: "inline-block"
+                            }}>
                                 Modpacks using CloudSettings
                             </Text>
                         </Col>
