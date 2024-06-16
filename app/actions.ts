@@ -1,11 +1,10 @@
 "use server"
-import {getServerSession} from "next-auth";
 import type {CloudSettingsSession} from "@/src/types/AuthTypes";
 import {PrismaClient} from "@prisma/client";
-import {authOptions} from "@/src/utils/AuthOptions";
+import {auth} from "@/auth";
 
 export async function blacklistUserOption(optionKey: string) {
-    const session = await getServerSession(authOptions);
+    const session = await auth();
     if (!session) return;
 
     const cloudSettingsSession = session as CloudSettingsSession;
@@ -27,7 +26,7 @@ export async function blacklistUserOption(optionKey: string) {
 }
 
 export async function whitelistUserOption(optionKey: string) {
-    const session = await getServerSession(authOptions);
+    const session = await auth();
     if (!session) return;
 
     const cloudSettingsSession = session as CloudSettingsSession;
@@ -49,7 +48,7 @@ export async function whitelistUserOption(optionKey: string) {
 }
 
 export async function deleteUserOption(optionKey: string) {
-    const session = await getServerSession(authOptions);
+    const session = await auth();
     if (!session) return;
 
     const cloudSettingsSession = session as CloudSettingsSession;

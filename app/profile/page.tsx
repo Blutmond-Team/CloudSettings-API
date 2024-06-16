@@ -1,12 +1,11 @@
 import {PrismaClient} from "@prisma/client";
-import {getServerSession} from "next-auth";
 import {CloudSettingsSession} from "@/src/types/AuthTypes";
 import {redirect} from "next/navigation";
 import {revalidatePath} from "next/cache";
 import {OptionsTable} from "@/components/profile/OptionsTable";
 import {Col, Row} from "antd";
 import {ProfileActions} from "@/components/profile/ProfileActions";
-import {authOptions} from "@/src/utils/AuthOptions";
+import {auth} from "@/auth";
 
 export default async function Home() {
     async function revalidatePage() {
@@ -39,7 +38,7 @@ export default async function Home() {
 }
 
 async function getData() {
-    const session = await getServerSession(authOptions);
+    const session = await auth() as CloudSettingsSession | null;
     if (!session) {
         redirect('/');
         return {
@@ -47,8 +46,7 @@ async function getData() {
         }
     }
 
-    const cloudSettingsSession = session as CloudSettingsSession;
-    if (!cloudSettingsSession.postLogin) {
+    if (!session.postLogin) {
         redirect('/');
         return {
             options: []
@@ -58,12 +56,12 @@ async function getData() {
     const prisma = new PrismaClient();
     const options = await prisma.option.findMany({
         where: {
-            userId: cloudSettingsSession.minecraft.uuid
+            userId: session.minecraft.uuid
         }
     });
     const user = await prisma.user.findFirst({
         where: {
-            id: cloudSettingsSession.minecraft.uuid
+            id: session.minecraft.uuid
         }
     });
 

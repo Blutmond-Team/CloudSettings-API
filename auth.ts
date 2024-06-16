@@ -1,28 +1,40 @@
-import {type NextAuthOptions} from "next-auth";
-import AzureAD from "next-auth/providers/azure-ad";
-import type {CloudSettingsSession, CloudSettingsToken} from "@/src/types/AuthTypes";
+import NextAuth from "next-auth"
+import {type CloudSettingsSession, CloudSettingsToken} from "@/src/types/AuthTypes";
 import {loginIntoMinecraft} from "@/src/utils/MicrosoftLoginUtils";
 import {PrismaClient} from "@prisma/client";
+import Entra from "next-auth/providers/microsoft-entra-id"
 
-export const authOptions: NextAuthOptions = {
-    providers: [
-        AzureAD({
-            clientId: process.env.AZURE_AD_CLIENT_ID!,
-            clientSecret: process.env.AZURE_AD_CLIENT_SECRET!,
-            tenantId: process.env.AZURE_AD_TENANT_ID,
-            authorization: {
-                params: {
-                    scope: "openid profile email XboxLive.signin"
-                }
-            }
-        })
-    ],
+const MinecraftLogin = Entra({
+    clientId: process.env.AZURE_AD_CLIENT_ID,
+    clientSecret: process.env.AZURE_AD_CLIENT_SECRET,
+    tenantId: process.env.AZURE_AD_TENANT_ID,
+    authorization: {
+        params: {
+            scope: "openid profile email XboxLive.signin offline_access"
+        }
+    }
+});
+
+export const {auth, handlers, signIn, signOut} = NextAuth({
+    providers: [MinecraftLogin],
+    debug: process.env.NODE_ENV !== "production",
     callbacks: {
+        signIn: async ({account}) => {
+            if (!account) return false;
+            try {
+                const fakeToken = {accessToken: account.access_token} as CloudSettingsToken;
+                await loginIntoMinecraft(fakeToken);
+                return !("error" in fakeToken);
+            } catch (error) {
+                console.error(error)
+                return false;
+            }
+        },
         jwt: async ({token, user, account, profile}) => {
             // On sign in
             if (account) {
                 // Ensure I don't mess up which other login methods
-                if (account.provider === "azure-ad") {
+                if (account.provider === "microsoft-entra-id" && user.id) {
                     let t: CloudSettingsToken = token as CloudSettingsToken;
                     // Add required data to next auth jwt
                     t.accessToken = account.token_type!;
@@ -81,4 +93,6 @@ export const authOptions: NextAuthOptions = {
             } as CloudSettingsSession;
         }
     }
-};
+});
+
+export const runtime = 'nodejs';

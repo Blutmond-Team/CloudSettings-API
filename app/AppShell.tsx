@@ -1,6 +1,5 @@
 "use client"
 import {useMemo} from "react";
-import {signIn, signOut, useSession} from "next-auth/react";
 import CloudSettingsLogo from '@/public/cloudsettings_logo_transparent.png';
 import {CloudSettingsSession} from "@/src/types/AuthTypes";
 import {Button, Col, Divider, Dropdown, Layout, Menu, MenuProps, Row, Space} from "antd";
@@ -10,24 +9,22 @@ import {Text} from "@/components/antd/Text";
 import {ConditionalElement} from "@/components/global/ConditionalElement";
 import {UserAvatar} from "@/components/menu/UserAvatar";
 import {useTheme} from "@/hooks";
+import {signIn, signOut} from "next-auth/react";
+import {Session} from "next-auth";
 
 type Props = {
+    session: Session | null
     children: React.ReactNode
 }
 
 const {Header, Content, Footer, Sider} = Layout;
 
 
-export function AppShell({children}: Props) {
+export function AppShell({children, session}: Props) {
     const token = useTheme();
-    const session = useSession();
     const user = useMemo(() => {
-        switch (session.status) {
-            default:
-                return undefined;
-            case "authenticated":
-                return session.data as CloudSettingsSession;
-        }
+        if (!session) return undefined;
+        return session as CloudSettingsSession;
     }, [session]);
 
     const userDropdownItems: MenuProps['items'] = useMemo(() => {
@@ -189,7 +186,7 @@ export function AppShell({children}: Props) {
                                             {
                                                 key: "login",
                                                 label: "Log In",
-                                                onClick: () => signIn('azure-ad')
+                                                onClick: () => signIn('microsoft-entra-id')
                                             }
                                         ]}
                                     />
@@ -302,7 +299,7 @@ export function AppShell({children}: Props) {
                                 </Space>
                             </ConditionalElement>
                             <ConditionalElement enabled={user === undefined}>
-                                <Button type={"text"} onClick={() => signIn('azure-ad')}>
+                                <Button type={"text"} onClick={() => signIn('microsoft-entra-id')}>
                                     Log In
                                 </Button>
                             </ConditionalElement>

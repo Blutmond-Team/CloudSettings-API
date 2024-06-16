@@ -1,12 +1,10 @@
-import {Option, Role} from "@prisma/client";
-import {Prisma, PrismaClient} from "@prisma/client";
-import {getServerSession} from "next-auth";
+import {Option, Prisma, PrismaClient, Role} from "@prisma/client";
 import type {CloudSettingsSession} from "@/src/types/AuthTypes";
 import {redirect} from "next/navigation";
 import {revalidatePath} from "next/cache";
 import {PredefinedSuspense} from "@/components/global/PredefinedSuspense";
 import {AdminOverview} from "@/components/admin/AdminOverview";
-import {authOptions} from "@/src/utils/AuthOptions";
+import {auth} from "@/auth";
 import UserGetPayload = Prisma.UserGetPayload;
 
 export default async function Home() {
@@ -17,7 +15,7 @@ export default async function Home() {
 
     async function deleteUnverified() {
         "use server"
-        const session = await getServerSession(authOptions) as CloudSettingsSession | null;
+        const session = await auth() as CloudSettingsSession | null;
         // User has to be logged in
         if (!session) return;
         // Post login has to be successful
@@ -62,7 +60,7 @@ export type UserData = {
 }
 
 async function getData(): Promise<{ users: UserData[], date: Date }> {
-    const session = await getServerSession(authOptions);
+    const session = await auth() as CloudSettingsSession | null;
     if (!session) {
         redirect('/');
         return {

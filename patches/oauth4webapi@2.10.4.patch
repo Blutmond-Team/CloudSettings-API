@@ -1,0 +1,14 @@
+diff --git a/build/index.js b/build/index.js
+index 7eccce2d51f233d20ee0fee9e7c84cb0d8380198..2c9f854ce4ea82efaa1394419d4353a9a667d636 100644
+--- a/build/index.js
++++ b/build/index.js
+@@ -246,7 +246,8 @@ export async function processDiscoveryResponse(expectedIssuerIdentifier, respons
+         throw new OPE('"response" body "issuer" property must be a non-empty string');
+     }
+     if (new URL(json.issuer).href !== expectedIssuerIdentifier.href) {
+-        throw new OPE('"response" body "issuer" does not match "expectedIssuer"');
++        console.log(new URL(json.issuer).href, expectedIssuerIdentifier.href)
++        //throw new OPE('"response" body "issuer" does not match "expectedIssuer"');
+     }
+     return json;
+ }

@@ -6,7 +6,7 @@ import {Analytics} from "@vercel/analytics/react";
 import {AntdStyledComponentRegistry} from "@/components/antd/AntdStyledComponentRegistry";
 import {Viewport} from "next";
 import {SpeedInsights} from "@vercel/speed-insights/next"
-import {Suspense} from "react";
+import {auth} from "@/auth";
 
 const inter = Inter({subsets: ['latin']});
 
@@ -38,13 +38,15 @@ type Props = {
     children: React.ReactNode
 }
 
-export default function RootLayout({children,}: Props) {
+export default async function RootLayout({children,}: Props) {
+    const session = await auth();
+
     return (
         <html lang="en" className={"h-full"}>
         <body className={`${inter.className} min-h-screen m-0`}>
         <AntdStyledComponentRegistry>
             <AppProvider>
-                <AppShell>
+                <AppShell session={session}>
                     {children}
                 </AppShell>
             </AppProvider>
