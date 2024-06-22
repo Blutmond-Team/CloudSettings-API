@@ -1,8 +1,7 @@
 "use client"
-import {UserData} from "@/app/admin/users/page";
 import {Button, Card, Col, DatePicker, Row, Typography} from "antd";
 import {useTheme} from "@/hooks";
-import {use, useCallback, useMemo, useState, useTransition} from "react";
+import {useCallback, useMemo, useState} from "react";
 import {TitleValueCol} from "@/components/global/TitleValueCol";
 import {ActiveUserGraph} from "@/components/admin/ActiveUserGraph";
 import {UserTable} from "@/components/admin/UserTable";
@@ -11,40 +10,52 @@ import {TotalUserGraph} from "@/components/admin/TotalUserGraph";
 import dayjs, {Dayjs} from "dayjs";
 import _ from "lodash";
 import {toast} from "react-toastify";
+import {DeletedUsers, UserEntries} from "@/src/types/ApiTypes";
+import {useMutation, useQuery} from "@tanstack/react-query";
+import axios from "axios";
 
 const {RangePicker} = DatePicker;
 
-type Props = {
-    dataPromise: Promise<{ users: UserData[], date: Date }>
-    revalidateFunction: VoidFunction
-    deleteUnverifiedFunction: VoidFunction
-}
+type Props = {}
 
-export const AdminOverview = ({dataPromise, revalidateFunction, deleteUnverifiedFunction}: Props) => {
+export const AdminOverview = ({}: Props) => {
     const token = useTheme();
-    const data = use(dataPromise);
-    const [isPending, startTransition] = useTransition();
     const [selectedRange, selectRange] = useState<[Dayjs | null, Dayjs | null] | null>([dayjs().startOf('month'), dayjs()]);
     const [startDate, endDate] = selectedRange || [null, null];
-
+    const {data: userEntries, refetch, isFetching} = useQuery<UserEntries>({
+        queryKey: ["api", "admin", "user"],
+        staleTime: Infinity
+    });
+    const {mutate: deleteUnverfiedUsers} = useMutation({
+        mutationFn: async () => {
+            const {data} = await axios.delete<DeletedUsers>("/api/admin/user?verified=0");
+            return data;
+        },
+        onSuccess: (data) => {
+            refetch().then(() => toast(`Deleted ${data.deleted} unverified users`))
+        }
+    })
     const toPercent = useCallback((value: number) => {
-        return (100 / data.users.length * value).toFixed(0);
-    }, [data.users.length])
+        if (!userEntries) return 0;
+        return (100 / (userEntries.users.length) * value).toFixed(0);
+    }, [userEntries])
     const [unverified, verified, activeToday] = useMemo(() => {
-        const unverified = data.users.filter(value => !value.verified).length;
-        const verified = data.users.length - unverified;
-        const activeToday = data.users.filter(value => {
+        if (!userEntries) return [0, 0, 0];
+        const unverified = userEntries.users.filter(value => !value.verified).length;
+        const verified = userEntries.users.length - unverified;
+        const activeToday = userEntries.users.filter(value => {
             const startToday = new Date().setHours(0, 0, 0, 0);
             return value.lastActivity.getTime() >= startToday;
         }).length;
 
         return [unverified, verified, activeToday];
-    }, [data.users]);
+    }, [userEntries]);
     const [newUsers, activeUsers] = useMemo(() => {
+        if (!userEntries) return [[], []];
         const start = startDate?.toDate();
         const end = endDate?.toDate();
-        let newUsers = _.cloneDeep(data.users);
-        let activeUsers = _.cloneDeep(data.users);
+        let newUsers = _.cloneDeep(userEntries.users);
+        let activeUsers = _.cloneDeep(userEntries.users);
 
         if (start) {
             newUsers = newUsers.filter(value => value.jointAt.getTime() >= start.getTime());
@@ -63,7 +74,7 @@ export const AdminOverview = ({dataPromise, revalidateFunction, deleteUnverified
         }
 
         return [newUsers, activeUsers];
-    }, [data.users, endDate, startDate])
+    }, [userEntries, endDate, startDate])
 
     return (
         <Row justify={"center"} gutter={[16, 8]} style={{margin: `0 ${token.margin}px`}} align={"stretch"}>
@@ -80,7 +91,7 @@ export const AdminOverview = ({dataPromise, revalidateFunction, deleteUnverified
                             <RangePicker
                                 value={selectedRange}
                                 onChange={(value) => selectRange(value)}
-                                minDate={dayjs(data.users[data.users.length - 1].jointAt)}
+                                minDate={dayjs(userEntries?.users[userEntries.users.length - 1].jointAt)}
                                 maxDate={dayjs()}
                                 format={"DD.MM.YYYY"}
                             />
@@ -93,7 +104,7 @@ export const AdminOverview = ({dataPromise, revalidateFunction, deleteUnverified
             </Col>
             <Col xs={24} lg={12}>
                 <TotalUserGraph
-                    data={data.users}
+                    data={userEntries?.users ?? []}
                     selectedStartDate={startDate?.toDate()}
                     selecredEndDate={endDate?.toDate()}
                 />
@@ -108,7 +119,7 @@ export const AdminOverview = ({dataPromise, revalidateFunction, deleteUnverified
                             <Col flex={"0 0 200px"}>
                                 <TitleValueCol
                                     title={"Total Users"}
-                                    value={data.users.length}
+                                    value={userEntries?.users.length ?? 0}
                                 />
                             </Col>
                             <Col flex={"0 0 200px"}>
@@ -129,11 +140,11 @@ export const AdminOverview = ({dataPromise, revalidateFunction, deleteUnverified
                                     value={`${activeToday} | ${toPercent(activeToday)}%`}
                                 />
                             </Col>
-                            <Col flex={"0 0 200px"} onClick={() => startTransition(revalidateFunction)}
+                            <Col flex={"0 0 200px"} onClick={() => refetch()}
                                  className={"!cursor-pointer"}>
                                 <TitleValueCol
                                     title={"Last Update"}
-                                    value={isPending ? "Loading..." : data.date.toLocaleString()}
+                                    value={isFetching ? "Loading..." : userEntries?.date.toLocaleString()}
                                 />
                             </Col>
                             <Col flex={"0 0 200px"}>
@@ -144,13 +155,7 @@ export const AdminOverview = ({dataPromise, revalidateFunction, deleteUnverified
                                                 <button
                                                     type="button"
                                                     className="relative inline-flex items-center rounded-md bg-white dark:bg-pale-800 px-3 py-2 text-sm font-semibold text-pale-900 dark:text-white ring-1 ring-inset ring-pale-300 dark:ring-pale-700 hover:bg-pale-50 dark:hover:bg-pale-700 focus:z-10 transition-colors"
-                                                    onClick={() => {
-                                                        startTransition(() => {
-                                                            deleteUnverifiedFunction();
-                                                            toast("Deleted all unverified users");
-                                                            revalidateFunction();
-                                                        })
-                                                    }}
+                                                    onClick={() => deleteUnverfiedUsers}
                                                 >
                                                     Yes
                                                 </button>
@@ -165,8 +170,8 @@ export const AdminOverview = ({dataPromise, revalidateFunction, deleteUnverified
             </Col>
             <Col span={24}>
                 <UserTable
-                    users={data.users}
-                    revalidateFunction={revalidateFunction}
+                    users={userEntries?.users ?? []}
+                    revalidateFunction={() => refetch()}
                 />
             </Col>
         </Row>

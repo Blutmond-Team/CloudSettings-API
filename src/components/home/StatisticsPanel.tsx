@@ -1,22 +1,25 @@
 "use client"
 import {Card, Col, Row} from "antd";
 import {useTheme} from "@/hooks";
-import {PageData} from "@/app/page";
-import {use} from "react";
 import ArrowDownOutlined from "@ant-design/icons/ArrowDownOutlined";
 import CloudSyncOutlined from "@ant-design/icons/CloudSyncOutlined";
 import TeamOutlined from "@ant-design/icons/TeamOutlined";
 import {Text} from "@/components/antd/Text";
+import {useQuery} from "@tanstack/react-query";
+import CountUp from "react-countup";
+import {UsageStats} from "@/src/types/ApiTypes";
 
 const {Meta} = Card;
 
-type Props = {
-    dataPromise: Promise<PageData>
-}
+type Props = {}
 
-export const StatisticsPanel = ({dataPromise}: Props) => {
+export const StatisticsPanel = ({}: Props) => {
     const token = useTheme();
-    const data = use(dataPromise);
+    const {data} = useQuery<UsageStats>({
+        queryKey: ["api", "usageStats"],
+        staleTime: 1000 * 60
+    });
+
 
     return (
         <Row>
@@ -55,10 +58,17 @@ export const StatisticsPanel = ({dataPromise}: Props) => {
                                 }
                                 title={<Text style={{color: token.colorTextSecondary, fontSize: token.fontSizeSM}}>Total
                                     Users</Text>}
-                                description={<Text style={{
-                                    fontSize: token.fontSizeHeading3,
-                                    fontWeight: token.fontWeightStrong
-                                }}>{data.userCount}</Text>}
+                                description={
+                                    <Text style={{
+                                        fontSize: token.fontSizeHeading3,
+                                        fontWeight: token.fontWeightStrong
+                                    }}>
+                                        <CountUp
+                                            end={data?.userCount ?? 0}
+                                            separator={" "}
+                                        />
+                                    </Text>
+                                }
                             />
                         </Card>
                     </Col>
@@ -92,7 +102,12 @@ export const StatisticsPanel = ({dataPromise}: Props) => {
                                 description={<Text style={{
                                     fontSize: token.fontSizeHeading3,
                                     fontWeight: token.fontWeightStrong
-                                }}>{data.optionsCount}</Text>}
+                                }}>
+                                    <CountUp
+                                        end={data?.optionsCount ?? 0}
+                                        separator={" "}
+                                    />
+                                </Text>}
                             />
                         </Card>
                     </Col>
@@ -130,7 +145,12 @@ export const StatisticsPanel = ({dataPromise}: Props) => {
                                 description={<Text style={{
                                     fontSize: token.fontSizeHeading3,
                                     fontWeight: token.fontWeightStrong
-                                }}>{data.totalDownloads}</Text>}
+                                }}>
+                                    <CountUp
+                                        end={data?.totalDownloads ?? 0}
+                                        separator={" "}
+                                    />
+                                </Text>}
                             />
                         </Card>
                     </Col>

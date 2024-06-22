@@ -1,7 +1,6 @@
 "use client"
 import {useMemo} from "react";
 import CloudSettingsLogo from '@/public/cloudsettings_logo_transparent.png';
-import {CloudSettingsSession} from "@/src/types/AuthTypes";
 import {Button, Col, Divider, Dropdown, Layout, Menu, MenuProps, Row, Space} from "antd";
 import Image from "next/image";
 import Link from "next/link";
@@ -22,10 +21,6 @@ const {Header, Content, Footer, Sider} = Layout;
 
 export function AppShell({children, session}: Props) {
     const token = useTheme();
-    const user = useMemo(() => {
-        if (!session) return undefined;
-        return session as CloudSettingsSession;
-    }, [session]);
 
     const userDropdownItems: MenuProps['items'] = useMemo(() => {
         const entries: MenuProps['items'] = [
@@ -35,8 +30,8 @@ export function AppShell({children, session}: Props) {
             }
         ];
 
-        if (user?.postLogin) {
-            if (user.role === "ADMIN") {
+        if (session?.postLogin.success) {
+            if (session.postLogin.role === "ADMIN") {
                 entries.push(
                     {
                         key: "Admin Tools Divider",
@@ -62,7 +57,7 @@ export function AppShell({children, session}: Props) {
 
 
         return entries;
-    }, [user]);
+    }, [session?.postLogin]);
 
     return (
         <Layout>
@@ -162,14 +157,19 @@ export function AppShell({children, session}: Props) {
                             </Col>
                             <Col flex={"1 0"}>
                                 <Divider className={"mx-0 my-2"}/>
-                                <ConditionalElement enabled={user !== undefined}>
+                                <ConditionalElement enabled={!!session}>
                                     <Row className={"!w-full"} justify={"center"} gutter={[4, 0]}>
                                         <Col>
-                                            <UserAvatar user={user}/>
+                                            <UserAvatar user={session}/>
                                         </Col>
                                         <Col>
-                                            <Text
-                                                className={"!text-xl"}>{user?.postLogin ? user.minecraft.username : user?.user?.name}</Text>
+                                            <Text className={"!text-xl"}>
+                                                {
+                                                    session?.postLogin.success
+                                                        ? session?.postLogin.minecraft.username
+                                                        : session?.user?.name
+                                                }
+                                            </Text>
                                         </Col>
                                     </Row>
                                     <Menu
@@ -178,7 +178,7 @@ export function AppShell({children, session}: Props) {
                                         items={userDropdownItems}
                                     />
                                 </ConditionalElement>
-                                <ConditionalElement enabled={user === undefined}>
+                                <ConditionalElement enabled={!session}>
                                     <Menu
                                         selectedKeys={[]}
                                         mode={"horizontal"}
@@ -267,13 +267,11 @@ export function AppShell({children, session}: Props) {
                             />
                         </Col>
                         <Col>
-                            <ConditionalElement enabled={user !== undefined}>
+                            <ConditionalElement enabled={!!session}>
                                 <Space direction={"vertical"}>
                                     <Space wrap>
                                         <Dropdown
-                                            menu={{
-                                                items: userDropdownItems
-                                            }}
+                                            menu={{items: userDropdownItems}}
                                             dropdownRender={menu => (
                                                 <div style={{
                                                     backgroundColor: token.colorBgElevated,
@@ -283,7 +281,7 @@ export function AppShell({children, session}: Props) {
                                                     <Space
                                                         style={{padding: 8, width: "100%", justifyContent: "center"}}>
                                                         <Text className={"!text-xl !font-bold"}>
-                                                            {user?.postLogin ? user.minecraft.username : user?.user?.name}
+                                                            {session?.postLogin.success ? session?.postLogin.minecraft.username : session?.user?.name}
                                                         </Text>
                                                     </Space>
                                                     <Divider style={{margin: 0}}/>
@@ -292,13 +290,13 @@ export function AppShell({children, session}: Props) {
                                             )}
                                         >
                                             <div>
-                                                <UserAvatar user={user}/>
+                                                <UserAvatar user={session}/>
                                             </div>
                                         </Dropdown>
                                     </Space>
                                 </Space>
                             </ConditionalElement>
-                            <ConditionalElement enabled={user === undefined}>
+                            <ConditionalElement enabled={!session}>
                                 <Button type={"text"} onClick={() => signIn('microsoft-entra-id')}>
                                     Log In
                                 </Button>

@@ -1,8 +1,9 @@
-import {CloudSettingsToken, MsStoreItem} from "@/src/types/AuthTypes";
+import {MsStoreItem} from "@/src/types/AuthTypes";
 
 import * as crypto from "crypto";
+import {JWT} from "next-auth/jwt";
 
-async function applyXboxLoginData(token: CloudSettingsToken): Promise<CloudSettingsToken> {
+async function applyXboxLoginData(token: JWT) {
     const response = await fetch('https://user.auth.xboxlive.com/user/authenticate', {
         method: "POST",
         body: JSON.stringify({
@@ -26,13 +27,14 @@ async function applyXboxLoginData(token: CloudSettingsToken): Promise<CloudSetti
         return Promise.reject(token);
     }
     const responseBody = await response.json();
-    token.xboxToken = responseBody.Token;
-    token.xboxUserHash = responseBody.DisplayClaims.xui[0].uhs;
 
-    return token;
+    return {
+        xboxToken: responseBody.Token,
+        xboxUserHash: responseBody.DisplayClaims.xui[0].uhs
+    };
 }
 
-async function applyMinecraftServicesData(token: CloudSettingsToken): Promise<CloudSettingsToken> {
+async function applyMinecraftServicesData(token: JWT, xboxToken: string) {
     const response = await fetch('https://xsts.auth.xboxlive.com/xsts/authorize', {
         method: "POST",
         headers: {
@@ -43,7 +45,7 @@ async function applyMinecraftServicesData(token: CloudSettingsToken): Promise<Cl
             "Properties": {
                 "SandboxId": "RETAIL",
                 "UserTokens": [
-                    token.xboxToken
+                    xboxToken
                 ]
             },
             "RelyingParty": "rp://api.minecraftservices.com/",
@@ -58,20 +60,21 @@ async function applyMinecraftServicesData(token: CloudSettingsToken): Promise<Cl
     }
 
     const responseBody = await response.json();
-    token.minecraftServicesToken = responseBody.Token;
-    token.minecraftServicesUserHash = responseBody.DisplayClaims.xui[0].uhs;
 
-    return token;
+    return {
+        minecraftServicesToken: responseBody.Token,
+        minecraftServicesUserHash: responseBody.DisplayClaims.xui[0].uhs
+    };
 }
 
-async function applyMinecraftData(token: CloudSettingsToken): Promise<CloudSettingsToken> {
+async function applyMinecraftData(token: JWT, minecraftServicesUserHash: string, minecraftServicesToken: string) {
     const response = await fetch('https://api.minecraftservices.com/authentication/login_with_xbox', {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
             "Accept": "application/json"
         },
-        body: JSON.stringify({"identityToken": `XBL3.0 x=${token.minecraftServicesUserHash};${token.minecraftServicesToken}`})
+        body: JSON.stringify({"identityToken": `XBL3.0 x=${minecraftServicesUserHash};${minecraftServicesToken}`})
     });
 
     if (!response.ok) {
@@ -81,17 +84,18 @@ async function applyMinecraftData(token: CloudSettingsToken): Promise<CloudSetti
     }
 
     const responseBody = await response.json();
-    token.minecraftAccessToken = responseBody.access_token
 
-    return token;
+    return {
+        minecraftAccessToken: responseBody.access_token
+    };
 }
 
-async function checkOwnsMinecraft(token: CloudSettingsToken): Promise<CloudSettingsToken> {
+async function checkOwnsMinecraft(token: JWT, minecraftAccessToken: string) {
     const response = await fetch('https://api.minecraftservices.com/entitlements/mcstore', {
         headers: {
             "Content-Type": "application/json",
             "Accept": "application/json",
-            "Authorization": `Bearer ${token.minecraftAccessToken}`
+            "Authorization": `Bearer ${minecraftAccessToken}`
         }
     });
 
@@ -108,12 +112,12 @@ async function checkOwnsMinecraft(token: CloudSettingsToken): Promise<CloudSetti
     return token;
 }
 
-async function getMinecraftProfile(token: CloudSettingsToken): Promise<CloudSettingsToken> {
+async function getMinecraftProfile(token: JWT, minecraftAccessToken: string) {
     const response = await fetch('https://api.minecraftservices.com/minecraft/profile', {
         headers: {
             "Content-Type": "application/json",
             "Accept": "application/json",
-            "Authorization": `Bearer ${token.minecraftAccessToken}`
+            "Authorization": `Bearer ${minecraftAccessToken}`
         }
     });
 
@@ -145,18 +149,23 @@ async function getMinecraftProfile(token: CloudSettingsToken): Promise<CloudSett
     token.minecraftUserName = responseBody.name;
     token.minecraftUUID = uuid;
 
-    return token;
+    return {
+        minecraftUserName: responseBody.name,
+        minecraftUUID: uuid
+    };
 }
 
-export async function loginIntoMinecraft(token: CloudSettingsToken): Promise<CloudSettingsToken> {
-    return applyXboxLoginData(token)
-        .then(value => applyMinecraftServicesData(value)
-            .then(value1 => applyMinecraftData(value1)
-                .then(value2 => checkOwnsMinecraft(value2)
-                    .then(value3 => getMinecraftProfile(value3))
-                )
-            )
-        );
+export async function loginIntoMinecraft(token: JWT) {
+    const {xboxToken} = await applyXboxLoginData(token);
+    const {minecraftServicesToken, minecraftServicesUserHash} = await applyMinecraftServicesData(token, xboxToken);
+    const {minecraftAccessToken} = await applyMinecraftData(token, minecraftServicesUserHash, minecraftServicesToken);
+    await checkOwnsMinecraft(token, minecraftAccessToken);
+    const {minecraftUserName, minecraftUUID} = await getMinecraftProfile(token, minecraftAccessToken);
+
+    token.postLogin = {
+        minecraftUUID,
+        minecraftUserName
+    };
 }
 
 export function mcHexDigest(playerName: string) {

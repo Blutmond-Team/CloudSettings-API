@@ -1,14 +1,14 @@
 "use client"
-import type {CloudSettingsSession} from "@/src/types/AuthTypes";
 import {Avatar} from "antd";
+import {Session} from "next-auth";
 
 type Props = {
-    user?: CloudSettingsSession
+    user?: Session | null
 }
 export const UserAvatar = ({user}: Props) => {
-    if (user?.postLogin) {
+    if (user?.postLogin.success) {
         return (
-            <Avatar src={`https://mc-heads.net/avatar/${user.minecraft.uuid}`}/>
+            <Avatar src={`https://mc-heads.net/avatar/${user.postLogin.minecraft.uuid}`}/>
         )
     }
     return (
