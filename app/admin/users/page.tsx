@@ -1,5 +1,4 @@
-import {Option, Role} from "@prisma/client";
-import {Prisma, PrismaClient} from "@prisma/client";
+import {Option, Prisma, PrismaClient, Role} from "@prisma/client";
 import {getServerSession} from "next-auth";
 import type {CloudSettingsSession} from "@/src/types/AuthTypes";
 import {redirect} from "next/navigation";
@@ -117,3 +116,4 @@ async function getData(): Promise<{ users: UserData[], date: Date }> {
 
 export const revalidate = 500;
 export const dynamic = "force-dynamic";
+export const maxDuration = 20;
