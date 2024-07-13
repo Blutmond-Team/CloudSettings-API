@@ -116,4 +116,4 @@ async function getData(): Promise<{ users: UserData[], date: Date }> {
 
 export const revalidate = 500;
 export const dynamic = "force-dynamic";
-export const maxDuration = 20;
+export const maxDuration = 60;
