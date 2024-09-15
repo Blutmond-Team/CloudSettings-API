@@ -1,11 +1,11 @@
 "use client"
 import {UserData} from "@/app/admin/users/page";
 import {Area, AreaChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxis} from "recharts";
-import _ from "lodash"
 import {useMemo} from "react";
 import {Text} from "@/components/antd/Text";
 import {useTheme} from "@/hooks";
 import {Card, Col, Row} from "antd";
+import {groupBy, sortBy, values} from "lodash-es";
 
 type Props = {
     data: UserData[]
@@ -13,9 +13,9 @@ type Props = {
 export const NewUserGraph = ({data}: Props) => {
     const token = useTheme();
     const chartData = useMemo(() => {
-        const sortedData = _.sortBy(data, value => value.jointAt.getTime());
-        const seperatedData = _.groupBy(sortedData, value => Date.UTC(value.jointAt.getUTCFullYear(), value.jointAt.getUTCMonth(), value.jointAt.getUTCDate()));
-        const seperatedArray = _.values(seperatedData);
+        const sortedData = sortBy(data, value => value.jointAt.getTime());
+        const seperatedData = groupBy(sortedData, value => Date.UTC(value.jointAt.getUTCFullYear(), value.jointAt.getUTCMonth(), value.jointAt.getUTCDate()));
+        const seperatedArray = values(seperatedData);
         const firstEntry = seperatedArray[0];
 
         const resultData: { key: string, count: number, unverified: number }[] = [];

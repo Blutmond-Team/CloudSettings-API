@@ -9,8 +9,8 @@ import {UserTable} from "@/components/admin/UserTable";
 import {NewUserGraph} from "@/components/admin/NewUserGraph";
 import {TotalUserGraph} from "@/components/admin/TotalUserGraph";
 import dayjs, {Dayjs} from "dayjs";
-import _ from "lodash";
 import {toast} from "react-toastify";
+import {cloneDeep} from "lodash-es";
 
 const {RangePicker} = DatePicker;
 
@@ -43,8 +43,8 @@ export const AdminOverview = ({dataPromise, revalidateFunction, deleteUnverified
     const [newUsers, activeUsers] = useMemo(() => {
         const start = startDate?.toDate();
         const end = endDate?.toDate();
-        let newUsers = _.cloneDeep(data.users);
-        let activeUsers = _.cloneDeep(data.users);
+        let newUsers = cloneDeep(data.users);
+        let activeUsers = cloneDeep(data.users);
 
         if (start) {
             newUsers = newUsers.filter(value => value.jointAt.getTime() >= start.getTime());
