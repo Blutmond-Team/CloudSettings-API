@@ -91,7 +91,11 @@ async function getData(): Promise<{ users: UserData[], date: Date }> {
     const users = await prisma.user.findMany({
         include: {
             Option: true,
-            LoginToken: true
+            LoginToken: {
+                select: {
+                    createdAt: true
+                }
+            }
         },
         orderBy: {
             lastActivity: 'desc'
