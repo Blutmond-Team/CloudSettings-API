@@ -81,9 +81,7 @@ export const TotalUserGraph = ({data, selectedStartDate, selecredEndDate}: Props
                 >
                     <Text style={{fontSize: token.fontSizeHeading3}}>Total Users</Text>
                     <ResponsiveContainer width={"95%"} height={200}>
-                        <AreaChart
-                            data={chartData}
-                        >
+                        <AreaChart data={chartData}>
                             <CartesianGrid strokeDasharray={"3 3"}/>
                             <YAxis/>
                             <XAxis dataKey={"key"}/>

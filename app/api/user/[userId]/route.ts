@@ -5,7 +5,7 @@ import {CloudSettingsToken} from "@/src/types/AuthTypes";
 
 export const dynamic = "force-dynamic";
 type PathVariables = {
-    params: { userId: string }
+    params: Promise<{ userId: string }>
 }
 
 export async function DELETE(request: NextRequest, {params}: PathVariables) {
@@ -38,7 +38,9 @@ export async function DELETE(request: NextRequest, {params}: PathVariables) {
         });
     }
 
-    if (requestUser.role !== "MODERATOR" && requestUser.role !== "ADMIN" && requestUser.id !== params.userId) {
+    const {userId} = await params;
+
+    if (requestUser.role !== "MODERATOR" && requestUser.role !== "ADMIN" && requestUser.id !== userId) {
         return new Response("No Permission to do that.", {
             status: 401,
             statusText: "No Permission to do that."
@@ -47,7 +49,7 @@ export async function DELETE(request: NextRequest, {params}: PathVariables) {
 
     const user = await prisma.user.findFirst({
         where: {
-            id: params.userId
+            id: userId
         }
     });
 
@@ -97,7 +99,9 @@ export async function GET(request: NextRequest, {params}: PathVariables) {
         });
     }
 
-    if (requestUser.role !== "MODERATOR" && requestUser.role !== "ADMIN" && requestUser.id !== params.userId) {
+    const {userId} = await params;
+
+    if (requestUser.role !== "MODERATOR" && requestUser.role !== "ADMIN" && requestUser.id !== userId) {
         return new Response("No Permission to do that.", {
             status: 401,
             statusText: "No Permission to do that."
@@ -106,7 +110,7 @@ export async function GET(request: NextRequest, {params}: PathVariables) {
 
     const user = await prisma.user.findFirst({
         where: {
-            id: params.userId
+            id: userId
         },
         include: {
             Option: true
