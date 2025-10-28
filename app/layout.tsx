@@ -1,31 +1,31 @@
+import '@ant-design/v5-patch-for-react-19';
 import './globals.css'
 import {Inter} from 'next/font/google'
 import {AppShell} from "@/app/AppShell";
 import {AppProvider} from "@/app/AppProvider";
 import {Analytics} from "@vercel/analytics/react";
-import {AntdStyledComponentRegistry} from "@/components/antd/AntdStyledComponentRegistry";
-import {Viewport} from "next";
+import {Metadata, Viewport} from "next";
 import {SpeedInsights} from "@vercel/speed-insights/next"
-import {Suspense} from "react";
+import {AntdRegistry} from "@ant-design/nextjs-registry";
 
 const inter = Inter({subsets: ['latin']});
 
-export const metadata = {
+export const metadata: Metadata = {
     title: 'CloudSettings',
     description: 'Web App for the CloudSettings Minecraft Mod',
     metadataBase: new URL('https://cloudsettings.blutmondgilde.de'),
     appLinks: {
         web: {
             url: 'https://cloudsettings.blutmondgilde.de/',
-            should_fallback: true
-        }
+            should_fallback: true,
+        },
     },
     openGraph: {
         title: 'CloudSettings',
         description: 'Web App for the CloudSettings Minecraft Mod',
         type: 'website',
-        url: 'https://cloudsettings.blutmondgilde.de/'
-    }
+        url: 'https://cloudsettings.blutmondgilde.de/',
+    },
 }
 
 export const viewport: Viewport = {
@@ -34,21 +34,17 @@ export const viewport: Viewport = {
     maximumScale: 1,
 }
 
-type Props = {
-    children: React.ReactNode
-}
-
-export default function RootLayout({children,}: Props) {
+export default function RootLayout({children}: LayoutProps<"/">) {
     return (
         <html lang="en" className={"h-full"}>
         <body className={`${inter.className} min-h-screen m-0`}>
-        <AntdStyledComponentRegistry>
+        <AntdRegistry>
             <AppProvider>
                 <AppShell>
                     {children}
                 </AppShell>
             </AppProvider>
-        </AntdStyledComponentRegistry>
+        </AntdRegistry>
         <Analytics/>
         <SpeedInsights/>
         </body>

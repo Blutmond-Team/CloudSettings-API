@@ -3,12 +3,7 @@ import {PrismaClient} from "@prisma/client";
 import {getToken} from "next-auth/jwt";
 import {CloudSettingsToken} from "@/src/types/AuthTypes";
 
-export const dynamic = "force-dynamic";
-type PathVariables = {
-    params: Promise<{ userId: string }>
-}
-
-export async function DELETE(request: NextRequest, {params}: PathVariables) {
+export async function DELETE(request: NextRequest, {params}: RouteContext<"/api/user/[userId]">) {
     const nextAuthToken = await getToken({req: request}) as CloudSettingsToken;
     if (!nextAuthToken) {
         return new Response("No valid session token found.", {
@@ -69,7 +64,7 @@ export async function DELETE(request: NextRequest, {params}: PathVariables) {
     return NextResponse.json({});
 };
 
-export async function GET(request: NextRequest, {params}: PathVariables) {
+export async function GET(request: NextRequest, {params}: RouteContext<"/api/user/[userId]">) {
     const nextAuthToken = await getToken({req: request}) as CloudSettingsToken;
     if (!nextAuthToken) {
         return new Response("No valid session token found.", {

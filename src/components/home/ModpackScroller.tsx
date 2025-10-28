@@ -5,19 +5,20 @@ import {Text} from "@/components/antd/Text";
 import {useTheme} from "@/hooks";
 import {InfiniteLooper} from "@/components/global/InfiniteLooper";
 import {ModpackCard} from "@/components/home/ModpackCard";
+import {UrlObject} from "node:url";
 
 const modpacks: {
-    url: string
+    url: UrlObject
     imageUrl: string
     name: string
     desc: string
 }[] = [
     {
-        url: "https://www.curseforge.com/minecraft/modpacks/blutmond",
+        url: {href: "https://www.curseforge.com/minecraft/modpacks/blutmond"},
         imageUrl: "https://media.forgecdn.net/attachments/363/785/header.png",
         name: "Blutmond",
-        desc: "A Modpack made for the Blutmond Community"
-    }
+        desc: "A Modpack made for the Blutmond Community",
+    },
 ]
 
 export const ModpackScroller = () => {
@@ -28,8 +29,8 @@ export const ModpackScroller = () => {
             style={{borderRadius: 0}}
             styles={{
                 body: {
-                    padding: `${theme.paddingLG}px 0`
-                }
+                    padding: `${theme.paddingLG}px 0`,
+                },
             }}
         >
             <Row gutter={[0, 16]}>

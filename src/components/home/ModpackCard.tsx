@@ -5,9 +5,10 @@ import Image from "next/image";
 import {Text} from "@/components/antd/Text";
 import Link from "next/link";
 import {useTheme} from "@/hooks";
+import {UrlObject} from "node:url";
 
 type Props = {
-    href: string
+    href: UrlObject
     img: string
     title: string
     desc: string

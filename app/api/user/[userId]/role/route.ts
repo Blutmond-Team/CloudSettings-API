@@ -3,9 +3,7 @@ import {PrismaClient, Role} from "@prisma/client";
 import {getToken} from "next-auth/jwt";
 import {CloudSettingsToken} from "@/src/types/AuthTypes";
 
-export const dynamic = "force-dynamic";
-
-export async function POST(request: NextRequest, {params}: { params: Promise<{ userId: string }> }) {
+export async function POST(request: NextRequest, {params}: RouteContext<"/api/user/[userId]/role">) {
     const nextAuthToken = await getToken({req: request}) as CloudSettingsToken;
     if (!nextAuthToken) {
         return new Response("No valid session token found.", {
