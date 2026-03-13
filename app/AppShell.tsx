@@ -271,13 +271,13 @@ export function AppShell({children}: Props) {
                         </Col>
                         <Col>
                             <ConditionalElement enabled={user !== undefined}>
-                                <Space direction={"vertical"}>
+                                <Space orientation={"vertical"}>
                                     <Space wrap>
                                         <Dropdown
                                             menu={{
                                                 items: userDropdownItems
                                             }}
-                                            dropdownRender={menu => (
+                                            popupRender={menu => (
                                                 <div style={{
                                                     backgroundColor: token.colorBgElevated,
                                                     borderRadius: token.borderRadiusLG,
