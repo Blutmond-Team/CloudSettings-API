@@ -125,7 +125,7 @@ export const OptionsTable = ({options, revalidateFunction}: Props) => {
                         ]}
                         size={"small"}
                         pagination={{
-                            size: "default",
+                            size: "small",
                             showTotal: (total, range) => `${range[0]}-${range[1]} of ${total} Options`
                         }}
                     />
